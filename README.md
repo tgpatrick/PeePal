@@ -6,12 +6,12 @@ PeePal
 
 ## Screenshots
 
-![MainPage](https://raw.githubusercontent.com/tgpatrick/PeePal/main/Screenshots/MainPage.png)
-![DetailSmall](https://raw.githubusercontent.com/tgpatrick/PeePal/main/Screenshots/DetailSmall)
-![Filters](https://raw.githubusercontent.com/tgpatrick/PeePal/main/Screenshots/Filters)
-![Settings](https://raw.githubusercontent.com/tgpatrick/PeePal/main/Screenshots/Settings)
-![Search](https://raw.githubusercontent.com/tgpatrick/PeePal/main/Screenshots/Search)
-![MainDark](https://raw.githubusercontent.com/tgpatrick/PeePal/main/Screenshots/MainDark)
+<img src="Screenshots/MainPage.png" width="150">
+<img src="Screenshots/DetailSmall.png" width="150">
+<img src="Screenshots/Filters.png" width="150">
+<img src="Screenshots/Settings.png" width="150">
+<img src="Screenshots/Search.png" width="150">
+<img src="Screenshots/MainDark.png" width="150">
 
 ## API
 
