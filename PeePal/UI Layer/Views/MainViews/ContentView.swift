@@ -57,47 +57,35 @@ struct ContentView: View {
             }
             
             VStack {
-            if ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 14, minorVersion: 2, patchVersion: 0)) { // The app is only fully-featured on iOS 14.2+. This check will let me put in a UIKit Map for 13.0 - 14.1 when I get around to it.
-                Map(
-                    coordinateRegion: $vm.region,
-                    interactionModes: MapInteractionModes.all,
-                    showsUserLocation: true,
-                    annotationItems: sm.restrooms
-                ) { restroom in
-                    MapAnnotation(
-                        coordinate: vm.getCoordinates(restroom: restroom),
-                        anchorPoint: CGPoint(x: 0.5, y: 1)
-                    ) {
-                        AnnotationView(restroom: restroom, viewModel: sm, contentViewModel: vm)
-                            .animation(.spring())
-                            .transition(.slide)
-                    }
-                }
-                .animation(.default)
-                .transition(.slide)
-                .onTapGesture {
-                    self.sm.clearScreen()
-                }
-                .edgesIgnoringSafeArea(.all)
-                .onAppear(perform: {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.sm.reCenter(group: nil)
-                    }
-                })
-            } else {
-                Map(
-                    coordinateRegion: $vm.region,
-                    interactionModes: MapInteractionModes.all,
-                    showsUserLocation: true,
-                    annotationItems: sm.restrooms
-                ) { restroom in
-                    MapAnnotation(
-                        coordinate: vm.getCoordinates(restroom: restroom),
-                        anchorPoint: CGPoint(x: 0.5, y: 1)
-                    ) {
-                        AnnotationView(restroom: restroom, viewModel: sm, contentViewModel: vm)
-                    }
-                }
+//            if ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 14, minorVersion: 2, patchVersion: 0)) { // The app is only fully-featured on iOS 14.2+. This check will let me put in a UIKit Map for 13.0 - 14.1 when I get around to it.
+//                Map(
+//                    coordinateRegion: $vm.region,
+//                    interactionModes: MapInteractionModes.all,
+//                    showsUserLocation: true,
+//                    annotationItems: sm.restrooms
+//                ) { restroom in
+//                    MapAnnotation(
+//                        coordinate: vm.getCoordinates(restroom: restroom),
+//                        anchorPoint: CGPoint(x: 0.5, y: 1)
+//                    ) {
+//                        AnnotationView(restroom: restroom, viewModel: sm, contentViewModel: vm)
+//                            .animation(.spring())
+//                            .transition(.slide)
+//                    }
+//                }
+//                .animation(.default)
+//                .transition(.slide)
+//                .onTapGesture {
+//                    self.sm.clearScreen()
+//                }
+//                .edgesIgnoringSafeArea(.all)
+//                .onAppear(perform: {
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                        self.sm.reCenter(group: nil)
+//                    }
+//                })
+//            } else {
+                MapView()
                 .animation(.default)
                 .onTapGesture {
                     self.sm.clearScreen()
@@ -109,7 +97,7 @@ struct ContentView: View {
                     }
                 })
             }
-            }
+//            }
             VStack { // The main buttons
                 HStack {
                     Spacer()

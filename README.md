@@ -23,7 +23,9 @@ PeePal uses the [Refuge Restrooms API](http://www.refugerestrooms.org/api/docs/)
 
 ## Installing
 
-PeePal is currently in public beta. You can install it on iOS/iPadOS 14.2+ through <a href="https://testflight.apple.com/join/pyJft4eT">TestFlight</a>.
+PeePal can be installed on iOS/iPadOS 14.2+ or on macOS 11.2+ on a Mac with Apple Silicon. It can be found on the <a href="https://apps.apple.com/us/app/peepal-refuge/id1540530097">App Store</a>.
+
+PeePal also has a public beta version. You can install it on those same operating systems through <a href="https://testflight.apple.com/join/pyJft4eT">TestFlight</a>.
 
 ## License
 
