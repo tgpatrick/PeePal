@@ -52,24 +52,24 @@ class ContentViewModel: ObservableObject {
     }
     
     func showDetail(restroom: Restroom) {
-            moveMap(coords: restroom.getCoordinates())
-            detailRestroom = restroom
-            detailRegion = region
-            var waitTime = 0.1
-            if region.span.latitudeDelta * 9 > waitTime {
-                waitTime = region.span.latitudeDelta * 9
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
-                if !self.showDetail {
-                    withAnimation {
-                        self.showDetail = true
-                    }
+        moveMap(coords: restroom.getCoordinates())
+        detailRestroom = restroom
+        detailRegion = region
+        var waitTime = 0.1
+        if region.span.latitudeDelta * 9 > waitTime {
+            waitTime = region.span.latitudeDelta * 9
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitTime) {
+            if !self.showDetail {
+                withAnimation {
+                    self.showDetail = true
                 }
             }
+        }
     }
     
     func filterButton() {
-        withAnimation {
+        withAnimation(.easeInOut) {
             if !showFilter {
                 clearScreen()
                 detailRegion = region
@@ -83,10 +83,6 @@ class ContentViewModel: ObservableObject {
     func settingsButton() {
         clearScreen()
         showSettings.toggle()
-    }
-    
-    func getCoordinates(restroom: Restroom) -> CLLocationCoordinate2D {
-        return restroom.getCoordinates()
     }
     
     func clearScreen() {

@@ -32,9 +32,8 @@ struct SettingsView: View {
                         Text("Done")
                             .foregroundColor(.black)
                             .fontWeight(.bold)
-                            .PeePalButton(padding: 5, radius: 10)
                     }
-//                    .buttonStyle(PeePalButtonStyle(padding: 5, radius: 10))
+                    .buttonStyle(PeePalButtonStyle(padding: 5, radius: 10))
                 }
             }
             VStack(alignment: .leading) {
@@ -100,10 +99,6 @@ struct SettingsView: View {
                                 .foregroundColor(.black)
                                 .fontWeight(.bold)
                         }
-                        .padding(8)
-                        .background(Color("Unisex"))
-                        .cornerRadius(15)
-                        .adaptiveShadow()
                     }
                     .padding(.horizontal)
                     Link(destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!) {
@@ -114,17 +109,17 @@ struct SettingsView: View {
                                 .foregroundColor(.black)
                                 .fontWeight(.bold)
                         }
-                        .padding(8)
-                        .background(Color("Unisex"))
-                        .cornerRadius(15)
-                        .adaptiveShadow()
                     }
                     .padding(.horizontal)
                 }
+                .buttonStyle(PeePalButtonStyle(color: .unisex))
             }
             .padding()
-            .background(Color.secondary.opacity(0.2))
-            .cornerRadius(15)
+            .background(
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.secondary.opacity(0.2))
+                    .shadow(radius: 5)
+            )
             Spacer()
         }
         .padding()
@@ -136,6 +131,5 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(sharedModel: SharedModel(), settings: AppSettings())
-//            .colorScheme(.dark)
     }
 }

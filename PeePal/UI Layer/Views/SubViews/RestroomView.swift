@@ -10,9 +10,12 @@ import SwiftUI
 struct RestroomView: View {
     @ObservedObject var vm: SharedModel
     var restroom: Restroom
-    let textSpace:CGFloat = 15
+    let textSpace: CGFloat = 15
     let opac = 0.2
+    let shortHeight: CGFloat = 250
+    let tallHeight: CGFloat = 500
     @State var expanded = false
+    @State var useExpandedMask = false
     @Environment(\.colorScheme) var colorScheme
     
     var appLogic: AppLogic
@@ -88,6 +91,7 @@ struct RestroomView: View {
                                     .padding(5)
                                     .background(Color.secondary.opacity(opac))
                                     .cornerRadius(5)
+                                    .shadow(radius: 1)
                                 }
                                 if restroom.accessible {
                                     ZStack {
@@ -104,6 +108,7 @@ struct RestroomView: View {
                                     .padding(5)
                                     .background(Color.secondary.opacity(opac))
                                     .cornerRadius(5)
+                                    .shadow(radius: 1)
                                 }
                                 if restroom.changing_table {
                                     ZStack {
@@ -120,6 +125,7 @@ struct RestroomView: View {
                                     .padding(5)
                                     .background(Color.secondary.opacity(opac))
                                     .cornerRadius(5)
+                                    .shadow(radius: 1)
                                 }
                             }
                         }
@@ -151,12 +157,16 @@ struct RestroomView: View {
                     }
                     .padding(textSpace)
                     .padding(.bottom, 55)
+                    .padding(.vertical, 5)
                 }
                 VStack {
                     HStack { // Expand + Dismiss buttons
                         Button(action: {
-                            withAnimation {
+                            withAnimation(.easeInOut) {
                                 expanded.toggle()
+                                DispatchQueue.main.asyncAfter(deadline: .now() + (expanded ? 0.1 : 0.3)) {
+                                    useExpandedMask.toggle()
+                                }
                             }
                         }) {
                             Image(systemName:
@@ -167,7 +177,6 @@ struct RestroomView: View {
                                 .foregroundColor(.gray)
                                 .opacity(0.5)
                                 .padding()
-                                .animation(.easeInOut)
                         }
                         Spacer()
                         Button(action: {
@@ -194,11 +203,8 @@ struct RestroomView: View {
                                     .foregroundColor(.black)
                                     .fontWeight(.bold)
                             }
-                            .padding(8)
-                            .background(Color("AccentColor"))
-                            .cornerRadius(15)
-                            .adaptiveShadow()
                         }
+                        .buttonStyle(PeePalButtonStyle())
                         .padding()
                         Link(destination: appLogic.makeEditURL(restroom: restroom)) {
                             HStack {
@@ -208,41 +214,29 @@ struct RestroomView: View {
                                     .foregroundColor(.black)
                                     .fontWeight(.bold)
                             }
-                            .padding(8)
-                            .background(Color("AccentColor"))
-                            .cornerRadius(15)
-                            .adaptiveShadow()
                         }
+                        .buttonStyle(PeePalButtonStyle())
                         .padding()
                     }
                 }
+                .padding(.bottom, expanded ? tallHeight / 20 : shortHeight / 20)
             }
-            .frame(width: 300, height: expanded ? 500 : 250)
-            .defaultCard(cornerRadius: 25)
-            
-            Rectangle() // Point at the bottom
-                .trim(from: 0.444, to: 0.556)
-                .frame(width: 100, height: 100)
-                .rotationEffect(Angle.degrees(45))
-                .offset(y: expanded ? 195 : 70)
-                .foregroundColor(expanded ? .clear : Color("AdaptiveBackground"))
         }
-        .offset(y: expanded ? -50 : -170)
-        .transition(restroomTransition)
+        .frame(width: 300, height: expanded ? tallHeight : shortHeight)
+        .background(.thinMaterial)
+        .mask(DetailShape(expanded: useExpandedMask))
+        .adaptiveShadow(radius: 10)
+        .offset(y: expanded ? -45 : -170)
     }
 }
 
 struct RestroomView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+            Color.yellow.ignoresSafeArea(.all)
             AnnotationView(restroom: exampleRestroom, viewModel: searchModel, contentViewModel: ContentViewModel())
                 .offset(y: -23)
             RestroomView(restroom: exampleRestroom, viewModel: searchModel)
         }
-        .colorScheme(.dark)
     }
 }

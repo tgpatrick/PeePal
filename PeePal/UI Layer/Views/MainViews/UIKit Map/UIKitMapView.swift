@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 import MapKit
-
+ /*
 final class UIKitRestroom: NSObject, MKAnnotation {
     var id: Int
     var name: String?
@@ -81,3 +81,4 @@ struct MapView: UIViewRepresentable {
         uiView.addAnnotations(restrooms)
     }
 }
+*/

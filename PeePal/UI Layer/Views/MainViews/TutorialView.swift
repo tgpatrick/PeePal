@@ -98,8 +98,8 @@ struct TutorialView: View {
                         .foregroundColor(.black)
                         .fontWeight(.bold)
                         .font(.title2)
-                        .PeePalButton(padding: 5, radius: 5)
                 }
+                .buttonStyle(PeePalButtonStyle(padding: 5, radius: 5))
                 Spacer()
                 HStack {
                     Spacer()

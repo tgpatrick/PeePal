@@ -26,8 +26,8 @@ struct AddView: View {
                             .foregroundColor(.black)
                             .fontWeight(.bold)
                     }
-                    .PeePalButton(padding: 8, radius: 15)
                 }
+                .buttonStyle(PeePalButtonStyle(padding: 8))
                 .padding()
             }
             

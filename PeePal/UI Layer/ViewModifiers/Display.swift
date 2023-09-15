@@ -29,42 +29,63 @@ extension View {
 }
 
 extension View {
-    func PeePalButton(padding: CGFloat = 10, radius: CGFloat = 15) -> some View {
-        
+    func defaultCard(cornerRadius: CGFloat = 15, shadowRadius: CGFloat = 10) -> some View {
         return self
-            .padding(padding)
-            .background(Color("AccentColor"))
-            .cornerRadius(radius)
-            .adaptiveShadow()
+            .background(.thinMaterial)
+            .cornerRadius(cornerRadius)
+            .adaptiveShadow(radius: shadowRadius)
     }
 }
 
-extension View {
-    func defaultCard(cornerRadius: CGFloat = 15, shadowRadius: CGFloat = 10) -> some View {
-        return self
-            .background(Color("AdaptiveBackground"))
-            .cornerRadius(cornerRadius)
-            .adaptiveShadow(radius: shadowRadius)
+struct PeePalButtonStyle: ButtonStyle {
+    var padding: CGFloat = 10
+    var radius: CGFloat = 15
+    var color: Color = .accentColor
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+        .padding(padding)
+        .background(color.opacity(0.5))
+        .background(color.opacity(0.5))
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: radius))
+        .scaleEffect(configuration.isPressed ? 0.975 : 1)
+        .opacity(configuration.isPressed ? 0.5 : 1)
+        .shadow(radius: configuration.isPressed ? 0 : 10)
+        .animation(.easeOut(duration: configuration.isPressed ? 0 : 0.3), value: configuration.isPressed)
+    }
+}
+
+struct MapButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) var colorScheme
+    
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .shadow(color: .black, radius: 1.5)
+            .foregroundStyle(.accent)
+            .frame(width: 45, height: 45, alignment: .center)
+            .background(.ultraThickMaterial)
+            .clipShape(Circle())
+            .scaleEffect(configuration.isPressed ? 0.975 : 1)
+            .opacity(configuration.isPressed ? 0.5 : 1)
+            .shadow(radius: configuration.isPressed ? 0 : 10)
+            .animation(.easeOut(duration: configuration.isPressed ? 0 : 0.3), value: configuration.isPressed)
     }
 }
 
 struct NeuPreview: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+            ContentView()
             VStack {
                 Text("Hello, World!")
                 Button(action: {}, label: {
                     Text("Button")
-                        .PeePalButton()
                 })
+                .buttonStyle(PeePalButtonStyle())
             }
             .frame(width: 250, height: 250)
             .defaultCard()
         }
-//        .colorScheme(.dark)
     }
 }

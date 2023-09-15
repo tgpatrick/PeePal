@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-struct Restroom: Identifiable, Codable {
+struct Restroom: Identifiable, Codable, Equatable {
     var id: Int
     var name: String?
     var street: String?

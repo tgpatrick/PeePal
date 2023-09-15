@@ -90,8 +90,8 @@ struct FilterView: View {
                                 .foregroundColor(.black)
                                 .font(.title3)
                                 .fontWeight(.bold)
-                                .PeePalButton(padding: 7)
                         }
+                        .buttonStyle(PeePalButtonStyle(padding: 7))
                         .frame(width: 200)
                     }
                     .padding()
@@ -123,13 +123,9 @@ struct FilterView: View {
 struct FilterView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+            ContentView()
             AnnotationView(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel())
             FilterView(sharedModel: SharedModel(), filters: Filters())
         }
-//        .colorScheme(.dark)
     }
 }

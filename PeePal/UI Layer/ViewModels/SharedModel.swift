@@ -28,7 +28,6 @@ class SharedModel: ObservableObject {
     init() {
         appLogic = AppLogic(settings: settings, filters: filters)
         showTutorial = !seenTutorial
-//        showTutorial = false
         if settings.numPerPage == 0 {
             settings.numPerPage = 60
         }
@@ -179,7 +178,7 @@ class SharedModel: ObservableObject {
     }
     
     func reCenter(group: DispatchGroup?) {
-        cvm.region.center = getCurrentCoords()
+        cvm.moveMap(coords: getCurrentCoords())
         if Float(cvm.region.center.latitude) != 37 {
             cvm.region.span = MKCoordinateSpan(
                 latitudeDelta: 0.01,

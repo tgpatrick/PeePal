@@ -29,7 +29,6 @@ struct SearchView: View {
                     loadingView
                 }
             }
-            .animation(.spring())
             .frame(width: vm.searchResults.count == 0 ? 200 : 300, height: vm.searchResults.count == 0 ? 100 : 300)
             .defaultCard()
             .padding(.top, 80)
@@ -46,8 +45,8 @@ struct SearchView: View {
                 Text("Search")
                     .foregroundColor(.black)
                     .fontWeight(.bold)
-                    .PeePalButton(padding: 5, radius: 10)
             }
+            .buttonStyle(PeePalButtonStyle(padding: 5, radius: 10))
             
             Spacer()
             
@@ -57,8 +56,8 @@ struct SearchView: View {
                 Text("Cancel")
                     .foregroundColor(.black)
                     .fontWeight(.bold)
-                    .PeePalButton(padding: 5, radius: 10)
             }
+            .buttonStyle(PeePalButtonStyle(padding: 5, radius: 10))
             
             Spacer()
         }
@@ -71,7 +70,7 @@ struct SearchView: View {
             Image(systemName: "arrow.clockwise")
                 .scaleEffect(CGSize(width: 1.5, height: 1.5))
                 .rotationEffect(.degrees(vm.spinning ? 360 : 0))
-                .animation(rotate)
+                .animation(rotate, value: vm.spinning)
                 .transition(.identity)
                 .matchedGeometryEffect(id: "spinner", in: matchedViews)
                 .onAppear(perform: {
@@ -102,14 +101,8 @@ var searchModel = SharedModel()
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-//                    searchModel.searching = true
-//                    searchModel.searchResults = [ exampleSearchRoom ]
-                })
+            ContentView()
             SearchView(viewModel: searchModel)
         }
-//        .colorScheme(.dark)
     }
 }

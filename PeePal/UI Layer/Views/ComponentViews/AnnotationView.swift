@@ -9,44 +9,43 @@ import SwiftUI
 
 struct AnnotationView: View {
     var restroom: Restroom
-    @ObservedObject var cvm: ContentViewModel
-    var gradientStart: Color = Color("AccentColor")
-    var gradientEnd: Color = Color("AccentColor.Light")
+    @ObservedObject var sharedModel: SharedModel
+    @ObservedObject var contentModel: ContentViewModel
+    var gradientStart: Color = Color(.accent)
+    var gradientEnd: Color = Color(.accentColorLight)
     
     init(restroom: Restroom, viewModel: SharedModel, contentViewModel: ContentViewModel) {
         self.restroom = restroom
-        self.cvm = contentViewModel
+        self.sharedModel = viewModel
+        self.contentModel = contentViewModel
         if restroom.accessible {
-            self.gradientStart = Color("Accessible")
+            self.gradientStart = Color(.accessible)
         }
         if restroom.unisex {
-            self.gradientEnd = Color("Unisex")
+            self.gradientEnd = Color(.unisex)
         }
     }
     
     var body: some View {
         ZStack {
-            if cvm.showDetail && cvm.detailRestroom.id == restroom.id  {
+            if contentModel.showDetail && contentModel.detailRestroom.id == restroom.id {
                 ShadowPoint(gradientStart: gradientStart, gradientEnd: gradientEnd)
             }
-            Point(heightRadiusRatio: 1.5)
-                .fill(LinearGradient(
-                    gradient: .init(colors: [gradientStart, gradientEnd]),
-                    startPoint: .init(x: 0.5, y: 0.2),
-                    endPoint: .init(x: 0.5, y: 0.6)
-                ))
-            Point(heightRadiusRatio: 1.5)
-                .stroke()
-            Image("Icon")
-                .resizable()
-                .scaleEffect(CGSize(width: 0.3, height: 0.5))
-                .offset(x: 0.25, y: -4)
+            ZStack {
+                Point(heightRadiusRatio: 1.5)
+                    .fill(LinearGradient(
+                        gradient: .init(colors: [gradientStart, gradientEnd]),
+                        startPoint: .init(x: 0.5, y: 0.2),
+                        endPoint: .init(x: 0.5, y: 0.6)
+                    ))
+                    .shadow(color: .black, radius: 2)
+                Image(.icon)
+                    .resizable()
+                    .scaleEffect(CGSize(width: 0.3, height: 0.5))
+                    .offset(x: 0.25, y: -4)
+            }
+            .frame(width: 45, height: 45, alignment: .center)
         }
-        .frame(width: 45, height: 45, alignment: .center)
-        .onTapGesture(perform: {
-            self.cvm.showDetail(restroom: restroom)
-        })
-        .adaptiveShadow(radius: 10)
     }
 }
 
@@ -90,15 +89,12 @@ struct ShadowPoint: View {
     }
 }
 
-var previewRestroom = exampleRestroom
-
 struct AnnotationView_Previews: PreviewProvider {
+    static var previewRestroom = exampleRestroom
+    
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+            ContentView()
             AnnotationView(restroom: previewRestroom, viewModel: searchModel, contentViewModel: ContentViewModel())
                 .onAppear(perform: {
                     previewRestroom.unisex = false
@@ -106,6 +102,5 @@ struct AnnotationView_Previews: PreviewProvider {
                     previewRestroom.changing_table = false
                 })
         }
-        .colorScheme(.dark)
     }
 }
