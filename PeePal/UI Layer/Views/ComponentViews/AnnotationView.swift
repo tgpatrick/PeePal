@@ -41,8 +41,9 @@ struct AnnotationView: View {
                     .shadow(color: .black, radius: 2)
                 Image(.icon)
                     .resizable()
-                    .scaleEffect(CGSize(width: 0.3, height: 0.5))
-                    .offset(x: 0.25, y: -4)
+                    .aspectRatio(contentMode: .fit)
+                    .scaleEffect(CGSize(width: 0.5, height: 0.5))
+                    .offset(x: 0, y: -3)
             }
             .frame(width: 45, height: 45, alignment: .center)
         }
