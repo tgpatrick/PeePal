@@ -56,7 +56,6 @@ struct SettingsView: View {
                         UserDefaults.standard.setValue(value, forKey: "numPerPage")
                         sm.cvm.reloadDistance = Float(settings.numPerPage) * 0.0005
                     })
-                    .frame(width: 55, height: 55)
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                 }
                 Toggle(isOn: $settings.useRegion, label: {

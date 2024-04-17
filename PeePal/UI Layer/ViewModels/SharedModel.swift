@@ -25,15 +25,17 @@ class SharedModel: ObservableObject {
     
     @Published var locationManager = LocationManager()
     
+    @Published var loadingTask: Task<(), Never>?
+    
     init() {
         appLogic = AppLogic(settings: settings, filters: filters)
         showTutorial = !seenTutorial
         if settings.numPerPage == 0 {
-            settings.numPerPage = 60
+            settings.numPerPage = 100
         }
     }
     
-    func getRestrooms(page: Int = 1, group: DispatchGroup?, forSearch: Bool = false, savedSearch: String = "") {
+    func getRestrooms(page: Int = 1, loadedSoFar: Int = 0, group: DispatchGroup?, forSearch: Bool = false, savedSearch: String = "") {
         var thisSearch: String = ""
         if page == 1 {
             self.loadingRestrooms = true
@@ -51,33 +53,41 @@ class SharedModel: ObservableObject {
         if (!forSearch && cvm.region.span.latitudeDelta < 0.1) || forSearch {
             var url: URL
             if !forSearch {
-                url = URL(string: appLogic.makeLocationURL(region: cvm.region, page: page, perPage: settings.numPerPage))!
+                url = URL(string: appLogic.makeLocationURL(region: cvm.region, page: page, perPage: 20))!
             } else {
                 if svm.searchText == "" {
                     return
                 }
-                url = URL(string: appLogic.makeSearchURL(searchText: svm.searchText, page: page, perPage: settings.numPerPage))!
+                url = URL(string: appLogic.makeSearchURL(searchText: svm.searchText, page: page, perPage: 20))!
             }
             let request = URLRequest(url: url)
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let data = data {
+            if let loadingTask {
+                loadingTask.cancel()
+            }
+            loadingTask = Task {
+                do {
+                    let (data, response) = try await URLSession.shared.data(for: request)
                     if !forSearch {
                         if let decodedResponse = try? JSONDecoder().decode([Restroom].self, from: data) {
                             if (decodedResponse.count > 0) {
                                 DispatchQueue.main.async {
-                                    //update the UI
-                                    withAnimation {
-                                        self.restrooms = self.fraudCheck(response: decodedResponse)
-//                                        self.loadedRestrooms = self.fraudCheck(response: decodedResponse)
+                                    // Remove duplicates, then only keep the closest
+                                    let deDuplicatedRestrooms = Set(decodedResponse)
+                                    var combined = Array(Set(self.restrooms).union(deDuplicatedRestrooms))
+                                    for (index, restroom) in combined.enumerated() {
+                                        combined[index].distance = restroom.distanceFrom(self.cvm.region.center)
                                     }
-                                    self.loadingRestrooms = false
-                                    group?.leave()
-                                    /*if ((Int(totalPages) ?? 0 > page) && self.responses.count < 60) {
-                                     self.getRestrooms(page: page + 1)
-                                     }
-                                     else {
-                                     self.restooms = self.responses
-                                     }*/
+                                    let indexEnd = min(self.settings.numPerPage, combined.count) - 1
+                                    combined = Array(combined.sorted()[...indexEnd])
+                                    withAnimation {
+                                        self.restrooms = combined
+                                    }
+                                    if loadedSoFar + deDuplicatedRestrooms.count < self.settings.numPerPage {
+                                        self.getRestrooms(page: page + 1, loadedSoFar: loadedSoFar + deDuplicatedRestrooms.count, group: group)
+                                    } else {
+                                        self.loadingRestrooms = false
+                                        group?.leave()
+                                    }
                                 }
                             } else {
                                 group?.leave()
@@ -115,10 +125,10 @@ class SharedModel: ObservableObject {
                             return
                         }
                     }
+                } catch {
+                    print("Network error: \(error)")
                 }
-                
-                print("Fetch failed: \(error?.localizedDescription ?? "Unknown error")")
-            }.resume()
+            }
         } else {
             group?.leave()
             self.loadingRestrooms = false
@@ -126,42 +136,23 @@ class SharedModel: ObservableObject {
     }
     
     func clearData() {
+        loadingTask?.cancel()
         withAnimation {
             self.restrooms = []
         }
     }
-    
-    func fraudCheck(response: [Restroom]) -> [Restroom] {
-        var locations: [CLLocationCoordinate2D] = []
-        var location: CLLocationCoordinate2D
-        var restrooms: [Restroom] = []
-        var fraudulent: [Restroom] = []
-        for restroom in response {
-            location = restroom.getCoordinates()
-            if locations.firstIndex(where: { $0.latitude == location.latitude && $0.longitude == location.longitude }) == nil {
-                locations.append(location)
-                restrooms.append(restroom)
-            } else if fraudulent.firstIndex(where: { $0.latitude == restroom.latitude && $0.longitude == restroom.longitude }) == nil {
-                fraudulent.append(restroom)
-            }
-        }
-        for badRestroom in fraudulent {
-            let index = restrooms.firstIndex(where: { $0.latitude == badRestroom.latitude && $0.longitude == badRestroom.longitude })
-            if index != nil {
-                restrooms.remove(at: index!)
-            }
-        }
-        return restrooms
-    }
+
     func loadNew() {
         self.getRestrooms(group: nil)
     }
+    
     func reload() {
         clearData()
         self.getRestrooms(group: nil)
     }
     
     func clearScreen() {
+        loadingTask?.cancel()
         withAnimation {
             svm.searchText = ""
             svm.searching = false
@@ -187,8 +178,8 @@ class SharedModel: ObservableObject {
     }
     
     func getClosest() -> Restroom? {
-        if self.restrooms.count > 0 {
-            var closest: Restroom = self.restrooms[0]
+        if let firstRestroom = self.restrooms.first {
+            var closest: Restroom = firstRestroom
             for restroom in self.restrooms {
                 if restroom.distance ?? 1000 < closest.distance ?? 1000 {
                     closest = restroom
