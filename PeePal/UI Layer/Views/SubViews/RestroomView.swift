@@ -239,7 +239,7 @@ struct RestroomView_Previews: PreviewProvider {
 //                .onAppear(perform: {
 //                    searchModel.showTutorial = false
 //                })
-            AnnotationView(restroom: exampleRestroom, viewModel: searchModel, contentViewModel: ContentViewModel_Old())
+            AnnotationView_Old(restroom: exampleRestroom, viewModel: searchModel, contentViewModel: ContentViewModel_Old())
                 .offset(y: -23)
             RestroomView(restroom: exampleRestroom, viewModel: searchModel)
         }

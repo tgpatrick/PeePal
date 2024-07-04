@@ -9,6 +9,7 @@ import MapKit
 
 struct ContentView: View {
     @State private var viewModel = ContentViewModel()
+    let clusterPixels = 30
 
     var body: some View {
         ZStack {
@@ -16,27 +17,32 @@ struct ContentView: View {
                 Map(position: $viewModel.cameraPosition) {
                     ForEach(viewModel.clusters) { cluster in
                         if cluster.size == 1, let restroom = cluster.restrooms.first {
-                            Marker(restroom.name ?? "Restroom",
-                                   systemImage: "toilet.fill",
-                                   coordinate: restroom.coordinate)
+                            Annotation(
+                                restroom.name ?? "",
+                                coordinate: restroom.coordinate,
+                                anchor: .bottom) {
+                                    RestroomAnnotation(restroom: restroom)
+                                }
                         } else {
-                            Marker("",
-                                   systemImage: "\(cluster.size).circle",
-                                   coordinate: cluster.center)
-                            .tint(Color.green)
+                            Annotation(
+                                "",
+                                coordinate: cluster.center,
+                                anchor: .center) {
+                                    ClusterAnnotation(cluster: cluster)
+                                }
                         }
                     }
                 }
                 .onMapCameraChange { context in
                     Task {
-                        if let distance = mapProxy.degreesFromPixels(30) {
+                        if let distance = mapProxy.degreesFromPixels(clusterPixels) {
                             await viewModel.cluster(epsilon: distance)
                         }
                         viewModel.fetchRestrooms(region: context.region)
                     }
                 }
                 .onChange(of: viewModel.restrooms, { _, _ in
-                    if let distance = mapProxy.degreesFromPixels(30) {
+                    if let distance = mapProxy.degreesFromPixels(clusterPixels) {
                         Task {
                             await viewModel.cluster(epsilon: distance)
                         }

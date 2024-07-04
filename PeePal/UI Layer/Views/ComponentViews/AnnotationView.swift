@@ -7,7 +7,71 @@
 
 import SwiftUI
 
-struct AnnotationView: View {
+struct RestroomAnnotation: View {
+    let restroom: Restroom
+    let gradient: LinearGradient
+
+    init(restroom: Restroom) {
+        self.restroom = restroom
+        var gradientStart: Color = Color(.accent)
+        var gradientEnd: Color = Color(.accentColorLight)
+        if restroom.accessible {
+            gradientStart = Color(.accessible)
+        }
+        if restroom.unisex {
+            gradientEnd = Color(.unisex)
+        }
+        self.gradient = LinearGradient(
+            gradient: .init(colors: [gradientStart, gradientEnd]),
+            startPoint: .init(x: 0.5, y: 0.2),
+            endPoint: .init(x: 0.5, y: 0.6)
+        )
+    }
+
+    var body: some View {
+        Image(.icon)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 15)
+            .padding(7.5)
+            .padding(.bottom, 3.25)
+            .background(
+                alignment: .bottom,
+                content: {
+                    Point(heightRadiusRatio: 1.5)
+                        .foregroundStyle(
+                            gradient.shadow(
+                                .inner(color: .black.opacity(0.5), radius: 5)
+                            )
+                        )
+                        .shadow(radius: 5)
+                }
+            )
+    }
+}
+
+struct ClusterAnnotation: View {
+    let cluster: RestroomCluster
+
+    var body: some View {
+        Text("\(cluster.size)")
+            .padding(7.5)
+            .foregroundStyle(.black)
+            .background(
+                Circle()
+                    .foregroundStyle(
+                        Color.accentColor.gradient.shadow(
+                            .inner(color: .black.opacity(0.25), radius: 5)
+                        )
+                    )
+                    .shadow(radius: 5)
+            )
+            .fontDesign(.rounded)
+            .fontWeight(.bold)
+    }
+}
+
+struct AnnotationView_Old: View {
     var restroom: Restroom
     @ObservedObject var sharedModel: SharedModel
     @ObservedObject var contentModel: ContentViewModel_Old
@@ -94,14 +158,6 @@ struct AnnotationView_Previews: PreviewProvider {
     static var previewRestroom = exampleRestroom
     
     static var previews: some View {
-        ZStack {
-            ContentView()
-            AnnotationView(restroom: previewRestroom, viewModel: searchModel, contentViewModel: ContentViewModel_Old())
-                .onAppear(perform: {
-                    previewRestroom.unisex = false
-                    previewRestroom.accessible = false
-                    previewRestroom.changing_table = false
-                })
-        }
+        ContentView()
     }
 }

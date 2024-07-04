@@ -19,7 +19,7 @@ struct RestroomSearchView: View {
     var body: some View {
         VStack{
             HStack {
-                AnnotationView(restroom: self.sm.appLogic.searchToReal(searchRestroom: restroom), viewModel: sm, contentViewModel: ContentViewModel_Old())
+                AnnotationView_Old(restroom: self.sm.appLogic.searchToReal(searchRestroom: restroom), viewModel: sm, contentViewModel: ContentViewModel_Old())
                     .scaleEffect(CGSize(width: 0.4, height: 0.4))
                     .frame(width: 25, height: 25)
                 Text(restroom.name ?? "No name")
