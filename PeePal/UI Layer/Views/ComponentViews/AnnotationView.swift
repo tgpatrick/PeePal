@@ -10,11 +10,11 @@ import SwiftUI
 struct AnnotationView: View {
     var restroom: Restroom
     @ObservedObject var sharedModel: SharedModel
-    @ObservedObject var contentModel: ContentViewModel_Oldw
+    @ObservedObject var contentModel: ContentViewModel_Old
     var gradientStart: Color = Color(.accent)
     var gradientEnd: Color = Color(.accentColorLight)
     
-    init(restroom: Restroom, viewModel: SharedModel, contentViewModel: ContentViewModel) {
+    init(restroom: Restroom, viewModel: SharedModel, contentViewModel: ContentViewModel_Old) {
         self.restroom = restroom
         self.sharedModel = viewModel
         self.contentModel = contentViewModel
@@ -96,7 +96,7 @@ struct AnnotationView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             ContentView()
-            AnnotationView(restroom: previewRestroom, viewModel: searchModel, contentViewModel: ContentViewModel())
+            AnnotationView(restroom: previewRestroom, viewModel: searchModel, contentViewModel: ContentViewModel_Old())
                 .onAppear(perform: {
                     previewRestroom.unisex = false
                     previewRestroom.accessible = false

@@ -13,11 +13,13 @@ class RestroomService {
     private static let baseURL = "https://www.refugerestrooms.org/api/v1/restrooms"
     private static let logger = Logger()
 
-    static func fetchRestrooms(near location: CLLocation) async throws -> [Restroom] {
-        let latitude = location.coordinate.latitude
-        let longitude = location.coordinate.longitude
-        logger.info("Fetching restrooms near coordinates:\nlat: \(latitude)\nlong:\(longitude)")
-        let urlString = "\(baseURL)/by_location.json?lat=\(latitude)&lng=\(longitude)"
+    static func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int = 1) async throws -> [Restroom] {
+        let latitude = location.latitude
+        let longitude = location.longitude
+        let urlString = "\(baseURL)/by_location.json?page=\(page)&lat=\(latitude)&lng=\(longitude)"
+        let session = URLSession(configuration: .default)
+
+        logger.info("Fetching restrooms:\nlat: \(latitude)\nlong: \(longitude)\npage: \(page)")
 
         guard let url = URL(string: urlString) else {
             logger.error("Invalid URL")
@@ -25,7 +27,7 @@ class RestroomService {
         }
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await session.data(from: url)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 logger.error("Unknown response from backend")

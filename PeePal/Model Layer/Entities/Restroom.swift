@@ -22,9 +22,13 @@ struct Restroom: Identifiable, Codable {
     var directions: String?
     var downvote: Int
     var upvote: Int
-    var latitude: Float
-    var longitude: Float
-    
+    var latitude: Double
+    var longitude: Double
+
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
     func getCoordinates() -> CLLocationCoordinate2D {
         let coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(
             latitude: CLLocationDegrees(latitude),
@@ -52,8 +56,8 @@ struct SearchRestroom: Identifiable, Codable {
     var comment: String?
     var downvote: Int
     var upvote: Int
-    var latitude: Float
-    var longitude: Float
+    var latitude: Double
+    var longitude: Double
     var changing_table: Bool
 }
 

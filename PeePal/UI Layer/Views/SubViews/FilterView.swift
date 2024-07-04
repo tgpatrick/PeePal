@@ -53,7 +53,7 @@ struct FilterView: View {
                                 .font(.caption)
                         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                         HStack {
-                            AnnotationView(restroom: accessibleRestroom, viewModel: vm, contentViewModel: ContentViewModel())
+                            AnnotationView(restroom: accessibleRestroom, viewModel: vm, contentViewModel: ContentViewModel_Old())
                                 .scaleEffect(CGSize(width: 0.5, height: 0.5))
                                 .frame(width: 20, height: 20)
                             Toggle(isOn: $filters.accessFilter, label: {
@@ -64,7 +64,7 @@ struct FilterView: View {
                             })
                         }
                         HStack {
-                            AnnotationView(restroom: unisexRestroom, viewModel: vm, contentViewModel: ContentViewModel())
+                            AnnotationView(restroom: unisexRestroom, viewModel: vm, contentViewModel: ContentViewModel_Old())
                                 .scaleEffect(CGSize(width: 0.5, height: 0.5))
                                 .frame(width: 20, height: 20)
                             Toggle(isOn: $filters.unisexFilter, label: {
@@ -127,7 +127,7 @@ struct FilterView_Previews: PreviewProvider {
 //                .onAppear(perform: {
 //                    searchModel.showTutorial = false
 //                })
-            AnnotationView(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel())
+            AnnotationView(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel_Old())
             FilterView(sharedModel: SharedModel(), filters: Filters())
         }
 //        .colorScheme(.dark)

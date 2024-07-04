@@ -12,10 +12,16 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Map()
-        }
-        .task {
-            await viewModel.fetchRestrooms()
+            Map(position: $viewModel.cameraPosition) {
+                ForEach(Array(viewModel.restrooms)) { restroom in
+                    Marker(restroom.name ?? "Restroom",
+                           systemImage: "toilet.fill",
+                           coordinate: restroom.getCoordinates())
+                }
+            }
+            .onMapCameraChange { context in
+                viewModel.fetchRestrooms(region: context.region)
+            }
         }
         .alert("Error", isPresented: Binding<Bool>(
             get: { viewModel.error != nil },
