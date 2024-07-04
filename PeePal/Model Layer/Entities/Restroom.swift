@@ -42,6 +42,11 @@ extension Restroom: Hashable {
         hasher.combine(latitude)
         hasher.combine(longitude)
     }
+
+    static func == (lhs: Restroom, rhs: Restroom) -> Bool {
+        lhs.latitude == rhs.latitude &&
+        lhs.longitude == rhs.longitude
+    }
 }
 
 struct RestroomCluster {
