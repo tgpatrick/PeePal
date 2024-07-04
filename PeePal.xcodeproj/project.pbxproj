@@ -34,7 +34,6 @@
 		9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22470255DA9E3008394A0 /* SharedModel.swift */; };
 		9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22474255DC955008394A0 /* AnnotationView.swift */; };
 		9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC74148255F767100A7A7A5 /* LocationManager.swift */; };
-		9AFFFA7925C46B78009D3E86 /* UIKitMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFFFA7825C46B78009D3E86 /* UIKitMapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,7 +67,6 @@
 		9AC22470255DA9E3008394A0 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		9AC22474255DC955008394A0 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		9AC74148255F767100A7A7A5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		9AFFFA7825C46B78009D3E86 /* UIKitMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitMapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,7 +151,6 @@
 		9A8C2FC4258715B700435B06 /* MainViews */ = {
 			isa = PBXGroup;
 			children = (
-				9AFFFA7725C46B2C009D3E86 /* UIKit Map */,
 				9A04ADCC255B0DF500D0F02C /* ContentView.swift */,
 				9A1A39FB255D976400905BA6 /* SettingsView.swift */,
 				9A24471D2574D6C000067381 /* TutorialView.swift */,
@@ -237,14 +234,6 @@
 				9A8C2FDC25871A9900435B06 /* Application Logic */,
 			);
 			path = "Model Layer";
-			sourceTree = "<group>";
-		};
-		9AFFFA7725C46B2C009D3E86 /* UIKit Map */ = {
-			isa = PBXGroup;
-			children = (
-				9AFFFA7825C46B78009D3E86 /* UIKitMapView.swift */,
-			);
-			path = "UIKit Map";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,7 +321,6 @@
 				9A24327A2560FF8C007DC1A9 /* RestroomView.swift in Sources */,
 				9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */,
 				9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */,
-				9AFFFA7925C46B78009D3E86 /* UIKitMapView.swift in Sources */,
 				9A8C2FEB25871CBA00435B06 /* ContentViewModel.swift in Sources */,
 				9A8C2FD32587192300435B06 /* Display.swift in Sources */,
 				9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */,
@@ -471,17 +459,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PeePal/PeePal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PeePal/Preview Content\"";
 				DEVELOPMENT_TEAM = 5XU95W3N65;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PeePal/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgp.PeePal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -497,17 +485,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PeePal/PeePal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PeePal/Preview Content\"";
 				DEVELOPMENT_TEAM = 5XU95W3N65;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PeePal/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.12;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tgp.PeePal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
