@@ -73,38 +73,28 @@ class ContentViewModel {
         return nil
     }
 
-    func cluster(epsilon : Double ) async {
+    func cluster(epsilon: Double) async {
         guard !restrooms.isEmpty else { return }
 
         let dbScanTask = Task { () -> [RestroomCluster] in
 
-            // put the locations in a format that DBSCAN can use
-            var input: [SIMD3<Double>] = []
-            for restroom in restrooms {
-                let coord = restroom.coordinate
-                let vector = SIMD3<Double>(x:coord.latitude, y:coord.longitude, z:0.0)
-                input.append(vector)
+            // Convert restrooms to points for DBSCAN
+            let points: [SIMD3<Double>] = restrooms.map {
+                SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0)
             }
 
-            // create and run DBSCAN on the locations data
-            let dbscan = DBSCAN(input)
+            // Run DBSCAN on the points
+            let dbscan = DBSCAN(points)
             let (clusters, _) = dbscan(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
 
-            // return an array of PlaceClusters matching the clusters returned by DBSCAN
-            var foundClusters = [RestroomCluster]()
-            for (_, cluster) in clusters.enumerated() {
-                var restroomsCluster = [Restroom]()
-                if cluster.count > 0 {
-                    for p in cluster {
-                        if let item = restrooms.first(where: { $0.coordinate.latitude == p.x && $0.coordinate.longitude == p.y }) {
-                            restroomsCluster.append(item)
-                        }
-                    }
-                    let pointCluster = RestroomCluster(restrooms: restroomsCluster)
-                    foundClusters.append(pointCluster)
+            // Create RestroomCluster objects from clusters
+            return clusters.compactMap { cluster -> RestroomCluster? in
+                guard !cluster.isEmpty else { return nil }
+                let restroomsInCluster = restrooms.filter { point in
+                    cluster.contains(where: { $0.x == point.coordinate.latitude && $0.y == point.coordinate.longitude })
                 }
+                return RestroomCluster(restrooms: Array(restroomsInCluster))
             }
-            return (foundClusters)
         }
 
         self.clusters = await dbScanTask.value
@@ -112,13 +102,10 @@ class ContentViewModel {
 }
 
 extension MapProxy {
-    func degrees( fromPixels pixels : Int ) -> Double? {
-        let c1 = self.convert(CGPoint.zero, from: .global)
-        let p2 = CGPoint(x: Double(pixels), y: 0.0 )
-        let c2 = self.convert(p2, from: .global)
-        if let lon1 = c1?.longitude, let lon2 = c2?.longitude {
-            return abs(lon1 - lon2)
-        }
-        return nil
+    func degreesFromPixels(_ pixels: Int) -> Double? {
+        guard let c1 = convert(CGPoint.zero, from: .global) else { return nil }
+        let p2 = CGPoint(x: Double(pixels), y: 0.0)
+        guard let c2 = convert(p2, from: .global) else { return nil }
+        return abs(c1.longitude - c2.longitude)
     }
 }

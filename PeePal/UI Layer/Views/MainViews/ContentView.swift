@@ -29,14 +29,14 @@ struct ContentView: View {
                 }
                 .onMapCameraChange { context in
                     Task {
-                        if let distance = mapProxy.degrees(fromPixels: 30) {
+                        if let distance = mapProxy.degreesFromPixels(30) {
                             await viewModel.cluster(epsilon: distance)
                         }
                         viewModel.fetchRestrooms(region: context.region)
                     }
                 }
                 .onChange(of: viewModel.restrooms, { _, _ in
-                    if let distance = mapProxy.degrees(fromPixels: 30) {
+                    if let distance = mapProxy.degreesFromPixels(30) {
                         Task {
                             await viewModel.cluster(epsilon: distance)
                         }
