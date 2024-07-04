@@ -12,15 +12,36 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Map(position: $viewModel.cameraPosition) {
-                ForEach(Array(viewModel.restrooms)) { restroom in
-                    Marker(restroom.name ?? "Restroom",
-                           systemImage: "toilet.fill",
-                           coordinate: restroom.getCoordinates())
+            MapReader { mapProxy in
+                Map(position: $viewModel.cameraPosition) {
+                    ForEach(viewModel.clusters) { cluster in
+                        if cluster.size == 1, let restroom = cluster.restrooms.first {
+                            Marker(restroom.name ?? "Restroom",
+                                   systemImage: "toilet.fill",
+                                   coordinate: restroom.coordinate)
+                        } else {
+                            Marker("",
+                                   systemImage: "\(cluster.size).circle",
+                                   coordinate: cluster.center)
+                            .tint(Color.green)
+                        }
+                    }
                 }
-            }
-            .onMapCameraChange { context in
-                viewModel.fetchRestrooms(region: context.region)
+                .onMapCameraChange { context in
+                    Task {
+                        if let distance = mapProxy.degrees(fromPixels: 30) {
+                            await viewModel.cluster(epsilon: distance)
+                        }
+                        viewModel.fetchRestrooms(region: context.region)
+                    }
+                }
+                .onChange(of: viewModel.restrooms, { _, _ in
+                    if let distance = mapProxy.degrees(fromPixels: 30) {
+                        Task {
+                            await viewModel.cluster(epsilon: distance)
+                        }
+                    }
+                })
             }
         }
         .alert("Error", isPresented: Binding<Bool>(

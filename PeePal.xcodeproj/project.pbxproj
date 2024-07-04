@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,7 @@
 		9A1DD68E2C3639C700F78D20 /* RestroomService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68D2C3639C700F78D20 /* RestroomService.swift */; };
 		9A1DD6902C364E7400F78D20 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68F2C364E7400F78D20 /* NetworkError.swift */; };
 		9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD6912C36521600F78D20 /* ContentViewModel.swift */; };
+		9A1DD6952C36853800F78D20 /* DBSCAN in Frameworks */ = {isa = PBXBuildFile; productRef = 9A1DD6942C36853800F78D20 /* DBSCAN */; };
 		9A24327A2560FF8C007DC1A9 /* RestroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432792560FF8C007DC1A9 /* RestroomView.swift */; };
 		9A2432912561E19D007DC1A9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432902561E19D007DC1A9 /* SearchView.swift */; };
 		9A2432942561EE54007DC1A9 /* RestroomSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */; };
@@ -80,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A1DD6952C36853800F78D20 /* DBSCAN in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +263,9 @@
 			dependencies = (
 			);
 			name = PeePal;
+			packageProductDependencies = (
+				9A1DD6942C36853800F78D20 /* DBSCAN */,
+			);
 			productName = PeePal;
 			productReference = 9A04ADC7255B0DF500D0F02C /* PeePal.app */;
 			productType = "com.apple.product-type.application";
@@ -288,6 +293,9 @@
 				Base,
 			);
 			mainGroup = 9A04ADBE255B0DF500D0F02C;
+			packageReferences = (
+				9A1DD6932C36853800F78D20 /* XCRemoteSwiftPackageReference "DBSCAN" */,
+			);
 			productRefGroup = 9A04ADC8255B0DF500D0F02C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -538,6 +546,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9A1DD6932C36853800F78D20 /* XCRemoteSwiftPackageReference "DBSCAN" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NSHipster/DBSCAN";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9A1DD6942C36853800F78D20 /* DBSCAN */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A1DD6932C36853800F78D20 /* XCRemoteSwiftPackageReference "DBSCAN" */;
+			productName = DBSCAN;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9A04ADBF255B0DF500D0F02C /* Project object */;
 }
