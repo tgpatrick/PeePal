@@ -9,6 +9,7 @@ import SwiftUI
 import CoreLocation
 import Observation
 import MapKit
+import OSLog
 
 @Observable
 class ContentViewModel {
@@ -20,22 +21,36 @@ class ContentViewModel {
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     ))
 
+    private var fetchTask: Task<Void, Error>? = nil
+    private let logger = Logger()
     private let locationManager = LocationManager()
 
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         isLoading = true
+        fetchTask?.cancel()
         defer { isLoading = false }
-        Task {
+
+        fetchTask = Task {
             guard let fetchRegion = region ?? cameraPosition.region else { return }
             do {
-                let newRestrooms = try await RestroomService.fetchRestrooms(near: fetchRegion.center)
-                await MainActor.run {
-                    withAnimation {
-                        restrooms.formUnion(newRestrooms)
+                var page = 1
+                while true {
+                    let newRestrooms = try await RestroomService.fetchRestrooms(near: fetchRegion.center, page: page)
+                    if !newRestrooms.isEmpty {
+                        withAnimation {
+                            restrooms.formUnion(newRestrooms)
+                        }
+                        page += 1
+                    } else {
+                        break
                     }
                 }
             } catch let error as NetworkError {
-                self.error = error
+                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                    logger.info("Network cancellation successful")
+                } else {
+                    self.error = error
+                }
             } catch {
                 self.error = .unknownError
             }
