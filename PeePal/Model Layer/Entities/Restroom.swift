@@ -33,6 +33,13 @@ struct Restroom: Identifiable, Codable {
     }
 }
 
+extension Restroom: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(latitude)
+        hasher.combine(longitude)
+    }
+}
+
 struct SearchRestroom: Identifiable, Codable {
     var id: Int
     var name: String?

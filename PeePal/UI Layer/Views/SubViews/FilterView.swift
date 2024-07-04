@@ -123,10 +123,10 @@ struct FilterView: View {
 struct FilterView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+//            ContentView(sharedModel: searchModel)
+//                .onAppear(perform: {
+//                    searchModel.showTutorial = false
+//                })
             AnnotationView(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel())
             FilterView(sharedModel: SharedModel(), filters: Filters())
         }

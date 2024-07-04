@@ -102,12 +102,12 @@ var searchModel = SharedModel()
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
+//            ContentView(sharedModel: searchModel)
+//                .onAppear(perform: {
+//                    searchModel.showTutorial = false
 //                    searchModel.searching = true
 //                    searchModel.searchResults = [ exampleSearchRoom ]
-                })
+//                })
             SearchView(viewModel: searchModel)
         }
 //        .colorScheme(.dark)

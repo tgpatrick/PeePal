@@ -235,10 +235,10 @@ struct RestroomView: View {
 struct RestroomView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+//            ContentView(sharedModel: searchModel)
+//                .onAppear(perform: {
+//                    searchModel.showTutorial = false
+//                })
             AnnotationView(restroom: exampleRestroom, viewModel: searchModel, contentViewModel: ContentViewModel())
                 .offset(y: -23)
             RestroomView(restroom: exampleRestroom, viewModel: searchModel)

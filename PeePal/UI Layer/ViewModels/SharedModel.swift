@@ -12,7 +12,7 @@ import CoreLocation
 class SharedModel: ObservableObject {
     @Published var settings = AppSettings()
     @Published var filters = Filters()
-    @Published var cvm = ContentViewModel()
+    @Published var cvm = ContentViewModel_Old()
     @Published var svm = SearchViewModel()
     var appLogic: AppLogic = AppLogic(settings: AppSettings(), filters: Filters())
     
@@ -173,8 +173,8 @@ class SharedModel: ObservableObject {
     
     func getCurrentCoords() -> CLLocationCoordinate2D {
         let coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(
-            latitude: CLLocationDegrees(locationManager.lastLocation?.coordinate.latitude ?? 37),
-            longitude: CLLocationDegrees(locationManager.lastLocation?.coordinate.longitude ?? -96))
+            latitude: CLLocationDegrees(locationManager.location?.coordinate.latitude ?? 37),
+            longitude: CLLocationDegrees(locationManager.location?.coordinate.longitude ?? -96))
         return coordinates
     }
     

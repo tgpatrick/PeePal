@@ -10,7 +10,7 @@ import SwiftUI
 struct AnnotationView: View {
     var restroom: Restroom
     @ObservedObject var sharedModel: SharedModel
-    @ObservedObject var contentModel: ContentViewModel
+    @ObservedObject var contentModel: ContentViewModel_Oldw
     var gradientStart: Color = Color(.accent)
     var gradientEnd: Color = Color(.accentColorLight)
     

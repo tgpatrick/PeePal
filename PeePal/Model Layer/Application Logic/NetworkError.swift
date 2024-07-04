@@ -13,6 +13,8 @@ enum NetworkError: Error {
     case decodingError(Error)
     case serverError(Int)
     case unknownError
+    case locationError(Error)
+    case locationNotAvailable
 
     var localizedDescription: String {
         switch self {
@@ -26,6 +28,10 @@ enum NetworkError: Error {
             return "Server returned an error: HTTP \(statusCode)"
         case .unknownError:
             return "An unknown error occurred."
+        case .locationError(let error):
+            return "A location error occurred: \(error.localizedDescription)"
+        case .locationNotAvailable:
+            return "Unable to determine your location. Please check your location settings."
         }
     }
 }

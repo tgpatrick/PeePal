@@ -15,6 +15,7 @@
 		9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A39FF255D990800905BA6 /* FilterView.swift */; };
 		9A1DD68E2C3639C700F78D20 /* RestroomService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68D2C3639C700F78D20 /* RestroomService.swift */; };
 		9A1DD6902C364E7400F78D20 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68F2C364E7400F78D20 /* NetworkError.swift */; };
+		9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD6912C36521600F78D20 /* ContentViewModel.swift */; };
 		9A24327A2560FF8C007DC1A9 /* RestroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432792560FF8C007DC1A9 /* RestroomView.swift */; };
 		9A2432912561E19D007DC1A9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432902561E19D007DC1A9 /* SearchView.swift */; };
 		9A2432942561EE54007DC1A9 /* RestroomSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */; };
@@ -25,7 +26,7 @@
 		9A8C2FD6258719C000435B06 /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FD5258719C000435B06 /* Function.swift */; };
 		9A8C2FDE25871B0000435B06 /* APIProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FDD25871B0000435B06 /* APIProxy.swift */; };
 		9A8C2FE325871C4B00435B06 /* AppLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FE225871C4B00435B06 /* AppLogic.swift */; };
-		9A8C2FEB25871CBA00435B06 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FEA25871CBA00435B06 /* ContentViewModel.swift */; };
+		9A8C2FEB25871CBA00435B06 /* ContentViewModel_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FEA25871CBA00435B06 /* ContentViewModel_old.swift */; };
 		9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FED2587201500435B06 /* AppSettings.swift */; };
 		9A8C2FF12587201F00435B06 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FF02587201F00435B06 /* Filters.swift */; };
 		9A8C2FF525872EED00435B06 /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FF425872EED00435B06 /* AddView.swift */; };
@@ -49,6 +50,7 @@
 		9A1A39FF255D990800905BA6 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		9A1DD68D2C3639C700F78D20 /* RestroomService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomService.swift; sourceTree = "<group>"; };
 		9A1DD68F2C364E7400F78D20 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		9A1DD6912C36521600F78D20 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		9A2432792560FF8C007DC1A9 /* RestroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomView.swift; sourceTree = "<group>"; };
 		9A2432832561DEA5007DC1A9 /* PeePal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PeePal.entitlements; sourceTree = "<group>"; };
 		9A2432902561E19D007DC1A9 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -60,7 +62,7 @@
 		9A8C2FD5258719C000435B06 /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		9A8C2FDD25871B0000435B06 /* APIProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIProxy.swift; sourceTree = "<group>"; };
 		9A8C2FE225871C4B00435B06 /* AppLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogic.swift; sourceTree = "<group>"; };
-		9A8C2FEA25871CBA00435B06 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		9A8C2FEA25871CBA00435B06 /* ContentViewModel_old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel_old.swift; sourceTree = "<group>"; };
 		9A8C2FED2587201500435B06 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		9A8C2FF02587201F00435B06 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		9A8C2FF425872EED00435B06 /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
@@ -226,9 +228,10 @@
 		9A8C2FE925871C9800435B06 /* MainViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				9A8C2FEA25871CBA00435B06 /* ContentViewModel.swift */,
+				9A8C2FEA25871CBA00435B06 /* ContentViewModel_old.swift */,
 				9A8C2FF72587F1AB00435B06 /* SettingsViewModel.swift */,
 				9A8C2FFD258821AB00435B06 /* TutorialViewModel.swift */,
+				9A1DD6912C36521600F78D20 /* ContentViewModel.swift */,
 			);
 			path = MainViewModels;
 			sourceTree = "<group>";
@@ -328,13 +331,14 @@
 				9A24327A2560FF8C007DC1A9 /* RestroomView.swift in Sources */,
 				9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */,
 				9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */,
-				9A8C2FEB25871CBA00435B06 /* ContentViewModel.swift in Sources */,
+				9A8C2FEB25871CBA00435B06 /* ContentViewModel_old.swift in Sources */,
 				9A8C2FD32587192300435B06 /* Display.swift in Sources */,
 				9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */,
 				9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */,
 				9A1DD6902C364E7400F78D20 /* NetworkError.swift in Sources */,
 				9A94BB83255C6D6A00BD4F08 /* Transition.swift in Sources */,
 				9A8C30012588260E00435B06 /* SearchViewModel.swift in Sources */,
+				9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */,
 				9A2432912561E19D007DC1A9 /* SearchView.swift in Sources */,
 				9A8C2FD6258719C000435B06 /* Function.swift in Sources */,
 				9A8C2FCE2587187B00435B06 /* ConcreteStructs.swift in Sources */,

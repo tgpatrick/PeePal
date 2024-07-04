@@ -6,13 +6,16 @@
 //
 
 import Foundation
+import CoreLocation
 import OSLog
 
 class RestroomService {
     private static let baseURL = "https://www.refugerestrooms.org/api/v1/restrooms"
     private static let logger = Logger()
 
-    static func fetchRestrooms(near latitude: Double, longitude: Double) async throws -> [Restroom] {
+    static func fetchRestrooms(near location: CLLocation) async throws -> [Restroom] {
+        let latitude = location.coordinate.latitude
+        let longitude = location.coordinate.longitude
         logger.info("Fetching restrooms near coordinates:\nlat: \(latitude)\nlong:\(longitude)")
         let urlString = "\(baseURL)/by_location.json?lat=\(latitude)&lng=\(longitude)"
 

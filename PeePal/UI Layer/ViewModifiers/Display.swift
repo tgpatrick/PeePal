@@ -51,10 +51,10 @@ extension View {
 struct NeuPreview: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
+//            ContentView(sharedModel: searchModel)
+//                .onAppear(perform: {
+//                    searchModel.showTutorial = false
+//                })
             VStack {
                 Text("Hello, World!")
                 Button(action: {}, label: {
