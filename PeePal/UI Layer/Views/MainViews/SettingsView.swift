@@ -54,7 +54,7 @@ struct SettingsView: View {
                     }
                     .onChange(of: settings.numPerPage, perform: { value in
                         UserDefaults.standard.setValue(value, forKey: "numPerPage")
-                        sm.cvm.reloadDistance = Float(settings.numPerPage) * 0.0005
+                        sm.cvm.reloadDistance = Float(settings.numPerPage) * 0.005
                     })
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                 }

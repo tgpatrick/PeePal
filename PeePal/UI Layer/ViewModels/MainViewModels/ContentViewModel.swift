@@ -44,7 +44,7 @@ class ContentViewModel: ObservableObject {
     
     init() {
         loadLocation = region
-        reloadDistance = Float(settings.numPerPage) * 0.0005
+        reloadDistance = Float(settings.numPerPage) * 0.005
     }
     
     func moveMap(coords: CLLocationCoordinate2D) {
