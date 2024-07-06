@@ -9,13 +9,12 @@ import MapKit
 
 struct ContentView: View {
     @State private var viewModel = ContentViewModel()
+    @State private var showBottomSheet = true
     private let clusterPixels = 30
-    private let minimumSheetHeight = 75.0
 
     var body: some View {
         MapReader { mapProxy in
             mainMap
-                .padding(.bottom, minimumSheetHeight / 2)
                 .onMapCameraChange { context in
                     Task {
                         if let distance = mapProxy.degreesFromPixels(clusterPixels) {
@@ -36,9 +35,8 @@ struct ContentView: View {
             MapUserLocationButton()
             MapCompass()
         }
-        .sheet(isPresented: .constant(true)) {
+        .sheet(isPresented: $showBottomSheet) {
             SheetView(
-                minimumSheetHeight: minimumSheetHeight,
                 searchField: $viewModel.searchField,
                 selectedCluster: $viewModel.selectedCluster
             )
@@ -47,7 +45,12 @@ struct ContentView: View {
         }
         .alert("Error", isPresented: Binding<Bool>(
             get: { viewModel.error != nil },
-            set: { if !$0 { viewModel.error = nil } }
+            set: {
+                if !$0 {
+                    viewModel.error = nil
+                    showBottomSheet = true
+                }
+            }
         ), actions: {
             Button("OK") { viewModel.error = nil }
         }, message: {

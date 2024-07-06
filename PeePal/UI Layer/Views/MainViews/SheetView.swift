@@ -10,6 +10,7 @@ import SwiftUI
 struct SheetView: View {
     @Binding var searchField: String
     @Binding var selectedCluster: RestroomCluster?
+    private let minimumSheetHeight: CGFloat = 75.0
 
     var body: some View {
         ZStack {
@@ -30,26 +31,27 @@ struct SheetView: View {
                 Spacer()
             }
             if let selectedCluster {
-                ZStack(alignment: .topTrailing) {
+                NavigationStack {
                     List(selectedCluster.restrooms) { restroom in
                         Text(restroom.name ?? "")
                     }
-                    Button(action: {
-                        _selectedCluster.wrappedValue = nil
-                    }, label: {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(8)
-                            .foregroundStyle(.regularMaterial)
-                            .frame(height: 30)
-                            .background(
-                                Circle()
-                                    .fill(Color.secondary.opacity(0.75))
-                            )
-                            .padding()
-                            .fontWeight(.heavy)
-                    })
+                    .toolbar {
+                        Button(action: {
+                            _selectedCluster.wrappedValue = nil
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(8)
+                                .foregroundStyle(.regularMaterial)
+                                .frame(height: 30)
+                                .background(
+                                    Circle()
+                                        .fill(Color.secondary.opacity(0.75))
+                                )
+                                .fontWeight(.heavy)
+                        })
+                    }
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))
             }
@@ -57,6 +59,7 @@ struct SheetView: View {
         .background(.ultraThickMaterial)
         .background(Color.accentColor.opacity(0.5))
         .animation(.easeInOut, value: selectedCluster)
+        .presentationDetents([.height(minimumSheetHeight), .fraction(0.4), .fraction(0.99)])
     }
 }
 
@@ -71,7 +74,7 @@ struct SheetView: View {
 }
 
 #Preview {
-    Color.indigo
+    Color.indigo.ignoresSafeArea()
         .sheet(isPresented: .constant(true)) {
             SheetView(
                 searchField: .constant(""),
