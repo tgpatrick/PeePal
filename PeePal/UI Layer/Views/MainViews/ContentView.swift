@@ -11,61 +11,37 @@ struct ContentView: View {
     @State private var viewModel = ContentViewModel()
     private let clusterPixels = 30
     private let minimumSheetHeight = 75.0
-    
+
     var body: some View {
-        ZStack {
-            MapReader { mapProxy in
-                Map(position: $viewModel.cameraPosition,
-                    selection: $viewModel.selectedCluster) {
-                    ForEach(viewModel.clusters) { cluster in
-                        if cluster.size == 1, let restroom = cluster.restrooms.first {
-                            Annotation(
-                                restroom.name ?? "",
-                                coordinate: restroom.coordinate,
-                                anchor: .bottom) {
-                                    RestroomAnnotation(restroom: restroom)
-                                }
-                                .tag(cluster)
-                        } else {
-                            Annotation(
-                                "",
-                                coordinate: cluster.center,
-                                anchor: .center) {
-                                    ClusterAnnotation(cluster: cluster)
-                                }
-                                .tag(cluster)
+        MapReader { mapProxy in
+            mainMap
+                .padding(.bottom, minimumSheetHeight / 2)
+                .onMapCameraChange { context in
+                    Task {
+                        if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                            await viewModel.cluster(epsilon: distance)
                         }
+                        viewModel.fetchRestrooms(region: context.region)
                     }
                 }
-                    .padding(.bottom, minimumSheetHeight / 2)
-                    .onMapCameraChange { context in
+                .onChange(of: viewModel.restrooms, { _, _ in
+                    if let distance = mapProxy.degreesFromPixels(clusterPixels) {
                         Task {
-                            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
-                                await viewModel.cluster(epsilon: distance)
-                            }
-                            viewModel.fetchRestrooms(region: context.region)
+                            await viewModel.cluster(epsilon: distance)
                         }
                     }
-                    .onChange(of: viewModel.restrooms, { _, _ in
-                        if let distance = mapProxy.degreesFromPixels(clusterPixels) {
-                            Task {
-                                await viewModel.cluster(epsilon: distance)
-                            }
-                        }
-                    })
-            }
-            .mapControls {
-                MapUserLocationButton()
-                MapCompass()
-            }
+                })
         }
-        .animation(.bouncy, value: viewModel.selectedCluster)
+        .mapControls {
+            MapUserLocationButton()
+            MapCompass()
+        }
         .sheet(isPresented: .constant(true)) {
             SheetView(
+                minimumSheetHeight: minimumSheetHeight,
                 searchField: $viewModel.searchField,
                 selectedCluster: $viewModel.selectedCluster
             )
-            .presentationDetents([.height(minimumSheetHeight), .fraction(0.4), .fraction(0.99)])
             .interactiveDismissDisabled()
             .presentationBackgroundInteraction(.enabled)
         }
@@ -77,6 +53,38 @@ struct ContentView: View {
         }, message: {
             Text(viewModel.error?.localizedDescription ?? "An unknown error occurred")
         })
+    }
+    
+    @ViewBuilder
+    var mainMap: some View {
+        Map(position: $viewModel.cameraPosition,
+            selection: $viewModel.selectedCluster) {
+            ForEach(viewModel.clusters) { cluster in
+                if cluster.size == 1, let restroom = cluster.restrooms.first {
+                    Annotation(
+                        restroom.name ?? "",
+                        coordinate: restroom.coordinate,
+                        anchor: .bottom ) {
+                            RestroomAnnotation(
+                                selection: $viewModel.selectedCluster,
+                                restroom: restroom
+                            )
+                        }
+                        .tag(cluster)
+                } else {
+                    Annotation(
+                        "\(cluster.restrooms.first?.name ?? "")\n+\(cluster.restrooms.count - 1) more",
+                        coordinate: cluster.center,
+                        anchor: .center) {
+                            ClusterAnnotation(
+                                selection: $viewModel.selectedCluster,
+                                cluster: cluster
+                            )
+                        }
+                        .tag(cluster)
+                }
+            }
+        }
     }
 }
 
