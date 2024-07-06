@@ -11,6 +11,8 @@ struct RestroomAnnotation: View {
     @Binding var selection: RestroomCluster?
     let restroom: Restroom
 
+    @State private var isShowing = false
+
     private var gradientStart: Color = Color(.accent)
     private var gradientEnd: Color = Color(.accentColorLight)
     private var gradient: LinearGradient {
@@ -48,7 +50,7 @@ struct RestroomAnnotation: View {
     var body: some View {
         VStack {
             Spacer()
-            if !isSelected {
+            if isShowing && !isSelected {
                 Image(.icon)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -68,7 +70,7 @@ struct RestroomAnnotation: View {
                         .asymmetric(
                             insertion: .scale(scale: 0.1, anchor: .center),
                             removal: .identity))
-            } else {
+            } else if isShowing {
                 Image(.icon)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -106,6 +108,12 @@ struct RestroomAnnotation: View {
         .animation(
             .interactiveSpring(extraBounce: 0.5),
             value: selection)
+        .onAppear {
+            withAnimation(.interactiveSpring(extraBounce: 0.5)) {
+                isShowing = true
+            }
+        }
+
     }
 }
 
@@ -113,33 +121,45 @@ struct ClusterAnnotation: View {
     @Binding var selection: RestroomCluster?
     let cluster: RestroomCluster
 
+    @State private var isShowing = false
+
     private var isSelected: Bool {
         guard let selection else { return false }
         return selection == cluster
     }
 
     var body: some View {
-        Text("\(cluster.size)")
-            .padding(7.5)
-            .foregroundStyle(.black)
-            .background(
-                Circle()
-                    .foregroundStyle(
-                        Color.accentColor.gradient.shadow(
-                            .inner(color: .black.opacity(0.25), radius: 5)
-                        )
+        Group {
+            if isShowing {
+                Text("\(cluster.size)")
+                    .padding(7.5)
+                    .foregroundStyle(.black)
+                    .background(
+                        Circle()
+                            .foregroundStyle(
+                                Color.accentColor.gradient.shadow(
+                                    .inner(color: .black.opacity(0.25), radius: 5)
+                                )
+                            )
+                            .shadow(radius: 5)
+                            .shadow(
+                                color: Color.accentColor,
+                                radius: isSelected ? 10 : 0)
                     )
-                    .shadow(radius: 5)
-                    .shadow(
-                        color: Color.accentColor,
-                        radius: isSelected ? 10 : 0)
-            )
-            .fontDesign(.rounded)
-            .fontWeight(.bold)
-            .scaleEffect(isSelected ? 1.5 : 1)
-            .animation(
-                .interactiveSpring(extraBounce: 0.5),
-                value: selection)
+                    .fontDesign(.rounded)
+                    .fontWeight(.bold)
+                    .scaleEffect(isSelected ? 1.5 : 1)
+                    .animation(
+                        .interactiveSpring(extraBounce: 0.5),
+                        value: selection)
+                    .transition(.scale(scale: 0.1))
+            }
+        }
+        .onAppear {
+            withAnimation(.interactiveSpring(extraBounce: 0.5)) {
+                isShowing = true
+            }
+        }
     }
 }
 
