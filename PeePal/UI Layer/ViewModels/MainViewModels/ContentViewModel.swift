@@ -17,12 +17,15 @@ import OSLog
 class ContentViewModel {
     var clusters: [RestroomCluster] = []
     var restrooms: Set<Restroom> = []
+    var selectedCluster: RestroomCluster?
     var isLoading = false
     var error: NetworkError?
     var cameraPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     ))
+
+    var searchField: String = ""
 
     private var fetchTask: Task<Void, Error>? = nil
     private let logger = Logger()
