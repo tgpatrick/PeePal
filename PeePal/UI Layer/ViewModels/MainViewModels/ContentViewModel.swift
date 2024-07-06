@@ -32,33 +32,43 @@ class ContentViewModel {
     private let locationManager = LocationManager()
 
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
-        isLoading = true
         fetchTask?.cancel()
-        defer { isLoading = false }
 
         fetchTask = Task {
             guard let fetchRegion = region ?? cameraPosition.region else { return }
             do {
                 var page = 1
-                while true {
+                while page < 5 && !Task.isCancelled {
+                    if !isLoading {
+                        withAnimation {
+                            isLoading = true
+                        }
+                    }
                     let newRestrooms = try await RestroomService.fetchRestrooms(near: fetchRegion.center, page: page)
                     if !newRestrooms.isEmpty {
-                        withAnimation {
-                            restrooms.formUnion(newRestrooms)
-                        }
+                        restrooms.formUnion(newRestrooms)
                         page += 1
                     } else {
                         break
                     }
+                }
+                withAnimation {
+                    isLoading = false
                 }
             } catch let error as NetworkError {
                 if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
                     logger.info("Network cancellation successful")
                 } else {
                     self.error = error
+                    withAnimation {
+                        isLoading = false
+                    }
                 }
             } catch {
                 self.error = .unknownError
+                withAnimation {
+                    isLoading = false
+                }
             }
         }
     }
