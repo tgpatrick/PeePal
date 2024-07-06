@@ -99,8 +99,11 @@ class ContentViewModel {
                 return RestroomCluster(restrooms: Array(restroomsInCluster))
             }
         }
-
-        self.clusters = await dbScanTask.value
+        
+        let newClusters = await dbScanTask.value
+        await MainActor.run {
+            self.clusters = newClusters
+        }
     }
 }
 
