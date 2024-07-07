@@ -15,46 +15,53 @@ struct ContentView: View {
 
     var body: some View {
         MapReader { mapProxy in
-            ZStack(alignment: .top) {
-                mainMap
-                    .zIndex(1)
-                    .onMapCameraChange { context in
-                        Task {
-                            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
-                                await viewModel.cluster(epsilon: distance)
-                            }
-                            viewModel.fetchRestrooms(region: context.region)
-                        }
-                    }
-                    .onChange(of: viewModel.restrooms, { _, _ in
-                        if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+            GeometryReader { geoProxy in
+                ZStack(alignment: .top) {
+                    mainMap
+                        .zIndex(1)
+                        .onMapCameraChange { context in
                             Task {
-                                await viewModel.cluster(epsilon: distance)
+                                if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                                    await viewModel.cluster(epsilon: distance)
+                                }
+                                viewModel.fetchRestrooms(region: context.region)
                             }
                         }
-                    })
+                        .onChange(of: viewModel.restrooms, { _, _ in
+                            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                                Task {
+                                    await viewModel.cluster(epsilon: distance)
+                                }
+                            }
+                        })
 
-                if viewModel.isLoading {
-                    Image(systemName: "dot.radiowaves.left.and.right")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 25, height: 25)
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color(.unisex))
-                        .symbolEffect(.variableColor.iterative,
-                                      options: .repeating.speed(0.5),
-                                      value: animateLoader)
-                        .padding(5)
-                        .background {
-                            Circle().foregroundStyle(.ultraThickMaterial)
-                        }
-                        .zIndex(2)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .onAppear {
-                            withAnimation {
-                                animateLoader.toggle()
+                    if viewModel.isLoading {
+                        Image(systemName: "dot.radiowaves.left.and.right")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 25, height: 25)
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(Color(.unisex))
+                            .symbolEffect(.variableColor.iterative,
+                                          options: .repeating.speed(0.5),
+                                          value: animateLoader)
+                            .padding(5)
+                            .background {
+                                Circle().foregroundStyle(.ultraThickMaterial)
                             }
-                        }
+                            .zIndex(2)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .onAppear {
+                                withAnimation {
+                                    animateLoader.toggle()
+                                }
+                            }
+                    }
+                }
+                .onChange(of: viewModel.selectedCluster) { _, newSelectedCluster in
+                    if let newSelectedCluster {
+                        viewModel.adjustMapPosition(for: newSelectedCluster, with: mapProxy, in: geoProxy.size)
+                    }
                 }
             }
         }
@@ -64,7 +71,6 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showBottomSheet) {
             SheetView(
-                searchField: $viewModel.searchField,
                 selectedCluster: $viewModel.selectedCluster
             )
             .interactiveDismissDisabled()

@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct SheetView: View {
-    @Binding var searchField: String
+    @State var viewModel: SheetViewModel = SheetViewModel()
     @Binding var selectedCluster: RestroomCluster?
-    private let minimumSheetHeight: CGFloat = 75.0
 
     var body: some View {
         ZStack {
@@ -18,7 +17,7 @@ struct SheetView: View {
                 HStack {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(.secondary)
-                    TextField("Search", text: $searchField)
+                    TextField("Search", text: $viewModel.searchField)
                 }
                 .padding(10)
                 .background(
@@ -59,7 +58,14 @@ struct SheetView: View {
         .background(.ultraThickMaterial)
         .background(Color.accentColor.opacity(0.5))
         .animation(.easeInOut, value: selectedCluster)
-        .presentationDetents([.height(minimumSheetHeight), .fraction(0.4), .fraction(0.99)])
+        .presentationDetents([.low, .middle, .high], selection: $viewModel.currentDetent)
+        .onChange(of: selectedCluster) { _, newValue in
+            if newValue != nil {
+                viewModel.currentDetent = .middle
+            } else {
+                viewModel.currentDetent = .low
+            }
+        }
     }
 }
 
@@ -67,7 +73,6 @@ struct SheetView: View {
     Color.indigo
         .sheet(isPresented: .constant(true)) {
             SheetView(
-                searchField: .constant(""),
                 selectedCluster: .constant(RestroomCluster(restrooms: [exampleRestroom])))
             .interactiveDismissDisabled()
         }
@@ -77,7 +82,6 @@ struct SheetView: View {
     Color.indigo.ignoresSafeArea()
         .sheet(isPresented: .constant(true)) {
             SheetView(
-                searchField: .constant(""),
                 selectedCluster: .constant(nil))
             .interactiveDismissDisabled()
         }

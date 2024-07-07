@@ -40,9 +40,7 @@ class ContentViewModel {
                 var page = 1
                 while page < 5 && !Task.isCancelled {
                     if !isLoading {
-                        withAnimation {
-                            isLoading = true
-                        }
+                        await setLoading(true)
                     }
                     let newRestrooms = try await RestroomService.fetchRestrooms(near: fetchRegion.center, page: page)
                     if !newRestrooms.isEmpty {
@@ -52,24 +50,25 @@ class ContentViewModel {
                         break
                     }
                 }
-                withAnimation {
-                    isLoading = false
-                }
+                await setLoading(false)
             } catch let error as NetworkError {
                 if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
                     logger.info("Network cancellation successful")
                 } else {
                     self.error = error
-                    withAnimation {
-                        isLoading = false
-                    }
+                    await setLoading(false)
                 }
             } catch {
                 self.error = .unknownError
-                withAnimation {
-                    isLoading = false
-                }
+                await setLoading(false)
             }
+        }
+    }
+    
+    @MainActor
+    private func setLoading(_ value: Bool) {
+        withAnimation {
+            isLoading = value
         }
     }
 
@@ -114,6 +113,57 @@ class ContentViewModel {
         await MainActor.run {
             self.clusters = newClusters
         }
+    }
+
+    func adjustMapPosition(for cluster: RestroomCluster, with mapProxy: MapProxy, in size: CGSize) {
+        guard let clusterPoint = mapProxy.convert(cluster.center, to: .global),
+              let topLeft = mapProxy.convert(CGPoint(x: 0, y: 0), from: .local),
+              let bottomRight = mapProxy.convert(CGPoint(x: size.width, y: size.height), from: .local)
+        else { return }
+        var mapRect = MKMapRect(topLeft: topLeft, bottomRight: bottomRight)
+        var originPoint = CGPoint(x: 0, y: 0)
+        
+        let topPadding = size.height * 0.1
+        let bottomPadding = size.height * 0.4
+        let sidePadding = size.width * 0.1
+
+        if clusterPoint.y > size.height - bottomPadding {
+            let pixelsToMove = clusterPoint.y - (size.height - bottomPadding)
+            originPoint.y += pixelsToMove
+        } else if clusterPoint.y < topPadding {
+            originPoint.y = -topPadding
+        }
+
+        if clusterPoint.x > size.width - sidePadding {
+            let pixelsToMove = clusterPoint.x - (size.width - sidePadding)
+            originPoint.x += pixelsToMove
+        } else if clusterPoint.x < sidePadding {
+            originPoint.x = -sidePadding
+        }
+
+        guard let newOriginCoords = mapProxy.convert(originPoint, from: .local) else { return }
+        let newOrigin = MKMapPoint(newOriginCoords)
+        if mapRect.origin.y != newOrigin.y || mapRect.origin.x != newOrigin.x {
+            mapRect.origin = newOrigin
+            withAnimation {
+                cameraPosition = .rect(mapRect)
+            }
+        }
+    }
+}
+
+extension MKMapRect {
+    init(topLeft: CLLocationCoordinate2D, bottomRight: CLLocationCoordinate2D) {
+        let topLeftPoint = MKMapPoint(topLeft)
+        let bottomRightPoint = MKMapPoint(bottomRight)
+
+        let origin = MKMapPoint(x: min(topLeftPoint.x, bottomRightPoint.x),
+                                y: min(topLeftPoint.y, bottomRightPoint.y))
+
+        let width = abs(topLeftPoint.x - bottomRightPoint.x)
+        let height = abs(topLeftPoint.y - bottomRightPoint.y)
+        let size = MKMapSize(width: width, height: height)
+        self.init(origin: origin, size: size)
     }
 }
 
