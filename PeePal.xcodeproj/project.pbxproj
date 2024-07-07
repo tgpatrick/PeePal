@@ -17,7 +17,7 @@
 		9A1DD6902C364E7400F78D20 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68F2C364E7400F78D20 /* NetworkError.swift */; };
 		9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD6912C36521600F78D20 /* ContentViewModel.swift */; };
 		9A1DD6952C36853800F78D20 /* DBSCAN in Frameworks */ = {isa = PBXBuildFile; productRef = 9A1DD6942C36853800F78D20 /* DBSCAN */; };
-		9A24327A2560FF8C007DC1A9 /* RestroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432792560FF8C007DC1A9 /* RestroomView.swift */; };
+		9A24327A2560FF8C007DC1A9 /* RestroomView_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432792560FF8C007DC1A9 /* RestroomView_Old.swift */; };
 		9A2432912561E19D007DC1A9 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432902561E19D007DC1A9 /* SearchView.swift */; };
 		9A2432942561EE54007DC1A9 /* RestroomSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */; };
 		9A24471E2574D6C000067381 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A24471D2574D6C000067381 /* TutorialView.swift */; };
@@ -40,6 +40,7 @@
 		9A94BB83255C6D6A00BD4F08 /* Transition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A94BB82255C6D6A00BD4F08 /* Transition.swift */; };
 		9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22470255DA9E3008394A0 /* SharedModel.swift */; };
 		9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22474255DC955008394A0 /* AnnotationView.swift */; };
+		9AC534402C3AE81900C4A795 /* RestroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC5343F2C3AE81900C4A795 /* RestroomView.swift */; };
 		9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC74148255F767100A7A7A5 /* LocationManager.swift */; };
 		9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */; };
 /* End PBXBuildFile section */
@@ -56,7 +57,7 @@
 		9A1DD68D2C3639C700F78D20 /* RestroomService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomService.swift; sourceTree = "<group>"; };
 		9A1DD68F2C364E7400F78D20 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		9A1DD6912C36521600F78D20 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
-		9A2432792560FF8C007DC1A9 /* RestroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomView.swift; sourceTree = "<group>"; };
+		9A2432792560FF8C007DC1A9 /* RestroomView_Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomView_Old.swift; sourceTree = "<group>"; };
 		9A2432832561DEA5007DC1A9 /* PeePal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PeePal.entitlements; sourceTree = "<group>"; };
 		9A2432902561E19D007DC1A9 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomSearchView.swift; sourceTree = "<group>"; };
@@ -80,6 +81,7 @@
 		9A94BB82255C6D6A00BD4F08 /* Transition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
 		9AC22470255DA9E3008394A0 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		9AC22474255DC955008394A0 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
+		9AC5343F2C3AE81900C4A795 /* RestroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomView.swift; sourceTree = "<group>"; };
 		9AC74148255F767100A7A7A5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -178,10 +180,11 @@
 		9A8C2FC72587166100435B06 /* SubViews */ = {
 			isa = PBXGroup;
 			children = (
-				9A2432902561E19D007DC1A9 /* SearchView.swift */,
-				9A2432792560FF8C007DC1A9 /* RestroomView.swift */,
-				9A1A39FF255D990800905BA6 /* FilterView.swift */,
 				9A8C2FF425872EED00435B06 /* AddView.swift */,
+				9A1A39FF255D990800905BA6 /* FilterView.swift */,
+				9A2432792560FF8C007DC1A9 /* RestroomView_Old.swift */,
+				9AC5343F2C3AE81900C4A795 /* RestroomView.swift */,
+				9A2432902561E19D007DC1A9 /* SearchView.swift */,
 			);
 			path = SubViews;
 			sourceTree = "<group>";
@@ -351,7 +354,7 @@
 				9A8C2FFE258821AB00435B06 /* TutorialViewModel.swift in Sources */,
 				9A04ADCB255B0DF500D0F02C /* PeePalApp.swift in Sources */,
 				9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */,
-				9A24327A2560FF8C007DC1A9 /* RestroomView.swift in Sources */,
+				9A24327A2560FF8C007DC1A9 /* RestroomView_Old.swift in Sources */,
 				9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */,
 				9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */,
 				9A8C2FEB25871CBA00435B06 /* ContentViewModel_old.swift in Sources */,
@@ -361,6 +364,7 @@
 				9A1DD6902C364E7400F78D20 /* NetworkError.swift in Sources */,
 				9A94BB83255C6D6A00BD4F08 /* Transition.swift in Sources */,
 				9A8C30012588260E00435B06 /* SearchViewModel.swift in Sources */,
+				9AC534402C3AE81900C4A795 /* RestroomView.swift in Sources */,
 				9A7A391C2C37B41400B19BA7 /* SheetView.swift in Sources */,
 				9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */,
 				9A2432912561E19D007DC1A9 /* SearchView.swift in Sources */,

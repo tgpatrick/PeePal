@@ -2,7 +2,7 @@
 //  RestroomListView.swift
 //  PeePal
 //
-//  Created by Thomas Patrick on 7/7/24.
+//  Created by Thomas Patrick on 11/15/20.
 //
 
 import SwiftUI
@@ -10,7 +10,7 @@ import CoreLocation
 
 struct RestroomListView: View {
     let restroom: Restroom
-    var locationManager = LocationManager()
+    @State var locationManager = LocationManager()
 
     private let disabledOpacity = 0.1
     private var address: String {
@@ -84,11 +84,8 @@ struct RestroomListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
-            HStack {
-                Text(getPercent())
-                    .font(.caption2)
-                    .fontDesign(.rounded)
-                    .foregroundStyle(getColor())
+            HStack(alignment: .center) {
+                RatingView(restroom: restroom, small: true)
                 if let distance = getDistance() {
                     Text(distance)
                         .font(.caption2)

@@ -9,17 +9,23 @@ import SwiftUI
 
 struct RatingView: View {
     let restroom: Restroom
-    var width: CGFloat = 150
-    var font: Font = .footnote
+    var small: Bool = false
 
     var body: some View {
         Text(getPercent())
-            .font(font)
+            .font(small ? .caption : .footnote)
             .fontWeight(.bold)
             .fontDesign(.rounded)
-            .padding(5)
-            .frame(width: width)
-            .background(getColor().opacity(0.6))
+            .padding(small ? 0 : 5)
+            .frame(width: small ? 100 : 150)
+            .background(
+                Group {
+                    if !small {
+                        getColor().opacity(0.6)
+                    }
+                }
+            )
+            .foregroundStyle(small ? getColor() : .primary)
             .cornerRadius(10)
     }
 
@@ -48,4 +54,8 @@ struct RatingView: View {
 
 #Preview {
     RatingView(restroom: exampleRestroom)
+}
+
+#Preview {
+    RatingView(restroom: exampleRestroom, small: true)
 }

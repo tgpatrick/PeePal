@@ -91,8 +91,6 @@ struct ContentView: View {
             SheetView(
                 selectedCluster: $viewModel.selectedCluster
             )
-            .interactiveDismissDisabled()
-            .presentationBackgroundInteraction(.enabled)
         }
         .alert("Error", isPresented: Binding<Bool>(
             get: { viewModel.error != nil },
