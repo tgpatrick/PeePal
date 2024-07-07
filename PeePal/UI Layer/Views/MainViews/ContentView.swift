@@ -36,26 +36,37 @@ struct ContentView: View {
                         })
 
                     if viewModel.isLoading {
-                        Image(systemName: "dot.radiowaves.left.and.right")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(Color(.unisex))
-                            .symbolEffect(.variableColor.iterative,
-                                          options: .repeating.speed(0.5),
-                                          value: animateLoader)
-                            .padding(5)
-                            .background {
-                                Circle().foregroundStyle(.ultraThickMaterial)
+                        ZStack {
+                            Image(systemName: "aqi.medium")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 25, height: 25)
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(Color(.unisex))
+                                .symbolEffect(
+                                    .variableColor.iterative,
+                                    options: .repeating.speed(0.5),
+                                    value: animateLoader)
+                            Image(systemName: "arrow.circlepath")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 45, height: 45)
+                                .foregroundStyle(Color.accentColor)
+                                .rotationEffect(Angle(
+                                    degrees: animateLoader ? 0 : 360))
+                                .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: animateLoader)
+                        }
+                        .padding(7.5)
+                        .background {
+                            Circle().foregroundStyle(.ultraThickMaterial)
+                        }
+                        .zIndex(2)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .onAppear {
+                            withAnimation {
+                                animateLoader.toggle()
                             }
-                            .zIndex(2)
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                            .onAppear {
-                                withAnimation {
-                                    animateLoader.toggle()
-                                }
-                            }
+                        }
                     }
                 }
                 .onChange(of: viewModel.selectedCluster) { oldSelectedCluster, newSelectedCluster in
