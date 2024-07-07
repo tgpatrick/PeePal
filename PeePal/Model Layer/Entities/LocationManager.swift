@@ -26,6 +26,7 @@ class LocationManager: NSObject {
     }
 
     func distance(to coordinate: CLLocationCoordinate2D) -> CLLocationDistance? {
+        requestLocation()
         guard let location else { return nil }
         let coordinateCLLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
 

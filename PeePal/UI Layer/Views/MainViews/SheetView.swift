@@ -38,7 +38,6 @@ struct SheetView: View {
                                 restroom: restroom,
                                 locationManager: locationManager
                             )
-                            .backgroundStyle(.regularMaterial)
                         } else {
                             List(selectedCluster.restrooms) { restroom in
                                 Button {
@@ -51,7 +50,6 @@ struct SheetView: View {
                                 }
                             }
                             .listStyle(.plain)
-                            .backgroundStyle(.regularMaterial)
                             .navigationTitle("\(selectedCluster.restrooms.count) Restrooms")
                             .navigationBarTitleDisplayMode(.large)
                         }

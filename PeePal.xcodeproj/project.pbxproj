@@ -41,6 +41,7 @@
 		9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22470255DA9E3008394A0 /* SharedModel.swift */; };
 		9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22474255DC955008394A0 /* AnnotationView.swift */; };
 		9AC534402C3AE81900C4A795 /* RestroomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC5343F2C3AE81900C4A795 /* RestroomView.swift */; };
+		9AC534422C3B079700C4A795 /* TitledBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC534412C3B079700C4A795 /* TitledBoxView.swift */; };
 		9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC74148255F767100A7A7A5 /* LocationManager.swift */; };
 		9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */; };
 /* End PBXBuildFile section */
@@ -82,6 +83,7 @@
 		9AC22470255DA9E3008394A0 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		9AC22474255DC955008394A0 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		9AC5343F2C3AE81900C4A795 /* RestroomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomView.swift; sourceTree = "<group>"; };
+		9AC534412C3B079700C4A795 /* TitledBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitledBoxView.swift; sourceTree = "<group>"; };
 		9AC74148255F767100A7A7A5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -196,6 +198,7 @@
 				9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */,
 				9A4BA9652C3A56E70000A4B4 /* RestroomListView.swift */,
 				9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */,
+				9AC534412C3B079700C4A795 /* TitledBoxView.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				9A1DD68E2C3639C700F78D20 /* RestroomService.swift in Sources */,
 				9A8C2FFE258821AB00435B06 /* TutorialViewModel.swift in Sources */,
 				9A04ADCB255B0DF500D0F02C /* PeePalApp.swift in Sources */,
+				9AC534422C3B079700C4A795 /* TitledBoxView.swift in Sources */,
 				9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */,
 				9A24327A2560FF8C007DC1A9 /* RestroomView_Old.swift in Sources */,
 				9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */,

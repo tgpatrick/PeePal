@@ -72,8 +72,12 @@ struct Restroom: Identifiable, Codable {
         self.unisex = try container.decode(Bool.self, forKey: .unisex)
         self.changingTable = try container.decode(Bool.self, forKey: .changing_table)
         self.distance = try container.decodeIfPresent(Float.self, forKey: .distance)
+
         self.comment = try container.decodeIfPresent(String.self, forKey: .comment)
+        if comment == "" { comment = nil }
         self.directions = try container.decodeIfPresent(String.self, forKey: .directions)
+        if directions == "" { directions = nil }
+
         self.downvote = try container.decode(Int.self, forKey: .downvote)
         self.upvote = try container.decode(Int.self, forKey: .upvote)
         self.latitude = try container.decode(Double.self, forKey: .latitude)

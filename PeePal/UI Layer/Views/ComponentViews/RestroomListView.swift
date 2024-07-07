@@ -86,25 +86,14 @@ struct RestroomListView: View {
             }
             HStack(alignment: .center) {
                 RatingView(restroom: restroom, small: true)
-                if let distance = getDistance() {
-                    Text(distance)
+                if let distance = locationManager.distance(to: restroom.coordinate) {
+                    Text(distance.formattedDistance())
                         .font(.caption2)
                         .fontDesign(.rounded)
                         .foregroundStyle(.secondary)
                 }
             }
         }
-    }
-
-    func getDistance() -> String? {
-        locationManager.requestLocation()
-        if let userLocation = locationManager.location {
-            let restroomLocation = CLLocation(
-                latitude: restroom.coordinate.latitude,
-                longitude: restroom.coordinate.longitude)
-            return userLocation.distance(from: restroomLocation).formattedDistance()
-        }
-        return nil
     }
 
     func getColor() -> Color {

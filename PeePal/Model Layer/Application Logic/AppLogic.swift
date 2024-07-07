@@ -54,18 +54,18 @@ class AppLogic {
         return url
     }
     
-    func makeAppleMapsURL(restroom: Restroom) -> URL {
+    static func makeAppleMapsURL(restroom: Restroom) -> URL {
         var url = "maps://?"
         url += "near=" + String(restroom.latitude) + "," + String(restroom.longitude)
-        if restroom.street != nil {
-            url += "&daddr=" + restroom.street!
-            if restroom.city != nil {
-                url += ", " + restroom.city!
+        if let street = restroom.street {
+            url += "&daddr=" + street
+            if let city = restroom.city {
+                url += ", " + city
             }
-            if restroom.state != nil {
-                url += ", " + restroom.state!
+            if let state = restroom.state {
+                url += ", " + state
             }
-        } else if restroom.name != nil {
+        } else if let name = restroom.name {
             url += "&q=" + (restroom.name ?? "")
         }
         url = url.replacingOccurrences(of: " ", with: "+")
@@ -74,13 +74,13 @@ class AppLogic {
     
     func makeGoogleMapsURL(restroom: Restroom) -> URL {
         var url = "https://www.google.com/maps/dir/?api=1"
-        if restroom.street != nil {
-            url += "&destination=" + (restroom.street ?? "")
-            if restroom.city != nil {
-                url += "," + restroom.city!
+        if let street = restroom.street {
+            url += "&destination=" + street
+            if let city = restroom.city {
+                url += "," + city
             }
-            if restroom.state != nil {
-                url += "," + restroom.state!
+            if let state = restroom.state {
+                url += "," + state
             }
         } else {
             url += "&destination=" + String(restroom.latitude) + "," + String(restroom.longitude)
@@ -93,13 +93,13 @@ class AppLogic {
     
     func directionsURL(restroom: Restroom) -> URL {
         if !settings.useGoogle {
-            return makeAppleMapsURL(restroom: restroom)
+            return AppLogic.makeAppleMapsURL(restroom: restroom)
         } else {
             return makeGoogleMapsURL(restroom: restroom)
         }
     }
     
-    func makeEditURL(restroom: Restroom) -> URL {
+    static func makeEditURL(restroom: Restroom) -> URL {
         var url = "https://www.refugerestrooms.org/restrooms/"
         url += String(restroom.id)
         return URL(string: url) ?? URL(string: "https://www.refugerestrooms.org")!

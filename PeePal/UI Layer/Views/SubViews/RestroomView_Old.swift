@@ -200,7 +200,7 @@ struct RestroomView_Old: View {
                             .adaptiveShadow()
                         }
                         .padding()
-                        Link(destination: appLogic.makeEditURL(restroom: restroom)) {
+                        Link(destination: AppLogic.makeEditURL(restroom: restroom)) {
                             HStack {
                                 Image(systemName: "star")
                                     .foregroundColor(.black)
