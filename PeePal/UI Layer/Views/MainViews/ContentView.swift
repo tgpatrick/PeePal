@@ -107,12 +107,16 @@ struct ContentView: View {
         }, message: {
             Text(viewModel.error?.localizedDescription ?? "An unknown error occurred")
         })
+        .task {
+            await viewModel.centerOnUser()
+        }
     }
     
     @ViewBuilder
     var mainMap: some View {
         Map(position: $viewModel.cameraPosition,
             selection: $viewModel.selectedCluster) {
+            UserAnnotation()
             ForEach(viewModel.clusters) { cluster in
                 if cluster.size == 1, let restroom = cluster.restrooms.first {
                     Annotation(

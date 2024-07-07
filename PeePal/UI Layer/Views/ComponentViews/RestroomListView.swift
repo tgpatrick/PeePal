@@ -10,9 +10,24 @@ import CoreLocation
 
 struct RestroomListView: View {
     let restroom: Restroom
-    let locationManager = LocationManager()
+    var locationManager = LocationManager()
 
     private let disabledOpacity = 0.1
+    private var address: String {
+        var address = ""
+        if let street = restroom.street {
+            address += street
+        }
+        if let city = restroom.city {
+            address += " "
+            address += city
+        }
+        if let state = restroom.state {
+            address += ", "
+            address += state
+        }
+        return address
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -22,20 +37,10 @@ struct RestroomListView: View {
                         .fontWeight(.bold)
                         .fontDesign(.rounded)
                     HStack(spacing: 0) {
-                        if let street = restroom.street {
-                            Text(" ") + Text(street)
-                        }
-                        if let city = restroom.city {
-                            Text(" ") + Text(city)
-                        }
-                        if let state = restroom.state {
-                            Text(", ") + Text(state)
-                        }
+                        Text(address)
                     }
                     .font(.caption)
-                    if let distance = getDistance() {
-                        Text(String(distance))
-                    }
+                    .padding(.leading, 5)
                 }
                 Spacer()
                 VStack {
@@ -79,18 +84,28 @@ struct RestroomListView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
             }
-            Text(getPercent())
-                .font(.caption2)
-                .foregroundStyle(getColor())
+            HStack {
+                Text(getPercent())
+                    .font(.caption2)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(getColor())
+                if let distance = getDistance() {
+                    Text(distance)
+                        .font(.caption2)
+                        .fontDesign(.rounded)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
     }
 
-    func getDistance() -> Double? {
+    func getDistance() -> String? {
+        locationManager.requestLocation()
         if let userLocation = locationManager.location {
             let restroomLocation = CLLocation(
                 latitude: restroom.coordinate.latitude,
                 longitude: restroom.coordinate.longitude)
-            return userLocation.distance(from: restroomLocation)
+            return userLocation.distance(from: restroomLocation).formattedDistance()
         }
         return nil
     }
@@ -115,6 +130,44 @@ struct RestroomListView: View {
         }
         percent = (Double(restroom.upvote) / Double(restroom.upvote + restroom.downvote)) * 100
         return String(Int(percent)) + "% Positive"
+    }
+}
+
+extension CLLocationDistance {
+    func formattedDistance(locale: Locale = .current) -> String {
+        let meters = Measurement(value: self, unit: UnitLength.meters)
+
+        let measurementFormatter = MeasurementFormatter()
+        measurementFormatter.locale = locale
+        measurementFormatter.unitOptions = .naturalScale
+        measurementFormatter.unitStyle = .medium
+        measurementFormatter.numberFormatter.maximumFractionDigits = 1
+
+        // Determine if we should use imperial (miles) or metric (kilometers) system
+        let useImperial = locale.measurementSystem == .us
+
+        if useImperial {
+            // Convert to miles for distances over 0.1 miles (about 160 meters)
+            if self > 160 {
+                let miles = meters.converted(to: .miles)
+                return measurementFormatter.string(from: miles)
+            } else {
+                // For shorter distances, use feet
+                let feet = meters.converted(to: .feet)
+                measurementFormatter.numberFormatter.maximumFractionDigits = 0
+                return measurementFormatter.string(from: feet)
+            }
+        } else {
+            // Use kilometers for distances over 1000 meters
+            if self >= 1000 {
+                let kilometers = meters.converted(to: .kilometers)
+                return measurementFormatter.string(from: kilometers)
+            } else {
+                // For shorter distances, use meters
+                measurementFormatter.numberFormatter.maximumFractionDigits = 0
+                return measurementFormatter.string(from: meters)
+            }
+        }
     }
 }
 

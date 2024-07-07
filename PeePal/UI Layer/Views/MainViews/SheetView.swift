@@ -10,6 +10,7 @@ import SwiftUI
 struct SheetView: View {
     @State var viewModel: SheetViewModel = SheetViewModel()
     @Binding var selectedCluster: RestroomCluster?
+    @State var locationManager = LocationManager()
 
     var body: some View {
         ZStack {
@@ -33,7 +34,10 @@ struct SheetView: View {
                 NavigationStack {
                     if selectedCluster.isSingle, let restroom = selectedCluster.restrooms.first {
                         ScrollView {
-                            RestroomListView(restroom: restroom)
+                            RestroomListView(
+                                restroom: restroom,
+                                locationManager: locationManager
+                            )
                                 .padding(.horizontal)
                         }
                         .navigationTitle(restroom.name ?? "")
@@ -60,7 +64,10 @@ struct SheetView: View {
                             Button {
                                 self.selectedCluster = RestroomCluster(restrooms: [restroom])
                             } label: {
-                                RestroomListView(restroom: restroom)
+                                RestroomListView(
+                                    restroom: restroom,
+                                    locationManager: locationManager
+                                )
                             }
                         }
                         .listStyle(.plain)
@@ -98,6 +105,9 @@ struct SheetView: View {
             } else {
                 viewModel.currentDetent = .low
             }
+        }
+        .onAppear {
+            locationManager.requestLocation()
         }
     }
 }

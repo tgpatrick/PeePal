@@ -32,6 +32,18 @@ class ContentViewModel {
     private let logger = Logger()
     private let locationManager = LocationManager()
 
+    func centerOnUser() async {
+        locationManager.requestLocation()
+        if let location = await waitForLocation() {
+            await MainActor.run {
+                cameraPosition = .region(MKCoordinateRegion(
+                    center: location.coordinate,
+                    span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+                ))
+            }
+        }
+    }
+
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         fetchTask?.cancel()
 
