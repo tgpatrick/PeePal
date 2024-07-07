@@ -29,7 +29,7 @@ struct RestroomAnnotation: View {
     private var iconBottomPadding: CGFloat { iconPadding / 2 }
 
     private var isSelected: Bool {
-        guard selection?.restrooms.count ?? 0 == 1,
+        guard selection?.isSingle ?? false,
               let selectedRestroom = selection?.restrooms.first else {
             return false
         }

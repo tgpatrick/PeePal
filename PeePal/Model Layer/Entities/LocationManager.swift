@@ -23,6 +23,13 @@ class LocationManager: NSObject, ObservableObject {
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
     }
+
+    func distance(to coordinate: CLLocationCoordinate2D) -> CLLocationDistance? {
+        guard let location else { return nil }
+        let coordinateCLLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+
+        return location.distance(from: coordinateCLLocation)
+    }
 }
 
 extension LocationManager: CLLocationManagerDelegate {

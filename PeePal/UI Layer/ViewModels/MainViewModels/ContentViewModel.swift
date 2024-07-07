@@ -18,6 +18,7 @@ class ContentViewModel {
     var clusters: [RestroomCluster] = []
     var restrooms: Set<Restroom> = []
     var selectedCluster: RestroomCluster?
+    var previousCluster: RestroomCluster?
     var isLoading = false
     var error: NetworkError?
     var cameraPosition = MapCameraPosition.region(MKCoordinateRegion(
@@ -109,9 +110,28 @@ class ContentViewModel {
             }
         }
         
-        let newClusters = await dbScanTask.value
+        var clusters = await dbScanTask.value
+        if let selectedCluster, !clusters.contains(selectedCluster) {
+            clusters.append(selectedCluster)
+        }
+        let newClusters = clusters
         await MainActor.run {
             self.clusters = newClusters
+        }
+    }
+
+    func selectAnnotation(_ cluster: RestroomCluster) {
+        if cluster.size == 1 {
+            guard let restroom = cluster.restrooms.first else { return }
+            clusters.removeAll(where: { cluster in
+                cluster.restrooms.contains(where: { $0.id == restroom.id })
+            })
+        }
+        clusters.append(cluster)
+        if selectedCluster != cluster {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                self.selectedCluster = cluster
+            }
         }
     }
 

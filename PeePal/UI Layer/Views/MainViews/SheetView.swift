@@ -31,25 +31,58 @@ struct SheetView: View {
             }
             if let selectedCluster {
                 NavigationStack {
-                    List(selectedCluster.restrooms) { restroom in
-                        Text(restroom.name ?? "")
-                    }
-                    .toolbar {
-                        Button(action: {
-                            _selectedCluster.wrappedValue = nil
-                        }, label: {
-                            Image(systemName: "xmark")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .padding(8)
-                                .foregroundStyle(.regularMaterial)
-                                .frame(height: 30)
-                                .background(
-                                    Circle()
-                                        .fill(Color.secondary.opacity(0.75))
-                                )
-                                .fontWeight(.heavy)
-                        })
+                    if selectedCluster.isSingle, let restroom = selectedCluster.restrooms.first {
+                        ScrollView {
+                            RestroomListView(restroom: restroom)
+                                .padding(.horizontal)
+                        }
+                        .navigationTitle(restroom.name ?? "")
+                        .navigationBarTitleDisplayMode(.large)
+                        .toolbar {
+                            Button {
+                                _selectedCluster.wrappedValue = nil
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .padding(8)
+                                    .foregroundStyle(.regularMaterial)
+                                    .frame(height: 30)
+                                    .background(
+                                        Circle()
+                                            .fill(Color.secondary.opacity(0.75))
+                                    )
+                                    .fontWeight(.heavy)
+                            }
+                        }
+                    } else {
+                        List(selectedCluster.restrooms) { restroom in
+                            Button {
+                                self.selectedCluster = RestroomCluster(restrooms: [restroom])
+                            } label: {
+                                RestroomListView(restroom: restroom)
+                            }
+                        }
+                        .listStyle(.plain)
+                        .navigationTitle("\(selectedCluster.restrooms.count) Restrooms")
+                        .navigationBarTitleDisplayMode(.large)
+                        .toolbar {
+                            Button {
+                                _selectedCluster.wrappedValue = nil
+                            } label: {
+                                Image(systemName: "xmark")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .padding(8)
+                                    .foregroundStyle(.regularMaterial)
+                                    .frame(height: 30)
+                                    .background(
+                                        Circle()
+                                            .fill(Color.secondary.opacity(0.75))
+                                    )
+                                    .fontWeight(.heavy)
+                            }
+                        }
                     }
                 }
                 .transition(.move(edge: .bottom).combined(with: .opacity))

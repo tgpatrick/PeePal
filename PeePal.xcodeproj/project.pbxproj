@@ -22,6 +22,7 @@
 		9A2432942561EE54007DC1A9 /* RestroomSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */; };
 		9A24471E2574D6C000067381 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A24471D2574D6C000067381 /* TutorialView.swift */; };
 		9A4BA9642C3A1FFF0000A4B4 /* SheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4BA9632C3A1FFF0000A4B4 /* SheetViewModel.swift */; };
+		9A4BA9662C3A56E70000A4B4 /* RestroomListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4BA9652C3A56E70000A4B4 /* RestroomListView.swift */; };
 		9A669CAE25608E8A002143A3 /* Restroom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A669CAD25608E8A002143A3 /* Restroom.swift */; };
 		9A7A391C2C37B41400B19BA7 /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A7A391B2C37B41400B19BA7 /* SheetView.swift */; };
 		9A8C2FCE2587187B00435B06 /* ConcreteStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C2FCD2587187B00435B06 /* ConcreteStructs.swift */; };
@@ -40,6 +41,7 @@
 		9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22470255DA9E3008394A0 /* SharedModel.swift */; };
 		9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC22474255DC955008394A0 /* AnnotationView.swift */; };
 		9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC74148255F767100A7A7A5 /* LocationManager.swift */; };
+		9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +62,7 @@
 		9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomSearchView.swift; sourceTree = "<group>"; };
 		9A24471D2574D6C000067381 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		9A4BA9632C3A1FFF0000A4B4 /* SheetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetViewModel.swift; sourceTree = "<group>"; };
+		9A4BA9652C3A56E70000A4B4 /* RestroomListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomListView.swift; sourceTree = "<group>"; };
 		9A669CAD25608E8A002143A3 /* Restroom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restroom.swift; sourceTree = "<group>"; };
 		9A7A391B2C37B41400B19BA7 /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
 		9A8C2FCD2587187B00435B06 /* ConcreteStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcreteStructs.swift; sourceTree = "<group>"; };
@@ -78,6 +81,7 @@
 		9AC22470255DA9E3008394A0 /* SharedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModel.swift; sourceTree = "<group>"; };
 		9AC22474255DC955008394A0 /* AnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationView.swift; sourceTree = "<group>"; };
 		9AC74148255F767100A7A7A5 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,8 +189,10 @@
 		9A8C2FC8258716AB00435B06 /* ComponentViews */ = {
 			isa = PBXGroup;
 			children = (
-				9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */,
 				9AC22474255DC955008394A0 /* AnnotationView.swift */,
+				9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */,
+				9A4BA9652C3A56E70000A4B4 /* RestroomListView.swift */,
+				9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */,
 			);
 			path = ComponentViews;
 			sourceTree = "<group>";
@@ -334,10 +340,12 @@
 				9A8C2FE325871C4B00435B06 /* AppLogic.swift in Sources */,
 				9A24471E2574D6C000067381 /* TutorialView.swift in Sources */,
 				9A2432942561EE54007DC1A9 /* RestroomSearchView.swift in Sources */,
+				9A4BA9662C3A56E70000A4B4 /* RestroomListView.swift in Sources */,
 				9A669CAE25608E8A002143A3 /* Restroom.swift in Sources */,
 				9A04ADCD255B0DF500D0F02C /* ContentView.swift in Sources */,
 				9A8C2FF525872EED00435B06 /* AddView.swift in Sources */,
 				9A8C2FDE25871B0000435B06 /* APIProxy.swift in Sources */,
+				9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */,
 				9A1A39FC255D976400905BA6 /* SettingsView.swift in Sources */,
 				9A1DD68E2C3639C700F78D20 /* RestroomService.swift in Sources */,
 				9A8C2FFE258821AB00435B06 /* TutorialViewModel.swift in Sources */,

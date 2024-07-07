@@ -58,9 +58,27 @@ struct ContentView: View {
                             }
                     }
                 }
-                .onChange(of: viewModel.selectedCluster) { _, newSelectedCluster in
+                .onChange(of: viewModel.selectedCluster) { oldSelectedCluster, newSelectedCluster in
                     if let newSelectedCluster {
+                        if let oldSelectedCluster,
+                           newSelectedCluster.isSingle,
+                           oldSelectedCluster.restrooms.contains(newSelectedCluster.restrooms) {
+                            viewModel.previousCluster = oldSelectedCluster
+                        } else {
+                            viewModel.previousCluster = nil
+                        }
+                        viewModel.selectAnnotation(newSelectedCluster)
                         viewModel.adjustMapPosition(for: newSelectedCluster, with: mapProxy, in: geoProxy.size)
+                    } else {
+                        if let previousCluster = viewModel.previousCluster {
+                            viewModel.selectAnnotation(previousCluster)
+                            viewModel.adjustMapPosition(for: previousCluster, with: mapProxy, in: geoProxy.size)
+                        }
+                        if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                            Task {
+                                await viewModel.cluster(epsilon: distance)
+                            }
+                        }
                     }
                 }
             }

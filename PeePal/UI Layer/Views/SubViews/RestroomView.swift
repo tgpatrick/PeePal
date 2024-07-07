@@ -105,7 +105,7 @@ struct RestroomView: View {
                                     .background(Color.secondary.opacity(opac))
                                     .cornerRadius(5)
                                 }
-                                if restroom.changing_table {
+                                if restroom.changingTable {
                                     ZStack {
                                         if colorScheme == .light {
                                             Image("ChangingTable")

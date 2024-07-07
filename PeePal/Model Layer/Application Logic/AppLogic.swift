@@ -124,7 +124,7 @@ class AppLogic {
             street: searchRestroom.street,
             accessible: searchRestroom.accessible,
             unisex: searchRestroom.unisex,
-            changing_table: searchRestroom.changing_table,
+            changingTable: searchRestroom.changing_table,
             distance: 0,
             comment: searchRestroom.comment,
             directions: searchRestroom.directions,
