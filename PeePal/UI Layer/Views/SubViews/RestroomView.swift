@@ -107,6 +107,7 @@ struct RestroomView: View {
 
     private var badgesBackground: some View {
         Rectangle()
+            .foregroundStyle(.ultraThinMaterial)
             .background(
                 HStack(spacing: 0) {
                     Rectangle()
