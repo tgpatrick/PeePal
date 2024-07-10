@@ -64,18 +64,24 @@ struct Restroom: Identifiable, Codable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
-        self.name = try container.decodeIfPresent(String.self, forKey: .name)
-        self.street = try container.decodeIfPresent(String.self, forKey: .street)
-        self.city = try container.decodeIfPresent(String.self, forKey: .city)
-        self.state = try container.decodeIfPresent(String.self, forKey: .state)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        self.street = try container.decodeIfPresent(String.self, forKey: .street)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        self.city = try container.decodeIfPresent(String.self, forKey: .city)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        self.state = try container.decodeIfPresent(String.self, forKey: .state)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         self.accessible = try container.decode(Bool.self, forKey: .accessible)
         self.unisex = try container.decode(Bool.self, forKey: .unisex)
         self.changingTable = try container.decode(Bool.self, forKey: .changing_table)
         self.distance = try container.decodeIfPresent(Float.self, forKey: .distance)
 
-        self.comment = try container.decodeIfPresent(String.self, forKey: .comment)
+        self.comment = try container.decodeIfPresent(String.self, forKey: .comment)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         if comment == "" { comment = nil }
-        self.directions = try container.decodeIfPresent(String.self, forKey: .directions)
+        self.directions = try container.decodeIfPresent(String.self, forKey: .directions)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         if directions == "" { directions = nil }
 
         self.downvote = try container.decode(Int.self, forKey: .downvote)
