@@ -51,22 +51,24 @@ struct ContentView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 45, height: 45)
-                                .foregroundStyle(Color.accentColor)
+                                .foregroundStyle(Color(.unisex))
                                 .rotationEffect(Angle(
                                     degrees: animateLoader ? 0 : 360))
                                 .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: animateLoader)
                         }
-                        .padding(7.5)
+                        .padding(-4)
                         .background {
                             Circle().foregroundStyle(.ultraThickMaterial)
                         }
+                        .shadow(radius: 5)
                         .zIndex(2)
                         .transition(.move(edge: .top).combined(with: .opacity))
                         .onAppear {
                             withAnimation {
-                                animateLoader.toggle()
+                                animateLoader = true
                             }
                         }
+                        .onDisappear { animateLoader = false }
                     }
                 }
                 .onChange(of: viewModel.selectedCluster) { oldSelectedCluster, newSelectedCluster in
