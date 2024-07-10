@@ -57,11 +57,14 @@ struct RestroomView: View {
                 }
 
                 VStack {
-                    HStack(spacing: 15) {
+                    HStack {
                         Spacer()
-                        availabilityBadge(for: .unisex, isAvailable: restroom.unisex)
-                        availabilityBadge(for: .accessible, isAvailable: restroom.accessible)
-                        availabilityBadge(for: .changingTable, isAvailable: restroom.changingTable)
+                        HStack(spacing: 0) {
+                            availabilityBadge(for: .unisex, isAvailable: restroom.unisex)
+                            availabilityBadge(for: .accessible, isAvailable: restroom.accessible)
+                            availabilityBadge(for: .changingTable, isAvailable: restroom.changingTable)
+                        }
+                        .background(badgesBackground)
                         Spacer()
                     }
                     RatingView(restroom: restroom)
@@ -102,23 +105,32 @@ struct RestroomView: View {
         }
     }
 
+    private var badgesBackground: some View {
+        Rectangle()
+            .foregroundStyle(.ultraThinMaterial)
+            .background(
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.unisex).opacity(restroom.unisex ? 1 : 0.1)
+                        )
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.accessible).opacity(restroom.accessible ? 1 : 0.1)
+                        )
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.changingTable).opacity(restroom.changingTable ? 1 : 0.1)
+                        )
+                }
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+
     private func availabilityBadge(for imageResource: ImageResource, isAvailable: Bool) -> some View {
         imageInvertedIfDark(image: Image(imageResource))
             .padding(10)
             .frame(width: 50, height: 50)
-            .background(.regularMaterial)
-            .background(
-                Group {
-                    if imageResource == .accessible {
-                        Color(.accessible)
-                    } else if imageResource == .changingTable {
-                        Color(.changingTable)
-                    } else {
-                        Color(.unisex)
-                    }
-                }
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 10))
             .opacity(isAvailable ? 1 : 0.1)
     }
 
