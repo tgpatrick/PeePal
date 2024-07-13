@@ -81,7 +81,7 @@ struct RestroomView: View {
                     Text("Please note that PeePal cannot verify any of the information presented here. If you want to rate this restroom or propose an edit, please visit its page at")
                         .multilineTextAlignment(.center)
                     Link(destination: AppLogic.makeEditURL(restroom: restroom)) {
-                        HStack(spacing: 2) {
+                        HStack(alignment: .bottom, spacing: 2) {
                             Text("Refuge Restrooms")
                             Image(systemName: "arrow.up.forward.square")
                                 .aspectRatio(contentMode: .fit)

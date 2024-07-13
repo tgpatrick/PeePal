@@ -47,14 +47,16 @@ struct ContentView: View {
                                     .variableColor.iterative,
                                     options: .repeating.speed(0.5),
                                     value: animateLoader)
-                            Image(systemName: "arrow.circlepath")
+                            Image(systemName: "arrow.triangle.2.circlepath")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 45, height: 45)
                                 .foregroundStyle(Color(.unisex))
                                 .rotationEffect(Angle(
-                                    degrees: animateLoader ? 0 : 360))
-                                .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: animateLoader)
+                                    degrees: animateLoader ? 360 : 0))
+                                .animation(
+                                    .easeInOut(duration: 1).repeatForever(autoreverses: false),
+                                    value: animateLoader)
                         }
                         .padding(-4)
                         .background {
