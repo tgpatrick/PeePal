@@ -51,7 +51,7 @@ class ContentViewModel {
             guard let fetchRegion = region ?? cameraPosition.region else { return }
             do {
                 var page = 1
-                while page < 5 && !Task.isCancelled {
+                while page < 3 && !Task.isCancelled {
                     if !isLoading {
                         await setLoading(true)
                     }

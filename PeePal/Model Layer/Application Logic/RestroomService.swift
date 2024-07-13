@@ -16,7 +16,7 @@ class RestroomService {
     static func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int = 1) async throws -> [Restroom] {
         let latitude = location.latitude
         let longitude = location.longitude
-        let urlString = "\(baseURL)/by_location.json?page=\(page)&per_page=\(20)&lat=\(latitude)&lng=\(longitude)"
+        let urlString = "\(baseURL)/by_location.json?page=\(page)&per_page=\(30)&lat=\(latitude)&lng=\(longitude)"
         let session = URLSession(configuration: .default)
 
         logger.info("Fetching restrooms:\nlat: \(latitude)\nlong: \(longitude)\npage: \(page)")
