@@ -21,27 +21,18 @@ class ContentViewModel {
     var previousCluster: RestroomCluster?
     var isLoading = false
     var error: NetworkError?
-    var cameraPosition = MapCameraPosition.region(MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), // Default to San Francisco
-        span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-    ))
-
+    var cameraPosition = MapCameraPosition.automatic
     var searchField: String = ""
 
     private var fetchTask: Task<Void, Error>? = nil
     private let logger = Logger()
-    private let locationManager = LocationManager()
+    let locationManager = LocationManager.shared
 
-    func centerOnUser() async {
-        locationManager.requestLocation()
-        if let location = await waitForLocation() {
-            await MainActor.run {
-                cameraPosition = .region(MKCoordinateRegion(
-                    center: location.coordinate,
-                    span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-                ))
-            }
-        }
+    func centerOn(_ location: CLLocation) {
+        cameraPosition = .region(MKCoordinateRegion(
+            center: location.coordinate,
+            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        ))
     }
 
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
@@ -83,19 +74,6 @@ class ContentViewModel {
         withAnimation {
             isLoading = value
         }
-    }
-
-    private func waitForLocation() async -> CLLocation? {
-        let maxAttempts = 10
-        let delayInterval: TimeInterval = 1.0 // 1 second
-
-        for _ in 0..<maxAttempts {
-            if let location = locationManager.location {
-                return location
-            }
-            try? await Task.sleep(for: .seconds(delayInterval))
-        }
-        return nil
     }
 
     func cluster(epsilon: Double) async {
