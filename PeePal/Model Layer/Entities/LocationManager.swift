@@ -10,6 +10,7 @@ import CoreLocation
 
 @Observable
 class LocationManager: NSObject {
+    static let shared = LocationManager()
     private let locationManager = CLLocationManager()
     var location: CLLocation?
     var locationError: Error?

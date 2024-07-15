@@ -6,11 +6,29 @@
 //
 
 import SwiftUI
+import MapKit
 
 @Observable
 class SheetViewModel {
     var currentDetent: PresentationDetent = .low
     var searchField: String = ""
+    var searchResults = [MKMapItem]()
+
+    func searchLocations() {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchField
+        request.resultTypes = [.pointOfInterest, .address]
+
+        let search = MKLocalSearch(request: request)
+        search.start { response, error in
+            guard let response = response else {
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+
+            self.searchResults = Array(response.mapItems.prefix(25))
+        }
+    }
 }
 
 extension PresentationDetent {

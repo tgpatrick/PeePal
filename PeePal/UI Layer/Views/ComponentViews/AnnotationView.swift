@@ -23,7 +23,6 @@ struct RestroomAnnotation: View {
         )
     }
     
-    private var morphProgress: CGFloat { isSelected ? 0 : 1}
     private var iconSize: CGFloat { isSelected ? 20 : 17.5 }
     private var iconPadding: CGFloat { iconSize * 0.4 }
     private var iconBottomPadding: CGFloat { iconPadding / 2 }

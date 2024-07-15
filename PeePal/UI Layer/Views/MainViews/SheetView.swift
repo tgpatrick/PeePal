@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct SheetView: View {
     @State var viewModel: SheetViewModel = SheetViewModel()
     @Binding var selectedCluster: RestroomCluster?
-    @State var locationManager = LocationManager()
+    @State var locationManager = LocationManager.shared
 
     var body: some View {
         ZStack {
@@ -28,6 +29,15 @@ struct SheetView: View {
                         )
                 )
                 .padding()
+                .onChange(of: viewModel.searchField) { _, _ in
+                    viewModel.searchLocations()
+                }
+                if viewModel.searchField != "" {
+                    List(viewModel.searchResults, id: \.self) { result in
+                        ListItemView(listItem: result, locationManager: locationManager)
+                    }
+                    .listStyle(.plain)
+                }
                 Spacer()
             }
             if let selectedCluster {
@@ -43,8 +53,8 @@ struct SheetView: View {
                                 Button {
                                     self.selectedCluster = RestroomCluster(restrooms: [restroom])
                                 } label: {
-                                    RestroomListView(
-                                        restroom: restroom,
+                                    ListItemView(
+                                        listItem: restroom,
                                         locationManager: locationManager
                                     )
                                 }
