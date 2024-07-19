@@ -38,7 +38,8 @@ class ContentViewModel {
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         fetchTask?.cancel()
 
-        fetchTask = Task {
+        fetchTask = Task.detached { [self] in
+            await Task.yield()
             guard let fetchRegion = region ?? cameraPosition.region else { return }
             do {
                 var page = 1

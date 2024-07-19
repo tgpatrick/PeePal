@@ -120,8 +120,8 @@ struct ContentView: View {
         }, message: {
             Text(viewModel.error?.localizedDescription ?? "An unknown error occurred")
         })
-        .onChange(of: viewModel.locationManager.location) { _, newLocation in
-            if let newLocation {
+        .onChange(of: viewModel.locationManager.location) { oldLocation, newLocation in
+            if oldLocation == nil, let newLocation {
                 viewModel.centerOn(newLocation)
             }
         }
