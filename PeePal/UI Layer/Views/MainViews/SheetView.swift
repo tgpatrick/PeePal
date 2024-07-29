@@ -33,8 +33,8 @@ struct SheetView: View {
                     viewModel.searchLocations()
                 }
                 if viewModel.searchField != "" {
-                    List(viewModel.searchResults, id: \.self) { result in
-                        ListItemView(listItem: result, locationManager: locationManager)
+                    List(viewModel.searchResults) { result in
+                        ListItemView(listItem: result.item, locationManager: locationManager)
                     }
                     .listStyle(.plain)
                 }

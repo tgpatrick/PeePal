@@ -12,7 +12,12 @@ import MapKit
 class SheetViewModel {
     var currentDetent: PresentationDetent = .low
     var searchField: String = ""
-    var searchResults = [MKMapItem]()
+    var searchResults: [ListableItem] {
+        mapResults.map({ ListableItem(item: $0) }) + restroomResults.map({ ListableItem(item: $0) })
+    }
+
+    private var mapResults = [MKMapItem]()
+    private var restroomResults = [Restroom]()
 
     func searchLocations() {
         let request = MKLocalSearch.Request()
@@ -26,7 +31,7 @@ class SheetViewModel {
                 return
             }
 
-            self.searchResults = Array(response.mapItems.prefix(25))
+            self.mapResults = Array(response.mapItems.prefix(25))
         }
     }
 }

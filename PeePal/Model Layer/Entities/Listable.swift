@@ -14,6 +14,11 @@ protocol Listable: Hashable {
     var coordinate: CLLocationCoordinate2D { get }
 }
 
+struct ListableItem: Identifiable {
+    let id = UUID()
+    let item: any Listable
+}
+
 extension Restroom: Listable {
     var fullName: String {
         name ?? "Name Unknown"
