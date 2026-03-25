@@ -75,5 +75,4 @@ iOSInjectionProject/
 # macOS
 #
 # macOS, by default, adds a .DS_Store to folders which is irrelevant to a repo.
-
 .DS_Store

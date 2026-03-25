@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkError: Error {
+enum NetworkError_old: Error {
     case invalidURL
     case networkError(Error)
     case decodingError(Error)
@@ -15,6 +15,7 @@ enum NetworkError: Error {
     case unknownError
     case locationError(Error)
     case locationNotAvailable
+    case missingResource
 
     var localizedDescription: String {
         switch self {
@@ -32,6 +33,8 @@ enum NetworkError: Error {
             return "A location error occurred: \(error.localizedDescription)"
         case .locationNotAvailable:
             return "Unable to determine your location. Please check your location settings."
+        case .missingResource:
+            return "The resource you are looking for does not exist."
         }
     }
 }

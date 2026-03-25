@@ -20,7 +20,7 @@ class ContentViewModel {
     var selectedCluster: RestroomCluster?
     var previousCluster: RestroomCluster?
     var isLoading = false
-    var error: NetworkError?
+    var error: NetworkError_old?
     var cameraPosition = MapCameraPosition.automatic
     var searchField: String = ""
 
@@ -47,7 +47,7 @@ class ContentViewModel {
                     if !isLoading {
                         await setLoading(true)
                     }
-                    let newRestrooms = try await RestroomService.fetchRestrooms(near: fetchRegion.center, page: page)
+                    let newRestrooms = try await RestroomService_old.fetchRestrooms(near: fetchRegion.center, page: page)
                     if !newRestrooms.isEmpty {
                         restrooms.formUnion(newRestrooms)
                         page += 1
@@ -56,7 +56,7 @@ class ContentViewModel {
                     }
                 }
                 await setLoading(false)
-            } catch let error as NetworkError {
+            } catch let error as NetworkError_old {
                 if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
                     logger.info("Network cancellation successful")
                 } else {
