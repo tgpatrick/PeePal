@@ -9,12 +9,6 @@ import Foundation
 import CoreLocation
 import OSLog
 
-protocol RestroomServiceProtocol {
-    func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int) async throws -> [Restroom]
-    func fetchAllRestrooms() async throws -> [Restroom]
-    func loadRestroomsFromBundle() throws -> [Restroom]
-}
-
 struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
     let baseURL = "https://www.refugerestrooms.org/api/v1/restrooms"
     let session: URLSession
@@ -76,15 +70,6 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
         }
 
         return restrooms
-    }
-
-    func loadRestroomsFromBundle() throws -> [Restroom] {
-        guard let url = Bundle.main.url(forResource: "Restrooms", withExtension: "json") else {
-            throw NetworkError.missingResource
-        }
-
-        let data = try Data(contentsOf: url)
-        return try decoder.decode([Restroom].self, from: data)
     }
 }
 

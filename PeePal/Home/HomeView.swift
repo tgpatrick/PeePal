@@ -7,21 +7,30 @@
 
 import MapKit
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
+    @Environment(\.modelContext) private var modelContext
+
     var body: some View {
         MapReader { mapProxy in
             Map()
         }
         .task {
+            let restroomManager = RestroomManager(modelContext: modelContext)
             do {
-                let restrooms = try await RestroomService.shared.fetchAllRestrooms()
+                print("Starting bundle initialization check...")
+                try await restroomManager.initializeFromBundleIfNeeded()
+                print("Bundle initialization check complete.")
+
+                print("Fetching all restrooms...")
+                let restrooms = try await restroomManager.fetchAllRestrooms()
                 let jsonData = try JSONEncoder().encode(restrooms)
                 let json = String(data: jsonData, encoding: .utf8) ?? "<invalid json>"
-                print("RestroomService fetchAllRestrooms succeeded (\(restrooms.count)) restrooms")
+                print("RestroomManager fetchAllRestrooms succeeded (\(restrooms.count)) restrooms")
                 print(json)
             } catch {
-                print("RestroomService fetchAllRestrooms failed: \(error)")
+                print("RestroomManager operation failed: \(error)")
             }
         }
     }

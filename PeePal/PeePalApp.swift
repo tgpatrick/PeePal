@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PeePalApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .modelContainer(for: [RestroomEntity.self])
         }
     }
 }
