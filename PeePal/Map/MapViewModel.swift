@@ -31,23 +31,10 @@ class MapViewModel {
     let locationManager = LocationManager.shared
     let restroomManager: RestroomManager
     let clusterPixels = 30
-    
-    private var dbscan: DBSCAN<SIMD3<Double>> {
-        let points: [SIMD3<Double>] = restrooms.map {
-            SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0)
-        }
-        
-        return DBSCAN(points)
-    }
-    
-    private var pointLookup: [SIMD3<Double>: Restroom] {
-        var pointLookup: [SIMD3<Double>: Restroom] = [:]
-        for restroom in self.restrooms {
-            let point = SIMD3<Double>(x: restroom.coordinate.latitude, y: restroom.coordinate.longitude, z: 0.0)
-            pointLookup[point] = restroom
-        }
-        return pointLookup
-    }
+
+    private var cachedPoints: [SIMD3<Double>]? = nil
+    private var cachedPointLookup: [SIMD3<Double>: Restroom]? = nil
+    private var lastRestroomCount: Int = 0
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
@@ -128,8 +115,30 @@ class MapViewModel {
     private func performClustering(epsilon: Double) async {
         guard !restrooms.isEmpty else { return }
 
-        let clusters = await Task.detached { [pointLookup = self.pointLookup, dbscan = self.dbscan] in
-            let (clusterPoints, _) = dbscan(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
+        // Invalidate cache if restrooms changed
+        if restrooms.count != lastRestroomCount {
+            cachedPoints = nil
+            cachedPointLookup = nil
+            lastRestroomCount = restrooms.count
+        }
+
+        // Compute or reuse points/lookup
+        let points = cachedPoints ?? restrooms.map { SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0) }
+        cachedPoints = points
+        let pointLookup = cachedPointLookup ?? {
+            var lookup: [SIMD3<Double>: Restroom] = [:]
+            for restroom in restrooms {
+                let point = SIMD3<Double>(x: restroom.coordinate.latitude, y: restroom.coordinate.longitude, z: 0.0)
+                lookup[point] = restroom
+            }
+            return lookup
+        }()
+        cachedPointLookup = pointLookup
+
+        let dbscanInstance = DBSCAN(points)
+
+        let clusters = await Task.detached {
+            let (clusterPoints, _) = dbscanInstance(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
 
             return clusterPoints.compactMap { cluster -> RestroomCluster? in
                 guard !cluster.isEmpty else { return nil }
