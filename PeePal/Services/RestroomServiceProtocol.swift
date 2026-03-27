@@ -5,8 +5,9 @@
 //  Created by Thomas Patrick on 7/3/24.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
+import MapKit
 
 protocol RestroomNetworkServiceProtocol {
     func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int) async throws -> [Restroom]
@@ -18,6 +19,7 @@ protocol RestroomLocalServiceProtocol {
     func fetchAllRestrooms() async throws -> [Restroom]
     func clearRestrooms() async throws
     func loadRestroomsFromBundle() throws -> [Restroom]
+    func fetchRestrooms(in: MKCoordinateRegion) async throws -> [Restroom]
 }
 
 

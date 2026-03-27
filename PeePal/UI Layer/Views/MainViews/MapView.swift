@@ -20,11 +20,14 @@ struct MapView: View {
                     mainMap
                         .zIndex(1)
                         .onMapCameraChange { context in
-                            Task {
-                                if let distance = mapProxy.degreesFromPixels(clusterPixels) {
-                                    await viewModel.cluster(epsilon: distance)
+                            viewModel.fetchRestrooms(region: context.region)
+
+                            if viewModel.shouldClusterForRegion(context.region) {
+                                Task {
+                                    if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                                        await viewModel.cluster(epsilon: distance)
+                                    }
                                 }
-                                viewModel.fetchRestrooms(region: context.region)
                             }
                         }
                         .onChange(of: viewModel.restrooms) { _, _ in

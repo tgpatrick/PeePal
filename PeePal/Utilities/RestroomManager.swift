@@ -71,4 +71,8 @@ struct RestroomManager {
             logger.info("Initialized local data from bundle with \(bundleRestrooms.count) restrooms")
         }
     }
+    
+    func fetchRestrooms(in region: MKCoordinateRegion) async throws -> [Restroom] {
+        try await localService.fetchRestrooms(in: region)
+    }
 }

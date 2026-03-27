@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import OSLog
+import MapKit
 
 struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
     typealias ModelType = Restroom
@@ -61,5 +62,21 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
 
         let data = try Data(contentsOf: url)
         return try JSONDecoder().decode([Restroom].self, from: data)
+    }
+
+    func fetchRestrooms(in region: MKCoordinateRegion) async throws -> [Restroom] {
+        let minLat = region.center.latitude - region.span.latitudeDelta / 2
+        let maxLat = region.center.latitude + region.span.latitudeDelta / 2
+        let minLon = region.center.longitude - region.span.longitudeDelta / 2
+        let maxLon = region.center.longitude + region.span.longitudeDelta / 2
+
+        let predicate = #Predicate<RestroomEntity> {
+            $0.latitude >= minLat && $0.latitude <= maxLat &&
+            $0.longitude >= minLon && $0.longitude <= maxLon
+        }
+
+        let descriptor = FetchDescriptor<RestroomEntity>(predicate: predicate)
+        let entities = try modelContext.fetch(descriptor)
+        return entities.map { $0.asRestroom }
     }
 }

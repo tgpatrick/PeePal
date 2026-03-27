@@ -35,9 +35,24 @@ class MapViewModel {
     private var cachedPoints: [SIMD3<Double>]? = nil
     private var cachedPointLookup: [SIMD3<Double>: Restroom]? = nil
     private var lastRestroomCount: Int = 0
+    private var lastZoomDeltaSum: Double?
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
+    }
+
+    func shouldClusterForRegion(_ region: MKCoordinateRegion) -> Bool {
+        let currentZoomSum = region.span.latitudeDelta + region.span.longitudeDelta
+
+        if let previousZoom = lastZoomDeltaSum {
+            let threshold = 0.0001
+            if abs(currentZoomSum - previousZoom) < threshold {
+                return false
+            }
+        }
+
+        lastZoomDeltaSum = currentZoomSum
+        return true
     }
 
     func centerOn(_ location: CLLocation) {
@@ -50,9 +65,17 @@ class MapViewModel {
     func loadInitialRestrooms() async {
         do {
             isLoading = true
-            let allRestrooms = try await restroomManager.fetchAllRestrooms()
-            restrooms.formUnion(allRestrooms)
-            logger.info("Loaded \(allRestrooms.count) initial restrooms")
+            // If a known region exists, fetch restrooms in that region to limit data
+            if let region = cameraPosition.region {
+                let regionRestrooms = try await restroomManager.fetchRestrooms(in: region)
+                restrooms.formUnion(regionRestrooms)
+                logger.info("Loaded \(regionRestrooms.count) restrooms in initial region")
+            } else {
+                // Fallback to loading all restrooms if no region is set
+                let allRestrooms = try await restroomManager.fetchAllRestrooms()
+                restrooms.formUnion(allRestrooms)
+                logger.info("Loaded \(allRestrooms.count) initial restrooms")
+            }
         } catch {
             logger.error("Failed to load initial restrooms: \(error)")
             self.error = .unknownError
@@ -67,33 +90,89 @@ class MapViewModel {
 
         fetchTask = Task.detached { [self] in
             await Task.yield()
-            guard let region = fetchRegion else { return }
-            await MainActor.run { self.setLoading(true) }
-            do {
-                var page = 1
-                while page < 3 && !Task.isCancelled {
-                    let newRestrooms = try await restroomManager.fetchRestrooms(near: region.center, page: page)
-                    if !newRestrooms.isEmpty {
-                        await MainActor.run { self.restrooms.formUnion(newRestrooms) }
-                        page += 1
-                    } else {
-                        break
+            guard let region = fetchRegion else {
+                // No region available, fallback to network fetch near camera center with paging
+                await MainActor.run { self.setLoading(true) }
+                do {
+                    var page = 1
+                    while page < 3 && !Task.isCancelled {
+                        let newRestrooms = try await restroomManager.fetchRestrooms(near: self.cameraPosition.region?.center ?? CLLocationCoordinate2D(), page: page)
+                        if !newRestrooms.isEmpty {
+                            await MainActor.run { self.restrooms.formUnion(newRestrooms) }
+                            page += 1
+                        } else {
+                            break
+                        }
                     }
-                }
-                await MainActor.run { self.setLoading(false) }
-            } catch let error as NetworkError {
-                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
-                    logger.info("Network cancellation successful")
-                } else {
+                    await MainActor.run { self.setLoading(false) }
+                } catch let error as NetworkError {
+                    if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                        logger.info("Network cancellation successful")
+                    } else {
+                        await MainActor.run {
+                            self.error = error
+                            self.setLoading(false)
+                        }
+                    }
+                } catch {
                     await MainActor.run {
-                        self.error = error
+                        self.error = .unknownError
                         self.setLoading(false)
                     }
                 }
+                return
+            }
+
+            // Region-based fetch, prefer fetching restrooms in the given region (likely local or more efficient)
+            await MainActor.run { self.setLoading(true) }
+            do {
+                // Attempt to fetch restrooms in the region
+                let newRestrooms = try await restroomManager.fetchRestrooms(in: region)
+                if !newRestrooms.isEmpty {
+                    await MainActor.run { self.restrooms = Set<Restroom>(newRestrooms) }
+                } else {
+                    // If no restrooms found or empty, fallback to network paging fetch near region center
+                    var page = 1
+                    while page < 3 && !Task.isCancelled {
+                        let fallbackRestrooms = try await restroomManager.fetchRestrooms(near: region.center, page: page)
+                        if !fallbackRestrooms.isEmpty {
+                            await MainActor.run { self.restrooms.formUnion(fallbackRestrooms) }
+                            page += 1
+                        } else {
+                            break
+                        }
+                    }
+                }
+                await MainActor.run { self.setLoading(false) }
             } catch {
-                await MainActor.run {
-                    self.error = .unknownError
-                    self.setLoading(false)
+                // On failure of region-based fetch, fallback to network paging fetch near region center
+                logger.error("Region fetch failed with error: \(error). Falling back to network fetch.")
+                do {
+                    var page = 1
+                    while page < 3 && !Task.isCancelled {
+                        let fallbackRestrooms = try await restroomManager.fetchRestrooms(near: region.center, page: page)
+                        if !fallbackRestrooms.isEmpty {
+                            await MainActor.run { self.restrooms.formUnion(fallbackRestrooms) }
+                            page += 1
+                        } else {
+                            break
+                        }
+                    }
+                    await MainActor.run { self.setLoading(false) }
+                } catch let error as NetworkError {
+                    if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                        logger.info("Network cancellation successful")
+                    } else {
+                        await MainActor.run {
+                            self.error = error
+                            self.setLoading(false)
+                        }
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.error = .unknownError
+                        self.setLoading(false)
+                    }
                 }
             }
         }
