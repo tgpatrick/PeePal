@@ -46,6 +46,8 @@
 		9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */; };
 		AA19845E2F7457BD00D16F36 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845D2F7457BD00D16F36 /* Logger.swift */; };
 		AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845F2F745E3900D16F36 /* NetworkService.swift */; };
+		AA314DDF2F756A1E00C01DE9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DDE2F756A1E00C01DE9 /* MapView.swift */; };
+		AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE02F756A3500C01DE9 /* MapViewModel.swift */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
@@ -103,6 +105,8 @@
 		9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		AA19845D2F7457BD00D16F36 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		AA19845F2F745E3900D16F36 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		AA314DDE2F756A1E00C01DE9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		AA314DE02F756A3500C01DE9 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
@@ -153,8 +157,9 @@
 				AA19845C2F7457AE00D16F36 /* Logging */,
 				AAD80BC72F6F773D006AF588 /* Models */,
 				AAD3B7352F67768E000FC239 /* Services */,
-				AABDEF2C2F26FA6F005414D5 /* Restrooms.json */,
 				AABDEF292F26DDA5005414D5 /* Home */,
+				AA314DDD2F75619500C01DE9 /* Map */,
+				AABDEF2C2F26FA6F005414D5 /* Restrooms.json */,
 				9A2432832561DEA5007DC1A9 /* PeePal.entitlements */,
 				9A1A39FA255D974900905BA6 /* UI Layer */,
 				9AC2246F255DA9BF008394A0 /* Model Layer */,
@@ -230,7 +235,6 @@
 		9A8C2FC8258716AB00435B06 /* ComponentViews */ = {
 			isa = PBXGroup;
 			children = (
-				9AC22474255DC955008394A0 /* AnnotationView.swift */,
 				9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */,
 				9A4BA9652C3A56E70000A4B4 /* ListItemView.swift */,
 				9A2432932561EE54007DC1A9 /* RestroomSearchView.swift */,
@@ -307,6 +311,16 @@
 				AA19845D2F7457BD00D16F36 /* Logger.swift */,
 			);
 			path = Logging;
+			sourceTree = "<group>";
+		};
+		AA314DDD2F75619500C01DE9 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				AA314DE02F756A3500C01DE9 /* MapViewModel.swift */,
+				AA314DDE2F756A1E00C01DE9 /* MapView.swift */,
+				9AC22474255DC955008394A0 /* AnnotationView.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		AABDEF292F26DDA5005414D5 /* Home */ = {
@@ -440,6 +454,7 @@
 				9A04ADCD255B0DF500D0F02C /* ContentView.swift in Sources */,
 				AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */,
 				9A9F04682C44CBF80091C5AD /* Listable.swift in Sources */,
+				AA314DDF2F756A1E00C01DE9 /* MapView.swift in Sources */,
 				9A8C2FF525872EED00435B06 /* AddView.swift in Sources */,
 				9A8C2FDE25871B0000435B06 /* APIProxy.swift in Sources */,
 				9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */,
@@ -456,6 +471,7 @@
 				9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */,
 				9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */,
 				9A8C2FEB25871CBA00435B06 /* ContentViewModel_old.swift in Sources */,
+				AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */,
 				9A8C2FD32587192300435B06 /* Display.swift in Sources */,
 				9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */,
 				9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */,

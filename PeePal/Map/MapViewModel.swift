@@ -1,8 +1,8 @@
 //
-//  ContentViewModel.swift
+//  MapViewModel.swift
 //  PeePal
 //
-//  Created by Thomas Patrick on 12/13/20.
+//  Created by Thomas Patrick on 03/26/26.
 //
 
 import SwiftUI
@@ -12,9 +12,10 @@ import MapKit
 import DBSCAN
 import simd
 import OSLog
+import SwiftData
 
 @Observable
-class ContentViewModel {
+class MapViewModel {
     var clusters: [RestroomCluster] = []
     var restrooms: Set<Restroom> = []
     var selectedCluster: RestroomCluster?
@@ -22,17 +23,34 @@ class ContentViewModel {
     var isLoading = false
     var error: NetworkError_old?
     var cameraPosition = MapCameraPosition.automatic
-    var searchField: String = ""
 
     private var fetchTask: Task<Void, Error>? = nil
     private let logger = Logger()
     let locationManager = LocationManager.shared
+    let restroomManager: RestroomManager
+
+    init(modelContext: ModelContext) {
+        self.restroomManager = RestroomManager(modelContext: modelContext)
+    }
 
     func centerOn(_ location: CLLocation) {
         cameraPosition = .region(MKCoordinateRegion(
             center: location.coordinate,
             span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         ))
+    }
+
+    func loadInitialRestrooms() async {
+        do {
+            isLoading = true
+            let allRestrooms = try await restroomManager.fetchAllRestrooms()
+            restrooms.formUnion(allRestrooms)
+            logger.info("Loaded \(allRestrooms.count) initial restrooms")
+        } catch {
+            logger.error("Failed to load initial restrooms: \(error)")
+            self.error = .unknownError
+        }
+        isLoading = false
     }
 
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
@@ -47,7 +65,7 @@ class ContentViewModel {
                     if !isLoading {
                         await setLoading(true)
                     }
-                    let newRestrooms = try await RestroomService_old.fetchRestrooms(near: fetchRegion.center, page: page)
+                    let newRestrooms = try await restroomManager.fetchRestrooms(near: fetchRegion.center, page: page)
                     if !newRestrooms.isEmpty {
                         restrooms.formUnion(newRestrooms)
                         page += 1
@@ -69,7 +87,7 @@ class ContentViewModel {
             }
         }
     }
-    
+
     @MainActor
     private func setLoading(_ value: Bool) {
         withAnimation {
@@ -81,17 +99,13 @@ class ContentViewModel {
         guard !restrooms.isEmpty else { return }
 
         let dbScanTask = Task { () -> [RestroomCluster] in
-
-            // Convert restrooms to points for DBSCAN
             let points: [SIMD3<Double>] = restrooms.map {
                 SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0)
             }
 
-            // Run DBSCAN on the points
             let dbscan = DBSCAN(points)
             let (clusters, _) = dbscan(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
 
-            // Create RestroomCluster objects from clusters
             return clusters.compactMap { cluster -> RestroomCluster? in
                 guard !cluster.isEmpty else { return nil }
                 let restroomsInCluster = restrooms.filter { point in
@@ -100,7 +114,7 @@ class ContentViewModel {
                 return RestroomCluster(restrooms: Array(restroomsInCluster))
             }
         }
-        
+
         var clusters = await dbScanTask.value
         if let selectedCluster, !clusters.contains(selectedCluster) {
             clusters.append(selectedCluster)
@@ -131,9 +145,10 @@ class ContentViewModel {
               let topLeft = mapProxy.convert(CGPoint(x: 0, y: 0), from: .local),
               let bottomRight = mapProxy.convert(CGPoint(x: size.width, y: size.height), from: .local)
         else { return }
+
         var mapRect = MKMapRect(topLeft: topLeft, bottomRight: bottomRight)
         var originPoint = CGPoint(x: 0, y: 0)
-        
+
         let topPadding = size.height * 0.1
         let bottomPadding = size.height * 0.4
         let sidePadding = size.width * 0.1
@@ -160,5 +175,29 @@ class ContentViewModel {
                 cameraPosition = .rect(mapRect)
             }
         }
+    }
+}
+
+extension MKMapRect {
+    init(topLeft: CLLocationCoordinate2D, bottomRight: CLLocationCoordinate2D) {
+        let topLeftPoint = MKMapPoint(topLeft)
+        let bottomRightPoint = MKMapPoint(bottomRight)
+
+        let origin = MKMapPoint(x: min(topLeftPoint.x, bottomRightPoint.x),
+                                y: min(topLeftPoint.y, bottomRightPoint.y))
+
+        let width = abs(topLeftPoint.x - bottomRightPoint.x)
+        let height = abs(topLeftPoint.y - bottomRightPoint.y)
+        let size = MKMapSize(width: width, height: height)
+        self.init(origin: origin, size: size)
+    }
+}
+
+extension MapProxy {
+    func degreesFromPixels(_ pixels: Int) -> Double? {
+        guard let c1 = convert(CGPoint.zero, from: .global) else { return nil }
+        let p2 = CGPoint(x: Double(pixels), y: 0.0)
+        guard let c2 = convert(p2, from: .global) else { return nil }
+        return abs(c1.longitude - c2.longitude)
     }
 }

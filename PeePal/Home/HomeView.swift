@@ -11,27 +11,22 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @State private var mapViewModel: MapViewModel?
 
     var body: some View {
-        MapReader { mapProxy in
-            Map()
-        }
-        .task {
-            let restroomManager = RestroomManager(modelContext: modelContext)
-            do {
-                print("Starting bundle initialization check...")
-                try await restroomManager.initializeFromBundleIfNeeded()
-                print("Bundle initialization check complete.")
-
-                print("Fetching all restrooms...")
-                let restrooms = try await restroomManager.fetchAllRestrooms()
-                let jsonData = try JSONEncoder().encode(restrooms)
-                let json = String(data: jsonData, encoding: .utf8) ?? "<invalid json>"
-                print("RestroomManager fetchAllRestrooms succeeded (\(restrooms.count)) restrooms")
-                print(json)
-            } catch {
-                print("RestroomManager operation failed: \(error)")
-            }
+        if let mapViewModel {
+            MapView(viewModel: mapViewModel)
+        } else {
+            ProgressView()
+                .task {
+                    mapViewModel = MapViewModel(modelContext: modelContext)
+                    do {
+                        try await mapViewModel?.restroomManager.initializeFromBundleIfNeeded()
+                        await mapViewModel?.loadInitialRestrooms()
+                    } catch {
+                        print("Failed to initialize from bundle: \(error)")
+                    }
+                }
         }
     }
 }

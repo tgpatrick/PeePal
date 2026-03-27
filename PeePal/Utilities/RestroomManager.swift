@@ -33,7 +33,17 @@ struct RestroomManager {
             logger.warning("Failed to fetch from local storage: \(error)")
         }
         
-//        // If local is empty or failed, fetch from network
+        // If local is empty, try to load from bundle as fallback
+        do {
+            let bundleRestrooms = try localService.loadRestroomsFromBundle()
+            try await localService.save(bundleRestrooms)
+            logger.info("Loaded \(bundleRestrooms.count) restrooms from bundle as fallback")
+            return bundleRestrooms
+        } catch {
+            logger.error("Failed to load from bundle: \(error)")
+        }
+        
+//        // If bundle loading failed, fetch from network
 //        let networkRestrooms = try await networkService.fetchAllRestrooms()
 //        logger.info("Fetched \(networkRestrooms.count) restrooms from network")
 //        
@@ -42,6 +52,8 @@ struct RestroomManager {
 //        logger.info("Saved restrooms to local storage")
 //        
 //        return networkRestrooms
+        
+        logger.warning("No restrooms available from any source")
         return []
     }
     
