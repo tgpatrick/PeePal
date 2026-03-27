@@ -20,12 +20,7 @@ struct HomeView: View {
             ProgressView()
                 .task {
                     mapViewModel = MapViewModel(modelContext: modelContext)
-                    do {
-                        try await mapViewModel?.restroomManager.initializeFromBundleIfNeeded()
-                        await mapViewModel?.loadInitialRestrooms()
-                    } catch {
-                        print("Failed to initialize from bundle: \(error)")
-                    }
+                    await mapViewModel?.loadInitialRestrooms()
                 }
         }
     }

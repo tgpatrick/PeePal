@@ -28,6 +28,23 @@ class MapViewModel {
     private let logger = Logger()
     let locationManager = LocationManager.shared
     let restroomManager: RestroomManager
+    
+    private var dbscan: DBSCAN<SIMD3<Double>> {
+        let points: [SIMD3<Double>] = restrooms.map {
+            SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0)
+        }
+        
+        return DBSCAN(points)
+    }
+    
+    private var pointLookup: [SIMD3<Double>: Restroom] {
+        var pointLookup: [SIMD3<Double>: Restroom] = [:]
+        for restroom in self.restrooms {
+            let point = SIMD3<Double>(x: restroom.coordinate.latitude, y: restroom.coordinate.longitude, z: 0.0)
+            pointLookup[point] = restroom
+        }
+        return pointLookup
+    }
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
@@ -99,19 +116,15 @@ class MapViewModel {
         guard !restrooms.isEmpty else { return }
 
         let dbScanTask = Task { () -> [RestroomCluster] in
-            let points: [SIMD3<Double>] = restrooms.map {
-                SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0)
-            }
-
-            let dbscan = DBSCAN(points)
             let (clusters, _) = dbscan(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
-
+            
             return clusters.compactMap { cluster -> RestroomCluster? in
                 guard !cluster.isEmpty else { return nil }
-                let restroomsInCluster = restrooms.filter { point in
-                    cluster.contains(where: { $0.x == point.coordinate.latitude && $0.y == point.coordinate.longitude })
+                let restroomsInCluster = cluster.compactMap { point in
+                    pointLookup[point]
                 }
-                return RestroomCluster(restrooms: Array(restroomsInCluster))
+
+                return restroomsInCluster.isEmpty ? nil : RestroomCluster(restrooms: restroomsInCluster)
             }
         }
 
