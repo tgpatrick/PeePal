@@ -12,7 +12,6 @@ import SwiftUI
 struct MapView: View {
     @State var viewModel: MapViewModel
     @State private var animateLoader = false
-    private let clusterPixels = 30
     
     var body: some View {
         MapReader { mapProxy in
@@ -21,12 +20,12 @@ struct MapView: View {
                     mainMap
                         .zIndex(1)
                         .onMapCameraChange { context in
-                            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                            if let distance = mapProxy.degreesFromPixels(viewModel.clusterPixels) {
                                 viewModel.cluster(epsilon: distance)
                             }
                         }
                         .onChange(of: viewModel.restrooms) { _, _ in
-                            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                            if let distance = mapProxy.degreesFromPixels(viewModel.clusterPixels) {
                                 viewModel.cluster(epsilon: distance)
                             }
                         }
@@ -70,27 +69,12 @@ struct MapView: View {
                     }
                 }
                 .onChange(of: viewModel.selectedCluster) { oldSelectedCluster, newSelectedCluster in
-                    if let newSelectedCluster {
-                        if let oldSelectedCluster,
-                           newSelectedCluster.isSingle,
-                           oldSelectedCluster.restrooms.contains(newSelectedCluster.restrooms) {
-                            viewModel.previousCluster = oldSelectedCluster
-                        } else {
-                            viewModel.previousCluster = nil
-                        }
-                        viewModel.selectAnnotation(newSelectedCluster)
-                        viewModel.adjustMapPosition(for: newSelectedCluster, with: mapProxy, in: geoProxy.size)
-                    } else {
-                        if let previousCluster = viewModel.previousCluster {
-                            viewModel.selectAnnotation(previousCluster)
-                            viewModel.adjustMapPosition(for: previousCluster, with: mapProxy, in: geoProxy.size)
-                        }
-                        if let distance = mapProxy.degreesFromPixels(clusterPixels) {
-                            Task {
-                                await viewModel.cluster(epsilon: distance)
-                            }
-                        }
-                    }
+                    viewModel.handleClusterSelectionChange(
+                        from: oldSelectedCluster,
+                        to: newSelectedCluster,
+                        mapProxy: mapProxy,
+                        geoSize: geoProxy.size
+                    )
                 }
             }
         }

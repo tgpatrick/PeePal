@@ -14,6 +14,7 @@ import simd
 import OSLog
 import SwiftData
 
+@MainActor
 @Observable
 class MapViewModel {
     var clusters: [RestroomCluster] = []
@@ -21,7 +22,7 @@ class MapViewModel {
     var selectedCluster: RestroomCluster?
     var previousCluster: RestroomCluster?
     var isLoading = false
-    var error: NetworkError_old?
+    var error: NetworkError?
     var cameraPosition = MapCameraPosition.automatic
 
     private var fetchTask: Task<Void, Error>? = nil
@@ -29,6 +30,7 @@ class MapViewModel {
     private let logger = Logger()
     let locationManager = LocationManager.shared
     let restroomManager: RestroomManager
+    let clusterPixels = 30
     
     private var dbscan: DBSCAN<SIMD3<Double>> {
         let points: [SIMD3<Double>] = restrooms.map {
@@ -49,11 +51,6 @@ class MapViewModel {
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
-    }
-    
-    deinit {
-        fetchTask?.cancel()
-        clusteringTask?.cancel()
     }
 
     func centerOn(_ location: CLLocation) {
@@ -79,39 +76,42 @@ class MapViewModel {
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         fetchTask?.cancel()
 
+        let fetchRegion = region ?? cameraPosition.region
+
         fetchTask = Task.detached { [self] in
             await Task.yield()
-            guard let fetchRegion = region ?? cameraPosition.region else { return }
+            guard let region = fetchRegion else { return }
+            await MainActor.run { self.setLoading(true) }
             do {
                 var page = 1
                 while page < 3 && !Task.isCancelled {
-                    if !isLoading {
-                        await setLoading(true)
-                    }
-                    let newRestrooms = try await restroomManager.fetchRestrooms(near: fetchRegion.center, page: page)
+                    let newRestrooms = try await restroomManager.fetchRestrooms(near: region.center, page: page)
                     if !newRestrooms.isEmpty {
-                        restrooms.formUnion(newRestrooms)
+                        await MainActor.run { self.restrooms.formUnion(newRestrooms) }
                         page += 1
                     } else {
                         break
                     }
                 }
-                await setLoading(false)
-            } catch let error as NetworkError_old {
+                await MainActor.run { self.setLoading(false) }
+            } catch let error as NetworkError {
                 if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
                     logger.info("Network cancellation successful")
                 } else {
-                    self.error = error
-                    await setLoading(false)
+                    await MainActor.run {
+                        self.error = error
+                        self.setLoading(false)
+                    }
                 }
             } catch {
-                self.error = .unknownError
-                await setLoading(false)
+                await MainActor.run {
+                    self.error = .unknownError
+                    self.setLoading(false)
+                }
             }
         }
     }
 
-    @MainActor
     private func setLoading(_ value: Bool) {
         withAnimation {
             isLoading = value
@@ -200,6 +200,28 @@ class MapViewModel {
             mapRect.origin = newOrigin
             withAnimation {
                 cameraPosition = .rect(mapRect)
+            }
+        }
+    }
+
+    func handleClusterSelectionChange(from oldCluster: RestroomCluster?, to newCluster: RestroomCluster?, mapProxy: MapProxy, geoSize: CGSize) {
+        if let newCluster {
+            if let oldSelectedCluster = selectedCluster,
+               newCluster.isSingle,
+               oldSelectedCluster.restrooms.contains(newCluster.restrooms) {
+                previousCluster = oldSelectedCluster
+            } else {
+                previousCluster = nil
+            }
+            selectAnnotation(newCluster)
+            adjustMapPosition(for: newCluster, with: mapProxy, in: geoSize)
+        } else {
+            if let previousCluster = previousCluster {
+                selectAnnotation(previousCluster)
+                adjustMapPosition(for: previousCluster, with: mapProxy, in: geoSize)
+            }
+            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
+                cluster(epsilon: distance)
             }
         }
     }
