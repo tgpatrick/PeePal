@@ -120,8 +120,8 @@ class MapViewModel {
 
     func cluster(epsilon: Double) {
         clusteringTask?.cancel()
-        clusteringTask = Task {
-            await performClustering(epsilon: epsilon)
+        clusteringTask = Task.detached { [weak self] in
+            await self?.performClustering(epsilon: epsilon)
         }
     }
 
@@ -139,11 +139,13 @@ class MapViewModel {
             }
         }.value
 
+        guard !Task.isCancelled else { return }
         var clustersWithSelection = clusters
         if let selectedCluster, !clustersWithSelection.contains(selectedCluster) {
             clustersWithSelection.append(selectedCluster)
         }
 
+        guard !Task.isCancelled else { return }
         let concurrencySafeClusters = clustersWithSelection
         await MainActor.run {
             self.clusters = concurrencySafeClusters
