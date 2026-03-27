@@ -26,7 +26,6 @@ class MapViewModel {
 
     private var fetchTask: Task<Void, Error>? = nil
     private var clusteringTask: Task<Void, Never>? = nil
-    private var clusteringWorkItem: DispatchWorkItem? = nil
     private let logger = Logger()
     let locationManager = LocationManager.shared
     let restroomManager: RestroomManager
@@ -55,7 +54,6 @@ class MapViewModel {
     deinit {
         fetchTask?.cancel()
         clusteringTask?.cancel()
-        clusteringWorkItem?.cancel()
     }
 
     func centerOn(_ location: CLLocation) {
@@ -121,18 +119,10 @@ class MapViewModel {
     }
 
     func cluster(epsilon: Double) {
-        clusteringWorkItem?.cancel()
         clusteringTask?.cancel()
-
-        let workItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
-            self.clusteringTask = Task {
-                await self.performClustering(epsilon: epsilon)
-            }
+        clusteringTask = Task {
+            await performClustering(epsilon: epsilon)
         }
-
-        clusteringWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08, execute: workItem)
     }
 
     private func performClustering(epsilon: Double) async {
