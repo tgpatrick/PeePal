@@ -25,6 +25,8 @@ class MapViewModel {
     var cameraPosition = MapCameraPosition.automatic
 
     private var fetchTask: Task<Void, Error>? = nil
+    private var clusteringTask: Task<Void, Never>? = nil
+    private var clusteringWorkItem: DispatchWorkItem? = nil
     private let logger = Logger()
     let locationManager = LocationManager.shared
     let restroomManager: RestroomManager
@@ -48,6 +50,12 @@ class MapViewModel {
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
+    }
+    
+    deinit {
+        fetchTask?.cancel()
+        clusteringTask?.cancel()
+        clusteringWorkItem?.cancel()
     }
 
     func centerOn(_ location: CLLocation) {
@@ -112,29 +120,43 @@ class MapViewModel {
         }
     }
 
-    func cluster(epsilon: Double) async {
-        guard !restrooms.isEmpty else { return }
+    func cluster(epsilon: Double) {
+        clusteringWorkItem?.cancel()
+        clusteringTask?.cancel()
 
-        let dbScanTask = Task { () -> [RestroomCluster] in
-            let (clusters, _) = dbscan(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
-            
-            return clusters.compactMap { cluster -> RestroomCluster? in
-                guard !cluster.isEmpty else { return nil }
-                let restroomsInCluster = cluster.compactMap { point in
-                    pointLookup[point]
-                }
-
-                return restroomsInCluster.isEmpty ? nil : RestroomCluster(restrooms: restroomsInCluster)
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            self.clusteringTask = Task {
+                await self.performClustering(epsilon: epsilon)
             }
         }
 
-        var clusters = await dbScanTask.value
-        if let selectedCluster, !clusters.contains(selectedCluster) {
-            clusters.append(selectedCluster)
+        clusteringWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08, execute: workItem)
+    }
+
+    private func performClustering(epsilon: Double) async {
+        guard !restrooms.isEmpty else { return }
+
+        let clusters = await Task.detached { [pointLookup = self.pointLookup, dbscan = self.dbscan] in
+            let (clusterPoints, _) = dbscan(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
+
+            return clusterPoints.compactMap { cluster -> RestroomCluster? in
+                guard !cluster.isEmpty else { return nil }
+
+                let restroomsInCluster = cluster.compactMap { pointLookup[$0] }
+                return restroomsInCluster.isEmpty ? nil : RestroomCluster(restrooms: restroomsInCluster)
+            }
+        }.value
+
+        var clustersWithSelection = clusters
+        if let selectedCluster, !clustersWithSelection.contains(selectedCluster) {
+            clustersWithSelection.append(selectedCluster)
         }
-        let newClusters = clusters
+
+        let concurrencySafeClusters = clustersWithSelection
         await MainActor.run {
-            self.clusters = newClusters
+            self.clusters = concurrencySafeClusters
         }
     }
 
