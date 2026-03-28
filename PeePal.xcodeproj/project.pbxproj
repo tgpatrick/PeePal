@@ -48,6 +48,7 @@
 		AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845F2F745E3900D16F36 /* NetworkService.swift */; };
 		AA314DDF2F756A1E00C01DE9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DDE2F756A1E00C01DE9 /* MapView.swift */; };
 		AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE02F756A3500C01DE9 /* MapViewModel.swift */; };
+		AA314DE32F78621B00C01DE9 /* PeePal Icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
@@ -107,6 +108,7 @@
 		AA19845F2F745E3900D16F36 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AA314DDE2F756A1E00C01DE9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AA314DE02F756A3500C01DE9 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
+		AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "PeePal Icon.icon"; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 			children = (
 				9A04ADC9255B0DF500D0F02C /* PeePal */,
 				9A04ADC8255B0DF500D0F02C /* Products */,
+				AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -248,7 +251,6 @@
 			children = (
 				9A8C2FED2587201500435B06 /* AppSettings.swift */,
 				9A8C2FF02587201F00435B06 /* Filters.swift */,
-				9AC74148255F767100A7A7A5 /* LocationManager.swift */,
 				9A8C2FCD2587187B00435B06 /* ConcreteStructs.swift */,
 				9A9F04672C44CBF70091C5AD /* Listable.swift */,
 			);
@@ -347,6 +349,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD5359A2F74832700B9D2C7 /* RestroomManager.swift */,
+				9AC74148255F767100A7A7A5 /* LocationManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -430,6 +433,7 @@
 				AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */,
 				9A04ADD2255B0DF700D0F02C /* Preview Assets.xcassets in Resources */,
 				9A04ADCF255B0DF700D0F02C /* Assets.xcassets in Resources */,
+				AA314DE32F78621B00C01DE9 /* PeePal Icon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -615,7 +619,7 @@
 		9A04ADD7255B0DF700D0F02C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "PeePal Icon";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PeePal/PeePal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -643,7 +647,7 @@
 		9A04ADD8255B0DF700D0F02C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "PeePal Icon";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = PeePal/PeePal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
