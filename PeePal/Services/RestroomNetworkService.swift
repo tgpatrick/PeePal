@@ -39,7 +39,7 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
 
         let url = try makeURL(path: "/by_location.json", queryItems: [
             URLQueryItem(name: "page", value: "\(page)"),
-            URLQueryItem(name: "per_page", value: "30"),
+            URLQueryItem(name: "per_page", value: "10"),
             URLQueryItem(name: "lat", value: "\(location.latitude)"),
             URLQueryItem(name: "lng", value: "\(location.longitude)")
         ])

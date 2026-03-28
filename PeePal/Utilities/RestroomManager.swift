@@ -43,29 +43,17 @@ struct RestroomManager {
             logger.error("Failed to load from bundle: \(error)")
         }
         
-//        // If bundle loading failed, fetch from network
-//        let networkRestrooms = try await networkService.fetchAllRestrooms()
-//        logger.info("Fetched \(networkRestrooms.count) restrooms from network")
-//        
-//        // Save to local storage
-//        try await localService.save(networkRestrooms)
-//        logger.info("Saved restrooms to local storage")
-//        
-//        return networkRestrooms
-        
         logger.warning("No restrooms available from any source")
         return []
     }
     
     func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int = 1) async throws -> [Restroom] {
-        // For now, delegate to network service
-        // In future, could implement local search or caching
         try await networkService.fetchRestrooms(near: location, page: page)
     }
     
     func initializeFromBundleIfNeeded() async throws {
         let localRestrooms = try await localService.fetchAllRestrooms()
-        if localRestrooms.isEmpty {
+        if localRestrooms.count < 2100 { // That's how many restrooms are in the JSON
             let bundleRestrooms = try localService.loadRestroomsFromBundle()
             try await localService.save(bundleRestrooms)
             logger.info("Initialized local data from bundle with \(bundleRestrooms.count) restrooms")
@@ -74,5 +62,10 @@ struct RestroomManager {
     
     func fetchRestrooms(in region: MKCoordinateRegion) async throws -> [Restroom] {
         try await localService.fetchRestrooms(in: region)
+    }
+    
+    // Save restrooms to local storage (delegates to local service)
+    func save(_ restrooms: [Restroom]) async throws {
+        try await localService.save(restrooms)
     }
 }

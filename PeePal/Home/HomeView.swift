@@ -20,7 +20,6 @@ struct HomeView: View {
             ProgressView()
                 .task {
                     mapViewModel = MapViewModel(modelContext: modelContext)
-                    await mapViewModel?.loadInitialRestrooms()
                 }
         }
     }

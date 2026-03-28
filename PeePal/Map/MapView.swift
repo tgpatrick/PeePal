@@ -19,8 +19,14 @@ struct MapView: View {
                 ZStack(alignment: .top) {
                     mainMap
                         .zIndex(1)
+                        .task {
+                            viewModel.setInitialCameraPosition()
+                            await viewModel.loadInitialRestrooms()
+                        }
                         .onMapCameraChange { context in
-                            viewModel.fetchRestrooms(region: context.region)
+                            if viewModel.regionHasChanged(context.region) {
+                                viewModel.fetchRestrooms(region: context.region)
+                            }
                         }
                         .onChange(of: viewModel.restrooms) { _, _ in
                             if let distance = mapProxy.degreesFromPixels(viewModel.clusterPixels) {

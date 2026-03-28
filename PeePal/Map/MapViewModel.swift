@@ -20,12 +20,12 @@ class MapViewModel {
     var clusters: [RestroomCluster] = []
     var restrooms: Set<Restroom> = []
     var selectedCluster: RestroomCluster?
-    var previousCluster: RestroomCluster?
+    var parentCluster: RestroomCluster?
     var isLoading = false
     var error: NetworkError?
     var cameraPosition = MapCameraPosition.automatic
 
-    private var fetchTask: Task<Void, Error>? = nil
+    private var fetchTask: Task<Void, Never>? = nil
     private var clusteringTask: Task<Void, Never>? = nil
     private let logger = Logger()
     let locationManager = LocationManager.shared
@@ -36,23 +36,23 @@ class MapViewModel {
     private var cachedPointLookup: [SIMD3<Double>: Restroom]? = nil
     private var lastRestroomCount: Int = 0
     private var lastZoomDeltaSum: Double?
+    private var lastCameraRegion: MKCoordinateRegion?
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
     }
 
-    func shouldClusterForRegion(_ region: MKCoordinateRegion) -> Bool {
-        let currentZoomSum = region.span.latitudeDelta + region.span.longitudeDelta
-
-        if let previousZoom = lastZoomDeltaSum {
-            let threshold = 0.0001
-            if abs(currentZoomSum - previousZoom) < threshold {
-                return false
-            }
+    func regionHasChanged(_ region: MKCoordinateRegion) -> Bool {
+        guard let lastCameraRegion else {
+            lastCameraRegion = region
+            return true
         }
-
-        lastZoomDeltaSum = currentZoomSum
-        return true
+        let minimumDistance = 0.01
+        
+        let longitudeDifference = abs(lastCameraRegion.center.longitude - region.center.longitude)
+        let latitudeDifference = abs(lastCameraRegion.center.latitude - region.center.latitude)
+        
+        return longitudeDifference > minimumDistance || latitudeDifference > minimumDistance
     }
 
     func centerOn(_ location: CLLocation) {
@@ -61,10 +61,15 @@ class MapViewModel {
             span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         ))
     }
+    
+    func setInitialCameraPosition() {
+        locationManager.requestLocation()
+    }
 
     func loadInitialRestrooms() async {
         do {
             isLoading = true
+            try? await restroomManager.initializeFromBundleIfNeeded()
             // If a known region exists, fetch restrooms in that region to limit data
             if let region = cameraPosition.region {
                 let regionRestrooms = try await restroomManager.fetchRestrooms(in: region)
@@ -74,7 +79,7 @@ class MapViewModel {
                 // Fallback to loading all restrooms if no region is set
                 let allRestrooms = try await restroomManager.fetchAllRestrooms()
                 restrooms.formUnion(allRestrooms)
-                logger.info("Loaded \(allRestrooms.count) initial restrooms")
+                logger.info("Loaded all local restrooms (\(allRestrooms.count))")
             }
         } catch {
             logger.error("Failed to load initial restrooms: \(error)")
@@ -84,95 +89,64 @@ class MapViewModel {
     }
 
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
+        // Cancel any ongoing fetch task to restart debounce timer
         fetchTask?.cancel()
-
-        let fetchRegion = region ?? cameraPosition.region
-
-        fetchTask = Task.detached { [self] in
-            await Task.yield()
-            guard let region = fetchRegion else {
-                // No region available, fallback to network fetch near camera center with paging
-                await MainActor.run { self.setLoading(true) }
-                do {
-                    var page = 1
-                    while page < 3 && !Task.isCancelled {
-                        let newRestrooms = try await restroomManager.fetchRestrooms(near: self.cameraPosition.region?.center ?? CLLocationCoordinate2D(), page: page)
-                        if !newRestrooms.isEmpty {
-                            await MainActor.run { self.restrooms.formUnion(newRestrooms) }
-                            page += 1
-                        } else {
-                            break
-                        }
-                    }
-                    await MainActor.run { self.setLoading(false) }
-                } catch let error as NetworkError {
-                    if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
-                        logger.info("Network cancellation successful")
-                    } else {
-                        await MainActor.run {
-                            self.error = error
-                            self.setLoading(false)
-                        }
-                    }
-                } catch {
-                    await MainActor.run {
-                        self.error = .unknownError
-                        self.setLoading(false)
-                    }
-                }
-                return
-            }
-
-            // Region-based fetch, prefer fetching restrooms in the given region (likely local or more efficient)
-            await MainActor.run { self.setLoading(true) }
+        
+        guard let region = region ?? cameraPosition.region else {
+            // No region, no fetch
+            return
+        }
+        
+        // Immediately fetch and display local restrooms for the given region
+        Task { @MainActor in
             do {
-                // Attempt to fetch restrooms in the region
-                let newRestrooms = try await restroomManager.fetchRestrooms(in: region)
-                if !newRestrooms.isEmpty {
-                    await MainActor.run { self.restrooms = Set<Restroom>(newRestrooms) }
-                } else {
-                    // If no restrooms found or empty, fallback to network paging fetch near region center
-                    var page = 1
-                    while page < 3 && !Task.isCancelled {
-                        let fallbackRestrooms = try await restroomManager.fetchRestrooms(near: region.center, page: page)
-                        if !fallbackRestrooms.isEmpty {
-                            await MainActor.run { self.restrooms.formUnion(fallbackRestrooms) }
-                            page += 1
+                let localRestrooms = try await restroomManager.fetchRestrooms(in: region)
+                self.restrooms = Set(localRestrooms)
+            } catch {
+                logger.error("Failed to fetch local restrooms immediately: \(error)")
+                self.error = .unknownError
+            }
+        }
+        
+        // Start debounced network fetch task
+        fetchTask = Task.detached { [weak self] in
+            try? await Task.sleep(nanoseconds: 300 * 1_000_000) // 300 ms
+            guard let self, !Task.isCancelled else { return }
+            await MainActor.run { self.setLoading(true) }
+            
+            do {
+                var page = 1
+                while page < 5 && !Task.isCancelled {
+                    let networkRestrooms = try await self.restroomManager.fetchRestrooms(near: region.center, page: page)
+                    if networkRestrooms.isEmpty { break }
+                    
+                    // Save fetched restrooms to local storage before next page
+                    try await self.restroomManager.save(networkRestrooms)
+                    let updatedLocalRestrooms = try await self.restroomManager.fetchRestrooms(in: region)
+                    await MainActor.run {
+                        if self.restrooms.count == updatedLocalRestrooms.count {
+                            self.fetchTask?.cancel()
+                            return
                         } else {
-                            break
+                            self.restrooms = Set(updatedLocalRestrooms)
                         }
                     }
+                    page += 1
                 }
                 await MainActor.run { self.setLoading(false) }
-            } catch {
-                // On failure of region-based fetch, fallback to network paging fetch near region center
-                logger.error("Region fetch failed with error: \(error). Falling back to network fetch.")
-                do {
-                    var page = 1
-                    while page < 3 && !Task.isCancelled {
-                        let fallbackRestrooms = try await restroomManager.fetchRestrooms(near: region.center, page: page)
-                        if !fallbackRestrooms.isEmpty {
-                            await MainActor.run { self.restrooms.formUnion(fallbackRestrooms) }
-                            page += 1
-                        } else {
-                            break
-                        }
-                    }
-                    await MainActor.run { self.setLoading(false) }
-                } catch let error as NetworkError {
-                    if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
-                        logger.info("Network cancellation successful")
-                    } else {
-                        await MainActor.run {
-                            self.error = error
-                            self.setLoading(false)
-                        }
-                    }
-                } catch {
+            } catch let error as NetworkError {
+                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                    self.logger.info("Network cancellation successful")
+                } else {
                     await MainActor.run {
-                        self.error = .unknownError
+                        self.error = error
                         self.setLoading(false)
                     }
+                }
+            } catch {
+                await MainActor.run {
+                    self.error = .unknownError
+                    self.setLoading(false)
                 }
             }
         }
@@ -294,23 +268,19 @@ class MapViewModel {
 
     func handleClusterSelectionChange(from oldCluster: RestroomCluster?, to newCluster: RestroomCluster?, mapProxy: MapProxy, geoSize: CGSize) {
         if let newCluster {
-            if let oldSelectedCluster = selectedCluster,
+            // If selecting a single restroom from a cluster, save parent cluster
+            if let oldCluster,
                newCluster.isSingle,
-               oldSelectedCluster.restrooms.contains(newCluster.restrooms) {
-                previousCluster = oldSelectedCluster
+               oldCluster.restrooms.contains(newCluster.restrooms) {
+                parentCluster = oldCluster
             } else {
-                previousCluster = nil
+                parentCluster = nil
             }
             selectAnnotation(newCluster)
             adjustMapPosition(for: newCluster, with: mapProxy, in: geoSize)
-        } else {
-            if let previousCluster = previousCluster {
-                selectAnnotation(previousCluster)
-                adjustMapPosition(for: previousCluster, with: mapProxy, in: geoSize)
-            }
-            if let distance = mapProxy.degreesFromPixels(clusterPixels) {
-                cluster(epsilon: distance)
-            }
+        } else if let parentCluster { // If unselecting a single restroom, focus parent cluster if necessary
+            selectAnnotation(parentCluster)
+            adjustMapPosition(for: parentCluster, with: mapProxy, in: geoSize)
         }
     }
 }

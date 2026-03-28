@@ -20,6 +20,7 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
         self.modelContext = modelContext
     }
 
+    @MainActor
     func save(_ models: [Restroom]) async throws {
         let entities = models.map { RestroomEntity(restroom: $0) }
 
@@ -32,6 +33,7 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
         logger.info("Saved \(models.count) restrooms to local datastore")
     }
 
+    @MainActor
     func fetchAll() async throws -> [Restroom] {
         let entities: [RestroomEntity] = try modelContext.fetch(FetchDescriptor<RestroomEntity>())
         return entities.map { $0.asRestroom }
@@ -40,7 +42,12 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
     func fetchAllRestrooms() async throws -> [Restroom] {
         try await fetchAll()
     }
+    
+    func deleteAll() async throws {
+        try await clearRestrooms()
+    }
 
+    @MainActor
     func clearRestrooms() async throws {
         let entities: [RestroomEntity] = try modelContext.fetch(FetchDescriptor<RestroomEntity>())
         for entity in entities {
@@ -49,10 +56,6 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
 
         try modelContext.save()
         logger.info("Cleared all restrooms from local datastore")
-    }
-
-    func deleteAll() async throws {
-        try await clearRestrooms()
     }
     
     func loadRestroomsFromBundle() throws -> [Restroom] {
@@ -64,6 +67,7 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
         return try JSONDecoder().decode([Restroom].self, from: data)
     }
 
+    @MainActor
     func fetchRestrooms(in region: MKCoordinateRegion) async throws -> [Restroom] {
         let minLat = region.center.latitude - region.span.latitudeDelta / 2
         let maxLat = region.center.latitude + region.span.latitudeDelta / 2
