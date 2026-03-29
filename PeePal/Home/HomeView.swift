@@ -31,6 +31,7 @@ struct HomeView: View {
                 onSelectItem: mapViewModel?.selectAnnotation,
                 onDismiss: mapViewModel?.clearSelectedAnnotation
             )
+            .id(cluster.hashValue)
         }
         .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
             // Copy of selected cluster ensures a new sheet for each cluster change

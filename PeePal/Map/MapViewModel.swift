@@ -91,6 +91,7 @@ class MapViewModel {
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         // Cancel any ongoing fetch task to restart debounce timer
         fetchTask?.cancel()
+        self.setLoading(false)
         
         guard let region = region ?? cameraPosition.region else {
             // No region, no fetch
@@ -110,7 +111,7 @@ class MapViewModel {
         
         // Start debounced network fetch task
         fetchTask = Task.detached { [weak self] in
-            try? await Task.sleep(nanoseconds: 300 * 1_000_000) // 300 ms
+            try? await Task.sleep(for: .seconds(1))
             guard let self, !Task.isCancelled else { return }
             await MainActor.run { self.setLoading(true) }
             
