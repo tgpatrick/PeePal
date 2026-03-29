@@ -25,7 +25,7 @@ struct TitledBoxView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.ultraThickMaterial)
+                    .foregroundStyle(.ultraThinMaterial)
             )
         }
     }

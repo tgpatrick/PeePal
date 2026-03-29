@@ -42,9 +42,7 @@ struct ClusterSheetView: View {
             }
             .presentationDetents([.low, .middle, .high], selection: $currentDetent)
             .presentationBackgroundInteraction(.enabled(upThrough: .middle))
-            .navigationBarTitleDisplayMode(
-                currentDetent == .low ? .inline : .large
-            )
+            .toolbarTitleDisplayMode(.inlineLarge)
         }
     }
     
@@ -66,7 +64,7 @@ struct ClusterSheetView: View {
 
 extension PresentationDetent {
     static let low: PresentationDetent = .height(75)
-    static let middle: PresentationDetent = .fraction(0.4)
+    static let middle: PresentationDetent = .fraction(0.45)
     static let high: PresentationDetent = .fraction(0.99)
 }
 
