@@ -11,7 +11,7 @@ import Combine
 
 struct SearchView: View {
     @ObservedObject var sm: SharedModel
-    @ObservedObject var vm: SearchViewModel = SearchViewModel()
+    @ObservedObject var vm: SearchViewModel_old = SearchViewModel_old()
     @Namespace private var matchedViews
     
     init(viewModel: SharedModel) {

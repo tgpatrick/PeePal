@@ -12,19 +12,34 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var mapViewModel: MapViewModel?
+    @State private var searchViewModel = SearchViewModel()
     @State private var sheetCluster: RestroomCluster?
 
     var body: some View {
-        ZStack {
-            if let mapViewModel {
-                MapView(viewModel: mapViewModel)
-            } else {
-                ProgressView()
-                    .task {
-                        mapViewModel = MapViewModel(modelContext: modelContext)
+        NavigationStack {
+            ZStack {
+                if let mapViewModel {
+                    MapView(viewModel: mapViewModel)
+                    if searchViewModel.searching {
+                        SearchResultsView(viewModel: searchViewModel)
+                            .onTapGesture {
+                                searchViewModel.searching = false
+                            }
                     }
+                } else {
+                    ProgressView()
+                        .task {
+                            mapViewModel = MapViewModel(modelContext: modelContext)
+                        }
+                }
             }
+            .ignoresSafeArea()
         }
+        .searchable(
+            text: $searchViewModel.searchText,
+            isPresented: $searchViewModel.searching,
+            placement: .toolbarPrincipal
+        )
         .sheet(item: $sheetCluster) { cluster in
             ClusterSheetView(
                 cluster: cluster,

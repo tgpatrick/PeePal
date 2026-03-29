@@ -12,6 +12,7 @@ struct RestroomView: View {
     @Environment(\.colorScheme) private var colorScheme
     let restroom: Restroom
     @State var locationManager: LocationManager = LocationManager.shared
+    @State private var viewModel = RestroomViewModel()
 
     var body: some View {
         ScrollView {
@@ -40,7 +41,7 @@ struct RestroomView: View {
                             .fontDesign(.rounded)
                             .foregroundStyle(.secondary)
                     }
-                    Link(destination: AppLogic.makeAppleMapsURL(restroom: restroom)) {
+                    Link(destination: viewModel.directionsURL(restroom: restroom)) {
                             Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -80,7 +81,7 @@ struct RestroomView: View {
                 VStack(spacing: 0) {
                     Text("Please note that PeePal cannot verify any of the information presented here. If you want to rate this restroom or propose an edit, please visit its page at")
                         .multilineTextAlignment(.center)
-                    Link(destination: AppLogic.makeEditURL(restroom: restroom)) {
+                    Link(destination: viewModel.makeEditURL(restroom: restroom)) {
                         HStack(alignment: .bottom, spacing: 2) {
                             Text("Refuge Restrooms")
                             Image(systemName: "arrow.up.forward.square")

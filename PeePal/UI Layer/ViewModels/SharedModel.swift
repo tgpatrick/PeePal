@@ -13,7 +13,7 @@ class SharedModel: ObservableObject {
     @Published var settings = AppSettings()
     @Published var filters = Filters()
     @Published var cvm = ContentViewModel_Old()
-    @Published var svm = SearchViewModel()
+    @Published var svm = SearchViewModel_old()
     var appLogic: AppLogic = AppLogic(settings: AppSettings(), filters: Filters())
     
     @Published var seenTutorial = UserDefaults.standard.bool(forKey: "seenTutorial")

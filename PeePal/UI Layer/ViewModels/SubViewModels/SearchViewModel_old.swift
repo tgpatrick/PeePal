@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class SearchViewModel: ObservableObject {
+class SearchViewModel_old: ObservableObject {
     @Published var searching: Bool = false
     @Published var searchText: String = ""
     @Published var searchResults: [SearchRestroom] = []

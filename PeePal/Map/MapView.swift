@@ -64,6 +64,7 @@ struct MapView: View {
                         .shadow(radius: 5)
                         .zIndex(2)
                         .transition(.move(edge: .top).combined(with: .opacity))
+                        .padding(.top, 75) // No safe area
                         .onAppear {
                             withAnimation {
                                 animateLoader = true
