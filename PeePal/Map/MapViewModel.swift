@@ -213,8 +213,13 @@ class MapViewModel {
             self.clusters = concurrencySafeClusters
         }
     }
+    
+    func clearSelectedAnnotation() {
+        selectedCluster = nil
+    }
 
     func selectAnnotation(_ cluster: RestroomCluster) {
+        // If selecting restroom from search, make sure there are no duplicates
         if cluster.size == 1 {
             guard let restroom = cluster.restrooms.first else { return }
             clusters.removeAll(where: { cluster in
@@ -278,7 +283,14 @@ class MapViewModel {
             }
             selectAnnotation(newCluster)
             adjustMapPosition(for: newCluster, with: mapProxy, in: geoSize)
-        } else if let parentCluster { // If unselecting a single restroom, focus parent cluster if necessary
+        } else if let parentCluster {
+            // If unselecting a single restroom, focus parent cluster if there is one
+            if let oldCluster {
+                clusters.removeAll(
+                    where: {
+                        $0.restrooms.contains(oldCluster.restrooms)
+                    })
+            }
             selectAnnotation(parentCluster)
             adjustMapPosition(for: parentCluster, with: mapProxy, in: geoSize)
         }

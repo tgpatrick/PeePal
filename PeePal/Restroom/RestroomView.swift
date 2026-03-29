@@ -11,7 +11,7 @@ import CoreLocation
 struct RestroomView: View {
     @Environment(\.colorScheme) private var colorScheme
     let restroom: Restroom
-    @State var locationManager: LocationManager = LocationManager()
+    @State var locationManager: LocationManager = LocationManager.shared
 
     var body: some View {
         ScrollView {

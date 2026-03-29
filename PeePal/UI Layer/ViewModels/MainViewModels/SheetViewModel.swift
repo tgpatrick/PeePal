@@ -35,9 +35,3 @@ class SheetViewModel {
         }
     }
 }
-
-extension PresentationDetent {
-    static let low: PresentationDetent = .height(75)
-    static let middle: PresentationDetent = .fraction(0.4)
-    static let high: PresentationDetent = .fraction(0.99)
-}

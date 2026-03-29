@@ -10,7 +10,7 @@ import MapKit
 
 struct ListItemView: View {
     let listItem: any Listable
-    @State var locationManager = LocationManager()
+    @State var locationManager = LocationManager.shared
     
     private var restroomData: Restroom? {
         listItem as? Restroom
