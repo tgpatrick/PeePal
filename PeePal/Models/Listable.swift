@@ -75,6 +75,10 @@ extension MKMapItem: Listable {
     }
     
     var coordinate: CLLocationCoordinate2D {
-        placemark.coordinate
+        if #available(iOS 26.0, *) {
+            return location.coordinate
+        } else {
+            return placemark.coordinate
+        }
     }
 }

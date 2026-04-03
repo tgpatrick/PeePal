@@ -100,3 +100,25 @@ final class RestroomEntity {
         )
     }
 }
+
+
+#if DEBUG
+@MainActor
+class DataController {
+    static let previewContainer: ModelContainer = {
+        do {
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            let container = try ModelContainer(for: RestroomEntity.self, configurations: config)
+
+            for i in 1...9 {
+                let restroom = RestroomEntity(restroom: exampleRestroom)
+                container.mainContext.insert(restroom)
+            }
+
+            return container
+        } catch {
+            fatalError("Failed to create model container for previewing: \(error.localizedDescription)")
+        }
+    }()
+}
+#endif // DEBUG

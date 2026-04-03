@@ -46,6 +46,8 @@
 		9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */; };
 		AA19845E2F7457BD00D16F36 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845D2F7457BD00D16F36 /* Logger.swift */; };
 		AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845F2F745E3900D16F36 /* NetworkService.swift */; };
+		AA1BF88C2F7F703C0036F74E /* LoadingSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1BF88B2F7F703C0036F74E /* LoadingSpinner.swift */; };
+		AA1BF8902F80617B0036F74E /* MapItemAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1BF88F2F80617B0036F74E /* MapItemAnnotationView.swift */; };
 		AA314DDF2F756A1E00C01DE9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DDE2F756A1E00C01DE9 /* MapView.swift */; };
 		AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE02F756A3500C01DE9 /* MapViewModel.swift */; };
 		AA314DE32F78621B00C01DE9 /* PeePal Icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */; };
@@ -110,6 +112,8 @@
 		9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
 		AA19845D2F7457BD00D16F36 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		AA19845F2F745E3900D16F36 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		AA1BF88B2F7F703C0036F74E /* LoadingSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinner.swift; sourceTree = "<group>"; };
+		AA1BF88F2F80617B0036F74E /* MapItemAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItemAnnotationView.swift; sourceTree = "<group>"; };
 		AA314DDE2F756A1E00C01DE9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AA314DE02F756A3500C01DE9 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "PeePal Icon.icon"; sourceTree = "<group>"; };
@@ -258,7 +262,6 @@
 				9A8C2FED2587201500435B06 /* AppSettings.swift */,
 				9A8C2FF02587201F00435B06 /* Filters.swift */,
 				9A8C2FCD2587187B00435B06 /* ConcreteStructs.swift */,
-				9A9F04672C44CBF70091C5AD /* Listable.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				AA314DE02F756A3500C01DE9 /* MapViewModel.swift */,
 				AA314DDE2F756A1E00C01DE9 /* MapView.swift */,
 				9AC22474255DC955008394A0 /* AnnotationView.swift */,
+				AA1BF88F2F80617B0036F74E /* MapItemAnnotationView.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -357,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				AABDEF2A2F26DDC6005414D5 /* HomeView.swift */,
+				AA1BF88B2F7F703C0036F74E /* LoadingSpinner.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -391,6 +396,7 @@
 				AAD80BC92F6F77A4006AF588 /* Restroom.swift */,
 				AAD80BCA2F6F77A4006AF588 /* RestroomCluster.swift */,
 				AAD80BCB2F6F77A4006AF588 /* SearchRestroom.swift */,
+				9A9F04672C44CBF70091C5AD /* Listable.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -478,6 +484,7 @@
 				AAD535962F746BAF00B9D2C7 /* RestroomLocalService.swift in Sources */,
 				9A4BA9642C3A1FFF0000A4B4 /* SheetViewModel.swift in Sources */,
 				9A8C2FF12587201F00435B06 /* Filters.swift in Sources */,
+				AA1BF88C2F7F703C0036F74E /* LoadingSpinner.swift in Sources */,
 				9A8C2FF82587F1AB00435B06 /* SettingsViewModel.swift in Sources */,
 				9A8C2FE325871C4B00435B06 /* AppLogic.swift in Sources */,
 				9A24471E2574D6C000067381 /* TutorialView.swift in Sources */,
@@ -497,6 +504,7 @@
 				9A8C2FFE258821AB00435B06 /* TutorialViewModel.swift in Sources */,
 				9A04ADCB255B0DF500D0F02C /* PeePalApp.swift in Sources */,
 				AAD5359B2F74832700B9D2C7 /* RestroomManager.swift in Sources */,
+				AA1BF8902F80617B0036F74E /* MapItemAnnotationView.swift in Sources */,
 				9AC534422C3B079700C4A795 /* TitledBoxView.swift in Sources */,
 				9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */,
 				AA19845E2F7457BD00D16F36 /* Logger.swift in Sources */,

@@ -12,34 +12,53 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var mapViewModel: MapViewModel?
-    @State private var searchViewModel = SearchViewModel()
+    @State private var searchViewModel: SearchViewModel?
     @State private var sheetCluster: RestroomCluster?
 
     var body: some View {
-        NavigationStack {
-            ZStack {
+            ZStack(alignment: .top) {
                 if let mapViewModel {
                     MapView(viewModel: mapViewModel)
-                    if searchViewModel.searching {
-                        SearchResultsView(viewModel: searchViewModel)
-                            .onTapGesture {
-                                searchViewModel.searching = false
-                            }
+                        .ignoresSafeArea(.keyboard)
+                    if mapViewModel.isLoading {
+                        LoadingSpinner()
                     }
                 } else {
                     ProgressView()
-                        .task {
+                        .onAppear {
                             mapViewModel = MapViewModel(modelContext: modelContext)
+                            searchViewModel = SearchViewModel(modelContext: modelContext)
                         }
                 }
             }
-            .ignoresSafeArea()
+        .toolbar {
+            if !(searchViewModel?.searching ?? false) {
+                ToolbarItem(id: "search", placement: .bottomBar) {
+                    Button("Search", systemImage: "magnifyingglass") {
+                        searchViewModel?.searching = true
+                    }
+                }
+                ToolbarItem(placement: .bottomBar) {
+                    Button("Settings", systemImage: "gearshape") {
+                        
+                    }
+                }
+            }
         }
-        .searchable(
-            text: $searchViewModel.searchText,
-            isPresented: $searchViewModel.searching,
-            placement: .toolbarPrincipal
-        )
+        .sheet(isPresented: .init(get: {
+            searchViewModel?.searching ?? false
+        }, set: { newValue in
+            searchViewModel?.searching = newValue
+        })) {
+            if let searchViewModel, let mapViewModel {
+                SearchResultsView(
+                    viewModel: searchViewModel,
+                    onItemTap: mapViewModel.focusOn,
+                    onDismiss: {
+                        mapViewModel.selectedMapItem = nil
+                    })
+            }
+        }
         .sheet(item: $sheetCluster) { cluster in
             ClusterSheetView(
                 cluster: cluster,
@@ -62,4 +81,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .modelContainer(DataController.previewContainer)
 }

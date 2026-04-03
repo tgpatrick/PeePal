@@ -64,6 +64,10 @@ struct RestroomManager {
         try await localService.fetchRestrooms(in: region)
     }
     
+    func searchLocalRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {
+        try await localService.searchRestrooms(matching: query, limit: limit)
+    }
+    
     // Save restrooms to local storage (delegates to local service)
     func save(_ restrooms: [Restroom]) async throws {
         try await localService.save(restrooms)

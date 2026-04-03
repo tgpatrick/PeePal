@@ -19,6 +19,7 @@ import SwiftData
 class MapViewModel {
     var clusters: [RestroomCluster] = []
     var restrooms: Set<Restroom> = []
+    var selectedMapItem: MKMapItem?
     var selectedCluster: RestroomCluster?
     var parentCluster: RestroomCluster?
     var isLoading = false
@@ -56,10 +57,25 @@ class MapViewModel {
     }
 
     func centerOn(_ location: CLLocation) {
-        cameraPosition = .region(MKCoordinateRegion(
-            center: location.coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-        ))
+        withAnimation {
+            cameraPosition = .region(MKCoordinateRegion(
+                center: location.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+            ))
+        }
+    }
+    
+    func focusOn(_ item: any Listable) {
+        if let mapItem = item as? MKMapItem {
+            selectedMapItem = mapItem
+            if #available(iOS 26.0, *) {
+                centerOn(mapItem.location)
+            } else if let location = mapItem.placemark.location {
+                centerOn(location)
+            }
+        } else if let restroomItem = item as? Restroom {
+            selectAnnotation(RestroomCluster(restrooms: [restroomItem]))
+        }
     }
     
     func setInitialCameraPosition() {

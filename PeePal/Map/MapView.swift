@@ -11,7 +11,6 @@ import SwiftUI
 
 struct MapView: View {
     @State var viewModel: MapViewModel
-    @State private var animateLoader = false
     
     var body: some View {
         MapReader { mapProxy in
@@ -33,45 +32,6 @@ struct MapView: View {
                                 viewModel.cluster(epsilon: distance)
                             }
                         }
-                    
-                    if viewModel.isLoading {
-                        ZStack {
-                            Image(systemName: "aqi.medium")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 25, height: 25)
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(Color(.unisex))
-                                .symbolEffect(
-                                    .variableColor.iterative,
-                                    options: .repeating.speed(0.5),
-                                    value: animateLoader)
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 45, height: 45)
-                                .foregroundStyle(Color(.unisex))
-                                .rotationEffect(Angle(
-                                    degrees: animateLoader ? 360 : 0))
-                                .animation(
-                                    .easeInOut(duration: 1).repeatForever(autoreverses: false),
-                                    value: animateLoader)
-                        }
-                        .padding(-4)
-                        .background {
-                            Circle().foregroundStyle(.ultraThickMaterial)
-                        }
-                        .shadow(radius: 5)
-                        .zIndex(2)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                        .padding(.top, 75) // No safe area
-                        .onAppear {
-                            withAnimation {
-                                animateLoader = true
-                            }
-                        }
-                        .onDisappear { animateLoader = false }
-                    }
                 }
                 .onChange(of: viewModel.selectedCluster) { oldSelectedCluster, newSelectedCluster in
                     viewModel.handleClusterSelectionChange(
@@ -100,7 +60,7 @@ struct MapView: View {
             selection: $viewModel.selectedCluster) {
             UserAnnotation()
             ForEach(viewModel.clusters) { cluster in
-                if cluster.size == 1, let restroom = cluster.restrooms.first {
+                if cluster.isSingle, let restroom = cluster.restrooms.first {
                     Annotation(
                         restroom.name ?? "",
                         coordinate: restroom.coordinate,
@@ -123,6 +83,14 @@ struct MapView: View {
                         }
                         .tag(cluster)
                 }
+            }
+            if let selectedMapItem = viewModel.selectedMapItem, viewModel.selectedCluster == nil {
+                Annotation(
+                    selectedMapItem.fullName,
+                    coordinate: selectedMapItem.placemark.coordinate,
+                    anchor: .center) {
+                        MapItemAnnotationView(mapItem: selectedMapItem)
+                    }
             }
         }
     }

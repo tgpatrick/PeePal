@@ -21,7 +21,7 @@ class RestroomViewModel {
                 url += ", " + state
             }
         } else if let name = restroom.name {
-            url += "&q=" + (restroom.name ?? "")
+            url += "&q=" + (name)
         }
         url = url.replacingOccurrences(of: " ", with: "+")
         return URL(string: url) ?? URL(string: "maps://?")!

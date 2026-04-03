@@ -20,6 +20,5 @@ protocol RestroomLocalServiceProtocol {
     func clearRestrooms() async throws
     func loadRestroomsFromBundle() throws -> [Restroom]
     func fetchRestrooms(in: MKCoordinateRegion) async throws -> [Restroom]
+    func searchRestrooms(matching query: String, limit: Int) async throws -> [Restroom]
 }
-
-
