@@ -24,7 +24,20 @@ class MapViewModel {
     var parentCluster: RestroomCluster?
     var isLoading = false
     var error: NetworkError?
-    var cameraPosition = MapCameraPosition.automatic
+    var cameraPosition: MapCameraPosition = .rect(
+        MKMapRect(
+            origin: MKMapPoint(
+                CLLocationCoordinate2D(
+                    latitude: 40.7128,
+                    longitude: -74.0060
+                )
+            ),
+            size: MKMapSize(
+                width: 100_000,
+                height: 100_000
+            )
+        )
+    )
 
     private var fetchTask: Task<Void, Never>? = nil
     private var clusteringTask: Task<Void, Never>? = nil
@@ -48,11 +61,12 @@ class MapViewModel {
             lastCameraRegion = region
             return true
         }
-        let minimumDistance = 0.01
+        let minimumDistance = 0.05
         
         let longitudeDifference = abs(lastCameraRegion.center.longitude - region.center.longitude)
         let latitudeDifference = abs(lastCameraRegion.center.latitude - region.center.latitude)
         
+        self.lastCameraRegion = region
         return longitudeDifference > minimumDistance || latitudeDifference > minimumDistance
     }
 
@@ -129,9 +143,13 @@ class MapViewModel {
             }
         }
         
+        // Don't fetch when zoomed out, that's not really useful
+        guard region.span.latitudeDelta < 1 else { return }
+        
         // Start debounced network fetch task
         fetchTask = Task.detached { [weak self] in
             try? await Task.sleep(for: .seconds(1))
+            
             guard let self, !Task.isCancelled else { return }
             await MainActor.run { self.setLoading(true) }
             
