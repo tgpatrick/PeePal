@@ -57,6 +57,8 @@ struct MapView: View {
     @ViewBuilder
     var mainMap: some View {
         Map(position: $viewModel.cameraPosition,
+            bounds: .init(maximumDistance: 7_500_000),
+            interactionModes: [.pan, .zoom],
             selection: $viewModel.selectedCluster) {
             UserAnnotation()
             ForEach(viewModel.clusters) { cluster in
