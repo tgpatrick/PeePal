@@ -22,6 +22,7 @@ public struct MapItemAnnotationView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(height: iconSize)
+                    .foregroundStyle(.black)
                     .padding(iconPadding)
                     .padding(.bottom, iconBottomPadding)
                     .background(

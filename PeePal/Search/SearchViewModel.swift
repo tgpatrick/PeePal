@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 import OSLog
 import SwiftData
+import SwiftUI
 
 @Observable
 class SearchViewModel: ObservableObject {
@@ -51,7 +52,9 @@ class SearchViewModel: ObservableObject {
         do {
             let response = try await search.start()
             await MainActor.run { [weak self] in
-                self?.mapResults = Array(response.mapItems).map({ ListableItem(item: $0) })
+                withAnimation {
+                    self?.mapResults = Array(response.mapItems).map({ ListableItem(item: $0) })
+                }
             }
         } catch {
             logger.error("Map search error: \(error.localizedDescription)")

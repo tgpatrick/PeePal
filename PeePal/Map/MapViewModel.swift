@@ -74,7 +74,10 @@ class MapViewModel {
                 centerOn(location)
             }
         } else if let restroomItem = item as? Restroom {
-            selectAnnotation(RestroomCluster(restrooms: [restroomItem]))
+            selectedCluster = RestroomCluster(restrooms: [restroomItem])
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+                self?.centerOn(CLLocation(coordinate: restroomItem.coordinate))
+            })
         }
     }
     
@@ -335,5 +338,11 @@ extension MapProxy {
         let p2 = CGPoint(x: Double(pixels), y: 0.0)
         guard let c2 = convert(p2, from: .global) else { return nil }
         return abs(c1.longitude - c2.longitude)
+    }
+}
+
+extension CLLocation {
+    convenience init(coordinate: CLLocationCoordinate2D) {
+        self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 }

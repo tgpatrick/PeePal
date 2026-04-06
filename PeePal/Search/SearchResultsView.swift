@@ -17,19 +17,12 @@ struct SearchResultsView: View {
     
     var body: some View {
         NavigationStack {
-            if viewModel.anyResults {
+            if viewModel.anyResults, currentDetent != .low {
                 List {
                     Section(content: {
                         ForEach(viewModel.mapResults.prefix(3)) { result in
-                            Button(action: {
-                                currentDetent = .middle
-                                onItemTap(result.item)
-                            }) {
-                                ListItemView(listItem: result.item)
-                                    .padding(.horizontal, 5)
-                            }
+                            itemButton(result.item)
                         }
-                        .buttonStyle(.plain)
                     }, header: {
                         HStack {
                             Text("Map Results")
@@ -45,15 +38,8 @@ struct SearchResultsView: View {
                     
                     Section(content: {
                         ForEach(viewModel.restroomResults.prefix(3)) { result in
-                            Button(action: {
-                                currentDetent = .middle
-                                onItemTap(result.item)
-                            }) {
-                                ListItemView(listItem: result.item)
-                                    .padding(.horizontal, 5)
-                            }
+                            itemButton(result.item)
                         }
-                        .buttonStyle(.plain)
                     }, header: {
                         HStack {
                             Text("Restroom Results")
@@ -68,10 +54,12 @@ struct SearchResultsView: View {
                     })
                 }
                 .listStyle(.plain)
-            } else {
+            } else if currentDetent != .low {
                 HStack {
                     Text("Search for:")
                 }
+            } else {
+                List {} // Otherwise the search bar disappears and everything crashes
             }
         }
         .searchable(
@@ -93,10 +81,21 @@ struct SearchResultsView: View {
     @ViewBuilder
     private func allResults(for results: [ListableItem], title: String = "") -> some View {
         List(results) { result in
-            ListItemView(listItem: result.item)
+            itemButton(result.item)
         }
         .listStyle(.plain)
         .navigationTitle("All \(title) Results")
+    }
+    
+    private func itemButton(_ item: any Listable) -> some View {
+        Button {
+            currentDetent = .middle
+            onItemTap(item)
+        } label: {
+            ListItemView(listItem: item)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 

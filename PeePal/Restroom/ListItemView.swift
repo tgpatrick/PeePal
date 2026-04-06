@@ -120,7 +120,7 @@ struct ListItemView: View {
         return Image(systemName: mapItemIconname(for: mapItem))
             .font(.system(size: 22))
             .frame(width: 55, height: 55)
-            .foregroundColor(.primary)
+            .foregroundColor(.black)
             .background(Color.accentColor)
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }

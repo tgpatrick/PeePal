@@ -14,6 +14,9 @@ struct HomeView: View {
     @State private var mapViewModel: MapViewModel?
     @State private var searchViewModel: SearchViewModel?
     @State private var sheetCluster: RestroomCluster?
+    @State private var showSearch: Bool = false
+    
+    let sheetDismissTime = 0.25
 
     var body: some View {
             ZStack(alignment: .top) {
@@ -35,7 +38,7 @@ struct HomeView: View {
             if !(searchViewModel?.searching ?? false) {
                 ToolbarItem(id: "search", placement: .bottomBar) {
                     Button("Search", systemImage: "magnifyingglass") {
-                        searchViewModel?.searching = true
+                        showSearch = true
                     }
                 }
                 ToolbarItem(placement: .bottomBar) {
@@ -45,15 +48,16 @@ struct HomeView: View {
                 }
             }
         }
-        .sheet(isPresented: .init(get: {
-            searchViewModel?.searching ?? false
-        }, set: { newValue in
-            searchViewModel?.searching = newValue
-        })) {
+        .sheet(isPresented: $showSearch) {
             if let searchViewModel, let mapViewModel {
                 SearchResultsView(
                     viewModel: searchViewModel,
-                    onItemTap: mapViewModel.focusOn,
+                    onItemTap: { item in
+                        showSearch = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + sheetDismissTime * 2) {
+                            mapViewModel.focusOn(item)
+                        }
+                    },
                     onDismiss: {
                         mapViewModel.selectedMapItem = nil
                     })
@@ -70,11 +74,32 @@ struct HomeView: View {
         .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
             // Copy of selected cluster ensures a new sheet for each cluster change
             sheetCluster = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                if let newValue {
+            runAfterSheetDismiss {
+                if let newValue, newValue != mapResultCluster {
                     sheetCluster = newValue
                 }
             }
+        }
+        .onChange(of: showSearch) { _, newValue in
+            runAfterSheetDismiss {
+                searchViewModel?.searching = newValue
+            }
+        }
+        .onChange(of: searchViewModel?.searching) { _, newValue in
+            if let newValue, !newValue {
+                showSearch = false
+            }
+        }
+        .onChange(of: mapViewModel?.selectedMapItem) { _, newValue in
+            if newValue != nil {
+                mapViewModel?.selectedCluster = mapResultCluster
+            }
+        }
+    }
+    
+    func runAfterSheetDismiss(_ completion: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + sheetDismissTime) {
+            completion()
         }
     }
 }
