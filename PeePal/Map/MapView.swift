@@ -60,7 +60,9 @@ struct MapView: View {
             selection: $viewModel.selectedCluster) {
             UserAnnotation()
             ForEach(viewModel.clusters) { cluster in
-                if cluster.isSingle, let restroom = cluster.restrooms.first {
+                if cluster.isSingle,
+                   let restroom = cluster.restrooms.first,
+                   restroom != mapItemCluster.restrooms.first {
                     Annotation(
                         restroom.name ?? "",
                         coordinate: restroom.coordinate,
@@ -71,7 +73,7 @@ struct MapView: View {
                             )
                         }
                         .tag(cluster)
-                } else {
+                } else if cluster != mapItemCluster {
                     Annotation(
                         "\(cluster.restrooms.first?.name ?? "")\n+\(cluster.restrooms.count - 1) more",
                         coordinate: cluster.center,
@@ -84,13 +86,14 @@ struct MapView: View {
                         .tag(cluster)
                 }
             }
-            if let selectedMapItem = viewModel.selectedMapItem, viewModel.selectedCluster == nil {
+            if let selectedMapItem = viewModel.selectedMapItem, viewModel.selectedCluster == mapItemCluster {
                 Annotation(
                     selectedMapItem.fullName,
                     coordinate: selectedMapItem.placemark.coordinate,
-                    anchor: .center) {
-                        MapItemAnnotationView(mapItem: selectedMapItem)
+                    anchor: .bottom) {
+                        MapItemAnnotation(mapItem: selectedMapItem)
                     }
+                    .tag(mapItemCluster)
             }
         }
     }

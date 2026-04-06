@@ -1,7 +1,14 @@
+//
+//  MapItemAnnotation.swift
+//  PeePal
+//
+//  Created by Thomas Patrick on 04/03/26.
+//
+
 import SwiftUI
 import MapKit
 
-public struct MapItemAnnotationView: View {
+public struct MapItemAnnotation: View {
     public let mapItem: MKMapItem
 
     @State private var isShowing = false

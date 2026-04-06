@@ -47,7 +47,7 @@
 		AA19845E2F7457BD00D16F36 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845D2F7457BD00D16F36 /* Logger.swift */; };
 		AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19845F2F745E3900D16F36 /* NetworkService.swift */; };
 		AA1BF88C2F7F703C0036F74E /* LoadingSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1BF88B2F7F703C0036F74E /* LoadingSpinner.swift */; };
-		AA1BF8902F80617B0036F74E /* MapItemAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1BF88F2F80617B0036F74E /* MapItemAnnotationView.swift */; };
+		AA1BF8902F80617B0036F74E /* MapItemAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1BF88F2F80617B0036F74E /* MapItemAnnotation.swift */; };
 		AA314DDF2F756A1E00C01DE9 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DDE2F756A1E00C01DE9 /* MapView.swift */; };
 		AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE02F756A3500C01DE9 /* MapViewModel.swift */; };
 		AA314DE32F78621B00C01DE9 /* PeePal Icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */; };
@@ -113,7 +113,7 @@
 		AA19845D2F7457BD00D16F36 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		AA19845F2F745E3900D16F36 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AA1BF88B2F7F703C0036F74E /* LoadingSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinner.swift; sourceTree = "<group>"; };
-		AA1BF88F2F80617B0036F74E /* MapItemAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItemAnnotationView.swift; sourceTree = "<group>"; };
+		AA1BF88F2F80617B0036F74E /* MapItemAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItemAnnotation.swift; sourceTree = "<group>"; };
 		AA314DDE2F756A1E00C01DE9 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AA314DE02F756A3500C01DE9 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "PeePal Icon.icon"; sourceTree = "<group>"; };
@@ -330,7 +330,7 @@
 				AA314DE02F756A3500C01DE9 /* MapViewModel.swift */,
 				AA314DDE2F756A1E00C01DE9 /* MapView.swift */,
 				9AC22474255DC955008394A0 /* AnnotationView.swift */,
-				AA1BF88F2F80617B0036F74E /* MapItemAnnotationView.swift */,
+				AA1BF88F2F80617B0036F74E /* MapItemAnnotation.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -504,7 +504,7 @@
 				9A8C2FFE258821AB00435B06 /* TutorialViewModel.swift in Sources */,
 				9A04ADCB255B0DF500D0F02C /* PeePalApp.swift in Sources */,
 				AAD5359B2F74832700B9D2C7 /* RestroomManager.swift in Sources */,
-				AA1BF8902F80617B0036F74E /* MapItemAnnotationView.swift in Sources */,
+				AA1BF8902F80617B0036F74E /* MapItemAnnotation.swift in Sources */,
 				9AC534422C3B079700C4A795 /* TitledBoxView.swift in Sources */,
 				9AC22475255DC955008394A0 /* AnnotationView.swift in Sources */,
 				AA19845E2F7457BD00D16F36 /* Logger.swift in Sources */,

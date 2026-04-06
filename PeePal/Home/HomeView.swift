@@ -58,9 +58,7 @@ struct HomeView: View {
                             mapViewModel.focusOn(item)
                         }
                     },
-                    onDismiss: {
-                        mapViewModel.selectedMapItem = nil
-                    })
+                    onDismiss: {})
             }
         }
         .sheet(item: $sheetCluster) { cluster in
@@ -75,7 +73,7 @@ struct HomeView: View {
             // Copy of selected cluster ensures a new sheet for each cluster change
             sheetCluster = nil
             runAfterSheetDismiss {
-                if let newValue {
+                if let newValue, newValue != mapItemCluster {
                     sheetCluster = newValue
                 }
             }

@@ -68,6 +68,7 @@ class MapViewModel {
     func focusOn(_ item: any Listable) {
         if let mapItem = item as? MKMapItem {
             selectedMapItem = mapItem
+            selectedCluster = mapItemCluster
             if #available(iOS 26.0, *) {
                 centerOn(mapItem.location)
             } else if let location = mapItem.placemark.location {
@@ -346,3 +347,18 @@ extension CLLocation {
         self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
     }
 }
+
+let mapItemCluster = RestroomCluster(
+    restrooms: [
+        Restroom(
+            id: -1,
+            accessible: false,
+            unisex: false,
+            changingTable: false,
+            downvote: 0,
+            upvote: 0,
+            latitude: 0,
+            longitude: 0
+        )
+    ]
+)
