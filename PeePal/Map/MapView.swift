@@ -46,6 +46,7 @@ struct MapView: View {
         .mapControls {
             MapUserLocationButton()
             MapCompass()
+            MapScaleView()
         }
         .onChange(of: viewModel.locationManager.location) { oldLocation, newLocation in
             if oldLocation == nil, let newLocation {

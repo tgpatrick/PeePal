@@ -40,10 +40,10 @@ struct ClusterSheetView: View {
                         .fontWeight(.heavy)
                 }
             }
-            .presentationDetents([.low, .middle, .high], selection: $currentDetent)
-            .presentationBackgroundInteraction(.enabled(upThrough: .middle))
             .toolbarTitleDisplayMode(.inlineLarge)
         }
+        .presentationDetents([.low, .middle, .high], selection: $currentDetent)
+        .presentationBackgroundInteraction(.enabled(upThrough: .middle))
     }
     
     var clusterView: some View {

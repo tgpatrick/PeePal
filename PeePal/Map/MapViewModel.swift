@@ -61,7 +61,7 @@ class MapViewModel {
             lastCameraRegion = region
             return true
         }
-        let minimumDistance = 0.05
+        let minimumDistance = 0.025
         
         let longitudeDifference = abs(lastCameraRegion.center.longitude - region.center.longitude)
         let latitudeDifference = abs(lastCameraRegion.center.latitude - region.center.latitude)
