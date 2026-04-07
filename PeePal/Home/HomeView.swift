@@ -39,7 +39,9 @@ struct HomeView: View {
                             mapViewModel.focusOn(item)
                         }
                     },
-                    onDismiss: {})
+                    onDismiss: {}
+                )
+                .interactiveDismissDisabled()
             }
         }
         .sheet(item: $sheetCluster) { cluster in
@@ -49,6 +51,7 @@ struct HomeView: View {
                 onDismiss: mapViewModel?.clearSelectedAnnotation
             )
             .id(cluster.hashValue)
+            .interactiveDismissDisabled()
         }
         .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
             // Copy of selected cluster ensures a new sheet for each cluster change

@@ -61,13 +61,22 @@ class MapViewModel {
             lastCameraRegion = region
             return true
         }
-        let minimumDistance = 0.025
+        let minimumDistance = 0.05
+        let minimumSpanChange = 0.001
         
         let longitudeDifference = abs(lastCameraRegion.center.longitude - region.center.longitude)
         let latitudeDifference = abs(lastCameraRegion.center.latitude - region.center.latitude)
+        let latitudeSpanDifference = abs(lastCameraRegion.span.latitudeDelta - region.span.latitudeDelta)
         
-        self.lastCameraRegion = region
-        return longitudeDifference > minimumDistance || latitudeDifference > minimumDistance
+        
+        let hasChanged = longitudeDifference > minimumDistance
+        || latitudeDifference > minimumDistance
+        || latitudeSpanDifference > minimumSpanChange
+        
+        if hasChanged {
+            self.lastCameraRegion = region
+        }
+        return hasChanged
     }
 
     func centerOn(_ location: CLLocation) {
