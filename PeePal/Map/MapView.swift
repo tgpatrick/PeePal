@@ -22,7 +22,7 @@ struct MapView: View {
                             viewModel.setInitialCameraPosition()
                             await viewModel.loadInitialRestrooms()
                         }
-                        .onMapCameraChange { context in
+                        .onMapCameraChange(frequency: .onEnd) { context in
                             if viewModel.regionHasChanged(context.region) {
                                 viewModel.fetchRestrooms(region: context.region)
                             }

@@ -46,7 +46,6 @@ class MapViewModel {
     let restroomManager: RestroomManager
     let clusterPixels = 30
 
-    private var cachedPoints: [SIMD3<Double>]? = nil
     private var cachedPointLookup: [SIMD3<Double>: Restroom]? = nil
     private var lastRestroomCount: Int = 0
     private var lastZoomDeltaSum: Double?
@@ -120,7 +119,7 @@ class MapViewModel {
                 logger.info("Loaded \(regionRestrooms.count) restrooms in initial region")
             } else {
                 // Fallback to loading all restrooms if no region is set
-                let allRestrooms = try await restroomManager.fetchAllRestrooms()
+                let allRestrooms = try await restroomManager.fetchAllLocalRestrooms()
                 restrooms.formUnion(allRestrooms)
                 logger.info("Loaded all local restrooms (\(allRestrooms.count))")
             }
@@ -218,35 +217,25 @@ class MapViewModel {
 
         // Invalidate cache if restrooms changed
         if restrooms.count != lastRestroomCount {
-            cachedPoints = nil
-            cachedPointLookup = nil
             lastRestroomCount = restrooms.count
         }
 
         // Compute or reuse points/lookup
-        let points = cachedPoints ?? restrooms.map { SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0) }
-        cachedPoints = points
-        let pointLookup = cachedPointLookup ?? {
-            var lookup: [SIMD3<Double>: Restroom] = [:]
-            for restroom in restrooms {
-                let point = SIMD3<Double>(x: restroom.coordinate.latitude, y: restroom.coordinate.longitude, z: 0.0)
-                lookup[point] = restroom
-            }
-            return lookup
-        }()
-        cachedPointLookup = pointLookup
-
+        let points = restrooms.map { SIMD3<Double>(x: $0.coordinate.latitude, y: $0.coordinate.longitude, z: 0.0) }
+        let pointLookup = await getOrGenerateCachedPointLookup()
         let dbscanInstance = DBSCAN(points)
 
         let clusters = await Task.detached {
-            let (clusterPoints, _) = dbscanInstance(epsilon: epsilon, minimumNumberOfPoints: 1, distanceFunction: simd.distance)
+            let (clusterPoints, outliers) = dbscanInstance(epsilon: epsilon, minimumNumberOfPoints: 2, distanceFunction: simd.distance)
 
-            return clusterPoints.compactMap { cluster -> RestroomCluster? in
+            let actualClusters = clusterPoints.compactMap { cluster -> RestroomCluster? in
                 guard !cluster.isEmpty else { return nil }
 
                 let restroomsInCluster = cluster.compactMap { pointLookup[$0] }
                 return restroomsInCluster.isEmpty ? nil : RestroomCluster(restrooms: restroomsInCluster)
             }
+            let individualRestrooms = outliers.compactMap { pointLookup[$0] }
+            return actualClusters + individualRestrooms.compactMap { RestroomCluster(restrooms: [$0]) }
         }.value
 
         guard !Task.isCancelled else { return }
@@ -260,6 +249,18 @@ class MapViewModel {
         await MainActor.run {
             self.clusters = concurrencySafeClusters
         }
+    }
+    
+    private func getOrGenerateCachedPointLookup() async -> [SIMD3<Double>: Restroom] {
+        if let cachedPointLookup { return cachedPointLookup }
+        guard let restrooms = try? await restroomManager.fetchAllLocalRestrooms() else { return [:] }
+        var lookup: [SIMD3<Double>: Restroom] = [:]
+        for restroom in restrooms {
+            let point = SIMD3<Double>(x: restroom.coordinate.latitude, y: restroom.coordinate.longitude, z: 0.0)
+            lookup[point] = restroom
+        }
+        cachedPointLookup = lookup
+        return lookup
     }
     
     func clearSelectedAnnotation() {

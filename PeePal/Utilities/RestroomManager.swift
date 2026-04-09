@@ -21,7 +21,7 @@ struct RestroomManager {
         self.localService = RestroomLocalService(modelContext: modelContext)
     }
     
-    func fetchAllRestrooms() async throws -> [Restroom] {
+    func fetchAllLocalRestrooms() async throws -> [Restroom] {
         // Try to fetch from local storage first
         do {
             let localRestrooms = try await localService.fetchAllRestrooms()
