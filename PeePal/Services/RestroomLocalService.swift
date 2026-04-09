@@ -10,9 +10,8 @@ import SwiftData
 import OSLog
 import MapKit
 
-struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
-    typealias ModelType = Restroom
-
+@MainActor
+struct RestroomLocalService {
     private let modelContext: ModelContext
     private let logger = Logger.for(RestroomLocalService.self)
 
@@ -20,9 +19,8 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
         self.modelContext = modelContext
     }
 
-    @MainActor
-    func save(_ models: [Restroom]) async throws {
-        let entities = models.map { RestroomEntity(restroom: $0) }
+    func save(_ restrooms: [Restroom]) async throws {
+        let entities = restrooms.map { RestroomEntity(restroom: $0) }
 
         for entity in entities {
             modelContext.insert(entity)
@@ -30,24 +28,14 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
 
         try modelContext.save()
 
-        logger.info("Saved \(models.count) restrooms to local datastore")
+        logger.info("Saved \(restrooms.count) restrooms to local datastore")
     }
 
-    @MainActor
     func fetchAll() async throws -> [Restroom] {
         let entities: [RestroomEntity] = try modelContext.fetch(FetchDescriptor<RestroomEntity>())
         return entities.map { $0.asRestroom }
     }
 
-    func fetchAllRestrooms() async throws -> [Restroom] {
-        try await fetchAll()
-    }
-    
-    func deleteAll() async throws {
-        try await clearRestrooms()
-    }
-
-    @MainActor
     func clearRestrooms() async throws {
         let entities: [RestroomEntity] = try modelContext.fetch(FetchDescriptor<RestroomEntity>())
         for entity in entities {
@@ -67,7 +55,6 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
         return try JSONDecoder().decode([Restroom].self, from: data)
     }
 
-    @MainActor
     func fetchRestrooms(in region: MKCoordinateRegion) async throws -> [Restroom] {
         let minLat = region.center.latitude - region.span.latitudeDelta / 2
         let maxLat = region.center.latitude + region.span.latitudeDelta / 2
@@ -84,7 +71,6 @@ struct RestroomLocalService: RestroomLocalServiceProtocol, LocalService {
         return entities.map { $0.asRestroom }
     }
 
-    @MainActor
     func searchRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return [] }

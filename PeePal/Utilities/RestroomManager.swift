@@ -11,12 +11,13 @@ import OSLog
 import SwiftData
 
 struct RestroomManager {
-    private let networkService: RestroomNetworkServiceProtocol
-    private let localService: RestroomLocalServiceProtocol
+    private let networkService: RestroomNetworkService
+    private let localService: RestroomLocalService
     private let logger = Logger.for(RestroomManager.self)
     
+    @MainActor
     init(modelContext: ModelContext,
-         networkService: RestroomNetworkServiceProtocol = RestroomNetworkService.shared) {
+         networkService: RestroomNetworkService = .shared) {
         self.networkService = networkService
         self.localService = RestroomLocalService(modelContext: modelContext)
     }
@@ -24,7 +25,7 @@ struct RestroomManager {
     func fetchAllLocalRestrooms() async throws -> [Restroom] {
         // Try to fetch from local storage first
         do {
-            let localRestrooms = try await localService.fetchAllRestrooms()
+            let localRestrooms = try await localService.fetchAll()
             if !localRestrooms.isEmpty {
                 logger.info("Fetched \(localRestrooms.count) restrooms from local storage")
                 return localRestrooms
@@ -35,7 +36,7 @@ struct RestroomManager {
         
         // If local is empty, try to load from bundle as fallback
         do {
-            let bundleRestrooms = try localService.loadRestroomsFromBundle()
+            let bundleRestrooms = try await localService.loadRestroomsFromBundle()
             try await localService.save(bundleRestrooms)
             logger.info("Loaded \(bundleRestrooms.count) restrooms from bundle as fallback")
             return bundleRestrooms
@@ -52,9 +53,9 @@ struct RestroomManager {
     }
     
     func initializeFromBundleIfNeeded() async throws {
-        let localRestrooms = try await localService.fetchAllRestrooms()
+        let localRestrooms = try await localService.fetchAll()
         if localRestrooms.count < 2100 { // That's how many restrooms are in the JSON
-            let bundleRestrooms = try localService.loadRestroomsFromBundle()
+            let bundleRestrooms = try await localService.loadRestroomsFromBundle()
             try await localService.save(bundleRestrooms)
             logger.info("Initialized local data from bundle with \(bundleRestrooms.count) restrooms")
         }
@@ -73,3 +74,4 @@ struct RestroomManager {
         try await localService.save(restrooms)
     }
 }
+

@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+@MainActor
 class AppLogic {
     @ObservedObject var settings: AppSettings
     @ObservedObject var filters: Filters

@@ -11,7 +11,7 @@ import CoreLocation
 struct RestroomView: View {
     @Environment(\.colorScheme) private var colorScheme
     let restroom: Restroom
-    @State var locationManager: LocationManager = LocationManager.shared
+    @State var locationManager = LocationManager()
     @State private var viewModel = RestroomViewModel()
 
     var body: some View {
@@ -160,8 +160,8 @@ struct RestroomView: View {
 #Preview {
     Color.accentColor.opacity(0.5).ignoresSafeArea()
         .sheet(isPresented: .constant(true)) {
-            SheetView(
-                selectedCluster: .constant(RestroomCluster(restrooms: [
-                    exampleRestroom])))
+            ClusterSheetView(cluster: RestroomCluster(restrooms: [
+                exampleRestroom
+            ]), onSelectItem: nil, onDismiss: nil)
         }
 }

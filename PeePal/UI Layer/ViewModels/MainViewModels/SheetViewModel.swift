@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 
 @Observable
+@MainActor
 class SheetViewModel {
     var currentDetent: PresentationDetent = .low
     var searchField: String = ""

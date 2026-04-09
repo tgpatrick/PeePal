@@ -191,7 +191,7 @@ struct TutorialView: View {
     }
 }
 
-var tutorialModel = SharedModel()
+@MainActor var tutorialModel = SharedModel()
 
 struct TutorialView_Previews: PreviewProvider {
     static var previews: some View {

@@ -42,7 +42,7 @@ class MapViewModel {
     private var fetchTask: Task<Void, Never>? = nil
     private var clusteringTask: Task<Void, Never>? = nil
     private let logger = Logger()
-    let locationManager = LocationManager.shared
+    var locationManager = LocationManager()
     let restroomManager: RestroomManager
     let clusterPixels = 30
 

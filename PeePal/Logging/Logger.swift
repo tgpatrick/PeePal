@@ -8,7 +8,7 @@
 import OSLog
 
 extension Logger {
-    static var subsystem = Bundle.main.bundleIdentifier!
+    static let subsystem = Bundle.main.bundleIdentifier!
     
     static func `for`(_ category: String) -> Logger {
         Logger(subsystem: subsystem, category: category)

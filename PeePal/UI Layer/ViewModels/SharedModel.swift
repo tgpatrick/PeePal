@@ -9,6 +9,7 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+@MainActor
 class SharedModel: ObservableObject {
     @Published var settings = AppSettings()
     @Published var filters = Filters()
@@ -60,6 +61,7 @@ class SharedModel: ObservableObject {
                 url = URL(string: appLogic.makeSearchURL(searchText: svm.searchText, page: page, perPage: settings.numPerPage))!
             }
             let request = URLRequest(url: url)
+            let concurrencySafeSearch = thisSearch
             URLSession.shared.dataTask(with: request) { data, response, error in
                 if let data = data {
                     if !forSearch {
@@ -96,12 +98,12 @@ class SharedModel: ObservableObject {
                             if (decodedResponse.count > 0) {
                                 DispatchQueue.main.async {
                                     //update the UI
-                                    if thisSearch == self.svm.searchText {
+                                    if concurrencySafeSearch == self.svm.searchText {
                                         self.svm.searchResults += decodedResponse
                                     }
                                     group?.leave()
                                     if ((Int(totalPages) ?? 0 > page)) {
-                                        self.getRestrooms(page: page + 1, group: nil, forSearch: true, savedSearch: thisSearch)
+                                        self.getRestrooms(page: page + 1, group: nil, forSearch: true, savedSearch: concurrencySafeSearch)
                                     } else {
                                         self.loadingRestrooms = false
                                     }

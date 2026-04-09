@@ -11,7 +11,7 @@ import MapKit
 struct SheetView: View {
     @State var viewModel: SheetViewModel = SheetViewModel()
     @Binding var selectedCluster: RestroomCluster?
-    @State var locationManager = LocationManager.shared
+    @State var locationManager = LocationManager()
 
     var body: some View {
         ZStack {

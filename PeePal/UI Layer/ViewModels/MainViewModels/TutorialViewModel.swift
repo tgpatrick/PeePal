@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 class TutorialViewModel: ObservableObject {
     @ObservedObject var sm: SharedModel
     

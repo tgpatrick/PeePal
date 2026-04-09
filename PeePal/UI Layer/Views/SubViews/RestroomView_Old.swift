@@ -239,9 +239,9 @@ struct RestroomView_Previews: PreviewProvider {
 //                .onAppear(perform: {
 //                    searchModel.showTutorial = false
 //                })
-            AnnotationView_Old(restroom: exampleRestroom, viewModel: searchModel, contentViewModel: ContentViewModel_Old())
+            AnnotationView_Old(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel_Old())
                 .offset(y: -23)
-            RestroomView_Old(restroom: exampleRestroom, viewModel: searchModel)
+            RestroomView_Old(restroom: exampleRestroom, viewModel: SharedModel())
         }
         .colorScheme(.dark)
     }

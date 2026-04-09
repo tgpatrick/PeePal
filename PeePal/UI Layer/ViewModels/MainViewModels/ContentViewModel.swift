@@ -14,6 +14,7 @@ import simd
 import OSLog
 
 @Observable
+@MainActor
 class ContentViewModel {
     var clusters: [RestroomCluster] = []
     var restrooms: Set<Restroom> = []
@@ -26,7 +27,7 @@ class ContentViewModel {
 
     private var fetchTask: Task<Void, Error>? = nil
     private let logger = Logger()
-    let locationManager = LocationManager.shared
+    let locationManager = LocationManager()
 
     func centerOn(_ location: CLLocation) {
         cameraPosition = .region(MKCoordinateRegion(
@@ -38,34 +39,34 @@ class ContentViewModel {
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         fetchTask?.cancel()
 
-        fetchTask = Task.detached { [self] in
+        fetchTask = Task { [weak self] in
             await Task.yield()
-            guard let fetchRegion = region ?? cameraPosition.region else { return }
+            guard let fetchRegion = region ?? self?.cameraPosition.region else { return }
             do {
                 var page = 1
                 while page < 3 && !Task.isCancelled {
-                    if !isLoading {
-                        await setLoading(true)
+                    if !(self?.isLoading ?? true) {
+                        self?.setLoading(true)
                     }
                     let newRestrooms = try await RestroomService_old.fetchRestrooms(near: fetchRegion.center, page: page)
                     if !newRestrooms.isEmpty {
-                        restrooms.formUnion(newRestrooms)
+                        self?.restrooms.formUnion(newRestrooms)
                         page += 1
                     } else {
                         break
                     }
                 }
-                await setLoading(false)
+                self?.setLoading(false)
             } catch let error as NetworkError_old {
                 if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
-                    logger.info("Network cancellation successful")
+                    self?.logger.info("Network cancellation successful")
                 } else {
-                    self.error = error
-                    await setLoading(false)
+                    self?.error = error
+                    self?.setLoading(false)
                 }
             } catch {
-                self.error = .unknownError
-                await setLoading(false)
+                self?.error = .unknownError
+                self?.setLoading(false)
             }
         }
     }

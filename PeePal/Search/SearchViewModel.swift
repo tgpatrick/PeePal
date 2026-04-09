@@ -12,7 +12,8 @@ import SwiftData
 import SwiftUI
 
 @Observable
-class SearchViewModel: ObservableObject {
+@MainActor
+final class SearchViewModel: ObservableObject {
     var searchText: String = ""
     var searching: Bool = false
     var anyResults: Bool { !mapResults.isEmpty || !restroomResults.isEmpty }
@@ -25,7 +26,7 @@ class SearchViewModel: ObservableObject {
     private var searchTask: Task<Void, Never>?
     private let logger = Logger.for(SearchViewModel.self)
     
-    init(modelContext: ModelContext) {
+    @MainActor init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
     }
     

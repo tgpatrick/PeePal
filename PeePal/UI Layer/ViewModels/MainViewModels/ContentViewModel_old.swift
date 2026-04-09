@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 
+@MainActor
 class ContentViewModel_Old: ObservableObject {
     @ObservedObject var settings = AppSettings()
     
