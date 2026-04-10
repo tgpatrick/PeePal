@@ -55,9 +55,7 @@ struct SearchResultsView: View {
                 }
                 .listStyle(.plain)
             } else if currentDetent != .low {
-                HStack {
-                    Text("Search for:")
-                }
+                searchSuggestions
             } else {
                 List {} // Otherwise the search bar disappears and everything crashes
             }
@@ -76,6 +74,29 @@ struct SearchResultsView: View {
             }
             viewModel.clear()
         }
+    }
+    
+    private var searchSuggestions: some View {
+        VStack {
+            Text("Search for")
+                .font(.subheadline)
+            Text("Restrooms")
+                .font(.title2)
+                .bold()
+            Text("and")
+                .font(.subheadline)
+            Text(viewModel.currentSuggestion ?? "Places")
+                .font(.title2)
+                .bold()
+                .id(viewModel.currentSuggestion)
+                .transition(
+                    .asymmetric(
+                        insertion: .move(edge: .top).combined(with: .opacity),
+                        removal: .move(edge: .bottom).combined(with: .opacity))
+                )
+        }
+        .onAppear(perform: viewModel.startSuggestionAnimation)
+        .onDisappear(perform: viewModel.stopSuggestionAnimation)
     }
     
     @ViewBuilder

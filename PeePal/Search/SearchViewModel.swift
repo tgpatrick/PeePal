@@ -17,6 +17,18 @@ final class SearchViewModel: ObservableObject {
     var searchText: String = ""
     var searching: Bool = false
     var anyResults: Bool { !mapResults.isEmpty || !restroomResults.isEmpty }
+    
+    var currentSuggestion: String?
+    private var suggestionTimer: Timer?
+    private let searchSuggestions: [String] = [
+        "Cafés", "Gas Stations", "Hospitals", "Cities", "Grocery Stores", "Bagel Shops",
+        "Pharmacies", "Dog Parks", "ATM Machines", "Charging Stations", "Pizza Parlors",
+        "Museums", "Hotels", "Restaurants", "Libraries", "Post Offices", "Movie Theaters",
+        "Bookstores", "Parks", "Aquariums", "Bike Repair Shops", "Bowling Alleys",
+        "Ice Cream Shops", "Haunted Houses", "Secret Lairs", "Unicorn Sanctuaries",
+        "Countries", "Mountains", "Universities", "Government Buildings", "Beaches",
+        "Discotheques", "Art Galleries", "Botanical Gardens", "Zombie Apocalypse Shelters"
+    ]
 
     let restroomManager: RestroomManager
     
@@ -42,6 +54,21 @@ final class SearchViewModel: ObservableObject {
         searchText.removeAll()
         mapResults.removeAll()
         restroomResults.removeAll()
+    }
+    
+    func startSuggestionAnimation() {
+        suggestionTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] timer in
+            let newSuggestion = self?.searchSuggestions.randomElement()
+            Task { @MainActor in
+                withAnimation {
+                    self?.currentSuggestion = newSuggestion
+                }
+            }
+        }
+    }
+    
+    func stopSuggestionAnimation() {
+        suggestionTimer?.invalidate()
     }
 
     private func searchMapLocations() async {
@@ -73,3 +100,4 @@ final class SearchViewModel: ObservableObject {
         }
     }
 }
+
