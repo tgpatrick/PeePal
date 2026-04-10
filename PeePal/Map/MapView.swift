@@ -69,7 +69,7 @@ struct MapView: View {
                     Annotation(
                         restroom.name ?? "",
                         coordinate: restroom.coordinate,
-                        anchor: .bottom ) {
+                        anchor: .bottom) {
                             RestroomAnnotation(
                                 selection: $viewModel.selectedCluster,
                                 restroom: restroom
