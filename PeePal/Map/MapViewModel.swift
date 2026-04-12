@@ -133,6 +133,7 @@ class MapViewModel {
     func fetchRestrooms(region: MKCoordinateRegion? = nil) {
         // Cancel any ongoing fetch task to restart debounce timer
         fetchTask?.cancel()
+        fetchTask = nil
         self.setLoading(false)
         
         guard let region = region ?? cameraPosition.region else {
@@ -168,7 +169,7 @@ class MapViewModel {
                     if networkRestrooms.isEmpty { break }
                     
                     // Save fetched restrooms to local storage before next page
-                    try await self.restroomManager.save(networkRestrooms)
+                    await saveNewRestrooms(networkRestrooms)
                     let updatedLocalRestrooms = try await self.restroomManager.fetchRestrooms(in: region)
                     await MainActor.run {
                         if self.restrooms.count == updatedLocalRestrooms.count {
@@ -207,6 +208,7 @@ class MapViewModel {
 
     func cluster(epsilon: Double) {
         clusteringTask?.cancel()
+        clusteringTask = nil
         clusteringTask = Task.detached { [weak self] in
             await self?.performClustering(epsilon: epsilon)
         }
@@ -248,6 +250,20 @@ class MapViewModel {
         let concurrencySafeClusters = clustersWithSelection
         await MainActor.run {
             self.clusters = concurrencySafeClusters
+        }
+    }
+    
+    private func saveNewRestrooms(_ newRestrooms: [Restroom]) async {
+        do {
+            try await restroomManager.save(newRestrooms)
+            var lookup = await getOrGenerateCachedPointLookup()
+            for restroom in newRestrooms {
+                let point = SIMD3<Double>(x: restroom.coordinate.latitude, y: restroom.coordinate.longitude, z: 0.0)
+                lookup[point] = restroom
+            }
+            cachedPointLookup = lookup
+        } catch {
+            logger.error("\(error.localizedDescription)")
         }
     }
     
