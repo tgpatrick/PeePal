@@ -52,6 +52,7 @@
 		AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE02F756A3500C01DE9 /* MapViewModel.swift */; };
 		AA314DE32F78621B00C01DE9 /* PeePal Icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */; };
 		AA314DE62F78680700C01DE9 /* ClusterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE52F78680700C01DE9 /* ClusterSheetView.swift */; };
+		AA36B7C12F8B36E9009A7A84 /* GlassyToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
@@ -118,6 +119,7 @@
 		AA314DE02F756A3500C01DE9 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "PeePal Icon.icon"; sourceTree = "<group>"; };
 		AA314DE52F78680700C01DE9 /* ClusterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusterSheetView.swift; sourceTree = "<group>"; };
+		AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassyToolbarButton.swift; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 		9A04ADC9255B0DF500D0F02C /* PeePal */ = {
 			isa = PBXGroup;
 			children = (
+				AA36B7BF2F8B3567009A7A84 /* Buttons */,
 				AAD535992F74828300B9D2C7 /* Utilities */,
 				AA19845C2F7457AE00D16F36 /* Logging */,
 				AAD80BC72F6F773D006AF588 /* Models */,
@@ -357,6 +360,14 @@
 			path = Search;
 			sourceTree = "<group>";
 		};
+		AA36B7BF2F8B3567009A7A84 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */,
+			);
+			path = Buttons;
+			sourceTree = "<group>";
+		};
 		AABDEF292F26DDA5005414D5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,6 +527,7 @@
 				AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */,
 				9A8C2FD32587192300435B06 /* Display.swift in Sources */,
 				9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */,
+				AA36B7C12F8B36E9009A7A84 /* GlassyToolbarButton.swift in Sources */,
 				AADB0A132F79BF1D00531741 /* RestroomViewModel.swift in Sources */,
 				9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */,
 				9A1DD6902C364E7400F78D20 /* NetworkError_old.swift in Sources */,

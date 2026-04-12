@@ -42,18 +42,18 @@ struct RestroomView: View {
                             .foregroundStyle(.secondary)
                     }
                     Link(destination: viewModel.directionsURL(restroom: restroom)) {
-                            Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
+                        Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(Color(.black).opacity(0.9))
-                        .padding(10)
-                        .frame(width: 50, height: 50)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(Color.accentColor.opacity(0.8))
-                        )
-                        .cornerRadius(10)
-                        .adaptiveShadow(radius: 5)
+                            .padding(10)
+                            .frame(width: 50, height: 50)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .foregroundStyle(Color.accentColor.opacity(0.8))
+                            )
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
                     }
                 }
 

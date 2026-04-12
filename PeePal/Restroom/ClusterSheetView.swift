@@ -39,6 +39,7 @@ struct ClusterSheetView: View {
                         .frame(height: 30)
                         .fontWeight(.heavy)
                 }
+                .buttonStyle(GlassyToolbarButton())
             }
             .toolbarTitleDisplayMode(.inlineLarge)
         }

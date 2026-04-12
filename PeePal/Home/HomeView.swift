@@ -145,11 +145,12 @@ struct HomeView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .fontWeight(.heavy)
+                                .foregroundStyle(.buttonYellow)
                                 .padding(12)
                                 .background(
                                     Circle()
-                                        .fill(.thickMaterial)
-                                        .strokeBorder(.accent, lineWidth: 3)
+                                        .fill(.regularMaterial)
+                                        .strokeBorder(.buttonYellow, lineWidth: 3)
                                 )
                         }
                         .compositingGroup()
@@ -178,11 +179,12 @@ struct HomeView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .fontWeight(.heavy)
+                                .foregroundStyle(.buttonYellow)
                                 .padding(5)
                                 .background(
                                     Circle()
-                                        .fill(.thickMaterial)
-                                        .strokeBorder(.accent, lineWidth: 3)
+                                        .fill(.regularMaterial)
+                                        .strokeBorder(.buttonYellow, lineWidth: 3)
                                 )
                         }
                         .compositingGroup()
