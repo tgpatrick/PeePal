@@ -157,6 +157,7 @@ struct RestroomView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Color.accentColor.opacity(0.5).ignoresSafeArea()
         .sheet(isPresented: .constant(true)) {
@@ -165,3 +166,4 @@ struct RestroomView: View {
             ]), onSelectItem: nil, onDismiss: nil)
         }
 }
+#endif

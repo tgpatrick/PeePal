@@ -52,6 +52,7 @@ struct RatingView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     RatingView(restroom: exampleRestroom)
 }
@@ -59,3 +60,4 @@ struct RatingView: View {
 #Preview {
     RatingView(restroom: exampleRestroom, small: true)
 }
+#endif

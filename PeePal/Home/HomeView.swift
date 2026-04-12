@@ -202,7 +202,9 @@ struct HomeView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HomeView()
         .modelContainer(DataController.previewContainer)
 }
+#endif

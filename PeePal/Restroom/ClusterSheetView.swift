@@ -68,6 +68,7 @@ extension PresentationDetent {
     static let high: PresentationDetent = .fraction(0.99)
 }
 
+#if DEBUG
 #Preview {
     ClusterSheetView(
         cluster: RestroomCluster(restrooms: [
@@ -79,3 +80,4 @@ extension PresentationDetent {
         onDismiss: {}
     )
 }
+#endif

@@ -135,6 +135,7 @@ extension CLLocationDistance {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         List([exampleRestroom, exampleRestroom, exampleRestroom]) { restroom in
@@ -144,3 +145,4 @@ extension CLLocationDistance {
         .navigationTitle("Results")
     }
 }
+#endif

@@ -31,6 +31,8 @@ struct TitledBoxView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     TitledBoxView(title: "Title", content: "This is some content. Hello, World!")
 }
+#endif
