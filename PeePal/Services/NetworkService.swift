@@ -72,8 +72,6 @@ extension NetworkService {
     }
 
     private func performDataTask(from url: URL, attempt: Int) async throws -> Data {
-        try Task.checkCancellation()
-
         do {
             let (data, response) = try await session.data(from: url)
             _ = try validateResponse(response)

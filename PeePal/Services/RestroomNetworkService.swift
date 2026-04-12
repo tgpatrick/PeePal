@@ -37,7 +37,7 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
 
         logger.info("Fetching restrooms near (\(location.latitude), \(location.longitude)) page=\(page)")
 
-        let url = try makeURL(path: "/by_location.json", queryItems: [
+        let url = try makeURL(path: "/by_location", queryItems: [
             URLQueryItem(name: "page", value: "\(page)"),
             URLQueryItem(name: "per_page", value: "10"),
             URLQueryItem(name: "lat", value: "\(location.latitude)"),
@@ -70,6 +70,17 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
         }
 
         return restrooms
+    }
+    
+    func searchRestrooms(matching query: String, page: Int = 1, limit: Int = 25) async throws -> [Restroom] {
+        let url = try makeURL(path: "/search", queryItems: [
+            URLQueryItem(name: "query", value: "\(query)"),
+            URLQueryItem(name: "page", value: "\(page)"),
+            URLQueryItem(name: "per_page", value: "\(limit)"),
+        ])
+        
+        let data = try await performDataTask(from: url)
+        return try decode(data)
     }
 }
 

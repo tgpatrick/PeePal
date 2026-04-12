@@ -35,6 +35,7 @@ final class SearchViewModel: ObservableObject {
     var mapResults = [ListableItem]()
     var restroomResults = [ListableItem]()
     
+    var loadingNetworkResults: Bool = false
     private var searchTask: Task<Void, Never>?
     private let logger = Logger.for(SearchViewModel.self)
     
@@ -43,10 +44,15 @@ final class SearchViewModel: ObservableObject {
     }
     
     func search() {
+        logger.debug("Searching for: \(self.searchText)")
         searchTask?.cancel()
+        searchTask = nil
         searchTask = Task {
             async let _ = searchMapLocations()
             async let _ = searchLocalRestrooms()
+            try? await Task.sleep(for: .seconds(1))
+            try? Task.checkCancellation()
+            await searchRemoteRestrooms()
         }
     }
     
@@ -79,6 +85,7 @@ final class SearchViewModel: ObservableObject {
         let search = MKLocalSearch(request: request)
         do {
             let response = try await search.start()
+            try? Task.checkCancellation()
             await MainActor.run { [weak self] in
                 withAnimation {
                     self?.mapResults = Array(response.mapItems).map({ ListableItem(item: $0) })
@@ -92,11 +99,44 @@ final class SearchViewModel: ObservableObject {
     private func searchLocalRestrooms() async {
         do {
             let response = try await restroomManager.searchLocalRestrooms(matching: searchText)
+            try? Task.checkCancellation()
             await MainActor.run { [weak self] in
                 self?.restroomResults = response.map({ ListableItem(item: $0) })
             }
         } catch {
             logger.error("Local restroom search error: \(error.localizedDescription)")
+        }
+    }
+    
+    func searchRemoteRestrooms() async {
+        guard searchText.count > 3 else { return }
+        defer {
+            withAnimation {
+                self.loadingNetworkResults = false
+            }
+        }
+        
+        do {
+            await MainActor.run { [weak self] in
+                withAnimation {
+                    self?.loadingNetworkResults = true
+                }
+            }
+            let response = try await restroomManager.searchRemoteRestrooms(matching: searchText)
+            let currentRestrooms = Set<ListableItem>(restroomResults)
+            let newResults = currentRestrooms.union(Set<ListableItem>(response.map({ ListableItem(item: $0) })))
+            try? Task.checkCancellation()
+            await MainActor.run { [weak self] in
+                self?.restroomResults = Array(newResults)
+            }
+        } catch {
+            var description = ""
+            if let error = error as? NetworkError {
+                description = error.description
+            } else {
+                description = error.localizedDescription
+            }
+            logger.error("Remote restroom search error: \(description)")
         }
     }
 }

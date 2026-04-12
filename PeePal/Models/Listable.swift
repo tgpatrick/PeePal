@@ -19,6 +19,21 @@ struct ListableItem: Identifiable {
     let item: any Listable
 }
 
+extension ListableItem: Equatable, Hashable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        if type(of: lhs.item) == type(of: rhs.item) {
+            return lhs.item.hashValue == rhs.item.hashValue
+        } else {
+            return false
+        }
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(type(of: item)))
+        hasher.combine(item.hashValue)
+    }
+}
+
 extension Restroom: Listable {
     var fullName: String {
         name ?? "Name Unknown"

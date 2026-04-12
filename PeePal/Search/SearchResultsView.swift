@@ -20,7 +20,7 @@ struct SearchResultsView: View {
             if viewModel.anyResults, currentDetent != .low {
                 List {
                     Section(content: {
-                        ForEach(viewModel.mapResults.prefix(3)) { result in
+                        ForEach(viewModel.mapResults.prefix(1)) { result in
                             itemButton(result.item)
                         }
                     }, header: {
@@ -44,6 +44,9 @@ struct SearchResultsView: View {
                         HStack {
                             Text("Restroom Results")
                                 .font(.title2)
+                            if viewModel.loadingNetworkResults {
+                                ProgressView()
+                            }
                             Spacer()
                             NavigationLink("See All") {
                                 allResults(for: viewModel.restroomResults, title: "Restroom")

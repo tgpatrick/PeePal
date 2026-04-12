@@ -52,6 +52,10 @@ struct RestroomManager {
         try await networkService.fetchRestrooms(near: location, page: page)
     }
     
+    func searchRemoteRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {
+        try await networkService.searchRestrooms(matching: query, limit: limit)
+    }
+    
     func initializeFromBundleIfNeeded() async throws {
         let localRestrooms = try await localService.fetchAll()
         if localRestrooms.count < 2100 { // That's how many restrooms are in the JSON
