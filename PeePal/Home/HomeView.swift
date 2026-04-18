@@ -56,6 +56,7 @@ struct HomeView: View {
         .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
             // Copy of selected cluster ensures a new sheet for each cluster change
             sheetCluster = nil
+            showSearch = false
             runAfterSheetDismiss {
                 if let newValue, newValue != mapItemCluster {
                     sheetCluster = newValue
