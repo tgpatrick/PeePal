@@ -11,67 +11,27 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @Namespace private var homeNamespace
+    
     @State private var mapViewModel: MapViewModel?
     @State private var searchViewModel: SearchViewModel?
     @State private var sheetCluster: RestroomCluster?
     @State private var showSearch: Bool = false
+    @State private var showFilter: Bool = false
     
     let sheetDismissTime = 0.25
     var showBottomControls: Bool {
-        !(searchViewModel?.searching ?? false) && sheetCluster == nil
+        !showSearch &&
+        sheetCluster == nil
     }
     
     var body: some View {
-        GeometryReader { geo in
-            if #available(iOS 26.0, *) {
-                container(width: geo.size.width, content)
-            } else {
-                compatibilityContainter(content)
+        if #available(iOS 26.0, *) {
+            GeometryReader { geo in
+                container(width: geo.size.width, withModifiers(content))
             }
-        }
-        .sheet(isPresented: $showSearch) {
-            if let searchViewModel, let mapViewModel {
-                SearchResultsView(
-                    viewModel: searchViewModel,
-                    onItemTap: { item in
-                        showSearch = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + sheetDismissTime * 2) {
-                            mapViewModel.focusOn(item)
-                        }
-                    },
-                    onDismiss: {}
-                )
-                .interactiveDismissDisabled()
-            }
-        }
-        .sheet(item: $sheetCluster) { cluster in
-            ClusterSheetView(
-                cluster: cluster,
-                onSelectItem: mapViewModel?.selectAnnotation,
-                onDismiss: mapViewModel?.clearSelectedAnnotation
-            )
-            .id(cluster.hashValue)
-            .interactiveDismissDisabled()
-        }
-        .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
-            // Copy of selected cluster ensures a new sheet for each cluster change
-            sheetCluster = nil
-            showSearch = false
-            runAfterSheetDismiss {
-                if let newValue, newValue != mapItemCluster {
-                    sheetCluster = newValue
-                }
-            }
-        }
-        .onChange(of: showSearch) { _, newValue in
-            runAfterSheetDismiss {
-                searchViewModel?.searching = newValue
-            }
-        }
-        .onChange(of: searchViewModel?.searching) { _, newValue in
-            if let newValue, !newValue {
-                showSearch = false
-            }
+        } else {
+            compatibilityContainter(withModifiers(content))
         }
     }
     
@@ -99,34 +59,37 @@ struct HomeView: View {
             content
         }
         .toolbar {
-            if showBottomControls {
-                ToolbarItem(id: "filter", placement: .bottomBar) {
-                    Button("filter", systemImage: "line.3.horizontal.decrease") {
-
+            ToolbarItem(placement: .bottomBar) {
+                Button("Show Filter", systemImage: "line.3.horizontal.decrease") {
+                    showFilter = true
+                }
+                .disabled(!showBottomControls)
+                .matchedTransitionSource(id: "filter", in: homeNamespace)
+            }
+            
+            ToolbarSpacer(.flexible, placement: .bottomBar)
+            ToolbarItem(id: "search", placement: .bottomBar) {
+                Button {
+                    showSearch = true
+                } label: {
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundStyle(.secondary)
+                        Text("Search")
+                            .foregroundStyle(.secondary)
                     }
                 }
-                ToolbarSpacer(.flexible, placement: .bottomBar)
-                ToolbarItem(id: "search", placement: .bottomBar) {
-                    Button {
-                        showSearch = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundStyle(.secondary)
-                            Text("Search")
-                                .foregroundStyle(.secondary)
-                        }
-                        .frame(minWidth: width * 0.575)
-                    }
+//                .frame(minWidth: width * 0.575)
+                .disabled(!showBottomControls)
+                .matchedTransitionSource(id: "search", in: homeNamespace)
+            }
+            
+            ToolbarSpacer(.flexible, placement: .bottomBar)
+            ToolbarItem(placement: .bottomBar) {
+                Button("settings", systemImage: "gearshape") {
+                    
                 }
-                ToolbarSpacer(.flexible, placement: .bottomBar)
-                ToolbarItem(placement: .bottomBar) {
-                    Button("settings", systemImage: "gearshape") {
-                        
-                    }
-                }
-            } else {
-                ToolbarSpacer(.fixed, placement: .bottomBar)
+                .disabled(!showBottomControls)
             }
         }
     }
@@ -140,7 +103,7 @@ struct HomeView: View {
                     Spacer()
                     HStack {
                         Button {
-                            
+                            showFilter = true
                         } label: {
                             Image(systemName: "line.3.horizontal.decrease")
                                 .resizable()
@@ -155,6 +118,8 @@ struct HomeView: View {
                                 )
                         }
                         .compositingGroup()
+                        .transitionSourceIfAvailable(id: "filter", in: homeNamespace)
+                        
                         Spacer()
                         Button {
                             showSearch = true
@@ -172,6 +137,8 @@ struct HomeView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .transitionSourceIfAvailable(id: "search", in: homeNamespace)
+                        
                         Spacer()
                         Button {
                             
@@ -196,6 +163,60 @@ struct HomeView: View {
                 }
             }
         }
+    }
+    
+    private func withModifiers<Content: View>(_ content: Content) -> some View {
+        content
+            .sheet(isPresented: $showSearch) {
+                if let searchViewModel, let mapViewModel {
+                    SearchResultsView(
+                        viewModel: searchViewModel,
+                        onItemTap: { item in
+                            showSearch = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + sheetDismissTime * 2) {
+                                mapViewModel.focusOn(item)
+                            }
+                        },
+                        onDismiss: {}
+                    )
+                    .interactiveDismissDisabled()
+                    .zoomTransitionIfAvailable(sourceID: "search", in: homeNamespace)
+                }
+            }
+            .sheet(item: $sheetCluster) { cluster in
+                ClusterSheetView(
+                    cluster: cluster,
+                    onSelectItem: mapViewModel?.selectAnnotation,
+                    onDismiss: mapViewModel?.clearSelectedAnnotation
+                )
+                .id(cluster.hashValue)
+                .interactiveDismissDisabled()
+            }
+            .sheet(isPresented: $showFilter) {
+                FilterView()
+                    .presentationDetents([.middle])
+                    .zoomTransitionIfAvailable(sourceID: "filter", in: homeNamespace)
+            }
+            .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
+                // Copy of selected cluster ensures a new sheet for each cluster change
+                sheetCluster = nil
+                showSearch = false
+                runAfterSheetDismiss {
+                    if let newValue, newValue != mapItemCluster {
+                        sheetCluster = newValue
+                    }
+                }
+            }
+            .onChange(of: showSearch) { _, newValue in
+                runAfterSheetDismiss {
+                    searchViewModel?.searching = newValue
+                }
+            }
+            .onChange(of: searchViewModel?.searching) { _, newValue in
+                if let newValue, !newValue {
+                    showSearch = false
+                }
+            }
     }
     
     func runAfterSheetDismiss(_ completion: @escaping () -> Void) {

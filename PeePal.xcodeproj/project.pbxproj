@@ -11,8 +11,8 @@
 		9A04ADCD255B0DF500D0F02C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A04ADCC255B0DF500D0F02C /* ContentView.swift */; };
 		9A04ADCF255B0DF700D0F02C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A04ADCE255B0DF700D0F02C /* Assets.xcassets */; };
 		9A04ADD2255B0DF700D0F02C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A04ADD1255B0DF700D0F02C /* Preview Assets.xcassets */; };
-		9A1A39FC255D976400905BA6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A39FB255D976400905BA6 /* SettingsView.swift */; };
-		9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A39FF255D990800905BA6 /* FilterView.swift */; };
+		9A1A39FC255D976400905BA6 /* SettingsView_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A39FB255D976400905BA6 /* SettingsView_old.swift */; };
+		9A1A3A00255D990800905BA6 /* FilterView_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A39FF255D990800905BA6 /* FilterView_old.swift */; };
 		9A1DD68E2C3639C700F78D20 /* RestroomService_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68D2C3639C700F78D20 /* RestroomService_old.swift */; };
 		9A1DD6902C364E7400F78D20 /* NetworkError_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD68F2C364E7400F78D20 /* NetworkError_old.swift */; };
 		9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1DD6912C36521600F78D20 /* ContentViewModel.swift */; };
@@ -53,6 +53,9 @@
 		AA314DE32F78621B00C01DE9 /* PeePal Icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */; };
 		AA314DE62F78680700C01DE9 /* ClusterSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA314DE52F78680700C01DE9 /* ClusterSheetView.swift */; };
 		AA36B7C12F8B36E9009A7A84 /* GlassyToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */; };
+		AA4DC3632F943028006E4581 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC3622F943028006E4581 /* FilterView.swift */; };
+		AA4DC3652F95B565006E4581 /* View+NavigationTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC3642F95B565006E4581 /* View+NavigationTransition.swift */; };
+		AA4DC36C2F9660C8006E4581 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36B2F9660C8006E4581 /* SettingsView.swift */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
@@ -78,8 +81,8 @@
 		9A04ADCE255B0DF700D0F02C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A04ADD1255B0DF700D0F02C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9A04ADD3255B0DF700D0F02C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9A1A39FB255D976400905BA6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		9A1A39FF255D990800905BA6 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		9A1A39FB255D976400905BA6 /* SettingsView_old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView_old.swift; sourceTree = "<group>"; };
+		9A1A39FF255D990800905BA6 /* FilterView_old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView_old.swift; sourceTree = "<group>"; };
 		9A1DD68D2C3639C700F78D20 /* RestroomService_old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomService_old.swift; sourceTree = "<group>"; };
 		9A1DD68F2C364E7400F78D20 /* NetworkError_old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError_old.swift; sourceTree = "<group>"; };
 		9A1DD6912C36521600F78D20 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
@@ -120,6 +123,9 @@
 		AA314DE22F78621B00C01DE9 /* PeePal Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "PeePal Icon.icon"; sourceTree = "<group>"; };
 		AA314DE52F78680700C01DE9 /* ClusterSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClusterSheetView.swift; sourceTree = "<group>"; };
 		AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassyToolbarButton.swift; sourceTree = "<group>"; };
+		AA4DC3622F943028006E4581 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		AA4DC3642F95B565006E4581 /* View+NavigationTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationTransition.swift"; sourceTree = "<group>"; };
+		AA4DC36B2F9660C8006E4581 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
@@ -179,6 +185,7 @@
 				AA314DDD2F75619500C01DE9 /* Map */,
 				AA314DE42F7867D700C01DE9 /* Restroom */,
 				AA314DE72F79A29C00C01DE9 /* Search */,
+				AA4DC36A2F9660BB006E4581 /* Settings */,
 				AABDEF2C2F26FA6F005414D5 /* Restrooms.json */,
 				9A2432832561DEA5007DC1A9 /* PeePal.entitlements */,
 				9A1A39FA255D974900905BA6 /* UI Layer */,
@@ -233,7 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				9A04ADCC255B0DF500D0F02C /* ContentView.swift */,
-				9A1A39FB255D976400905BA6 /* SettingsView.swift */,
+				9A1A39FB255D976400905BA6 /* SettingsView_old.swift */,
 				9A7A391B2C37B41400B19BA7 /* SheetView.swift */,
 				9A24471D2574D6C000067381 /* TutorialView.swift */,
 			);
@@ -244,7 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				9A8C2FF425872EED00435B06 /* AddView.swift */,
-				9A1A39FF255D990800905BA6 /* FilterView.swift */,
+				9A1A39FF255D990800905BA6 /* FilterView_old.swift */,
 				9A2432792560FF8C007DC1A9 /* RestroomView_Old.swift */,
 				9A2432902561E19D007DC1A9 /* SearchView.swift */,
 			);
@@ -368,11 +375,21 @@
 			path = Buttons;
 			sourceTree = "<group>";
 		};
+		AA4DC36A2F9660BB006E4581 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AA4DC36B2F9660C8006E4581 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		AABDEF292F26DDA5005414D5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				AABDEF2A2F26DDC6005414D5 /* HomeView.swift */,
 				AA1BF88B2F7F703C0036F74E /* LoadingSpinner.swift */,
+				AA4DC3622F943028006E4581 /* FilterView.swift */,
+				AA4DC3642F95B565006E4581 /* View+NavigationTransition.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -511,7 +528,7 @@
 				9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */,
 				AADB0A0F2F79BAE100531741 /* SearchViewModel.swift in Sources */,
 				AAD80BD12F6F77E8006AF588 /* NetworkError.swift in Sources */,
-				9A1A39FC255D976400905BA6 /* SettingsView.swift in Sources */,
+				9A1A39FC255D976400905BA6 /* SettingsView_old.swift in Sources */,
 				9A1DD68E2C3639C700F78D20 /* RestroomService_old.swift in Sources */,
 				9A8C2FFE258821AB00435B06 /* TutorialViewModel.swift in Sources */,
 				9A04ADCB255B0DF500D0F02C /* PeePalApp.swift in Sources */,
@@ -522,18 +539,20 @@
 				AA19845E2F7457BD00D16F36 /* Logger.swift in Sources */,
 				9A24327A2560FF8C007DC1A9 /* RestroomView_Old.swift in Sources */,
 				9AC74149255F767100A7A7A5 /* LocationManager.swift in Sources */,
-				9A1A3A00255D990800905BA6 /* FilterView.swift in Sources */,
+				9A1A3A00255D990800905BA6 /* FilterView_old.swift in Sources */,
 				9A8C2FEB25871CBA00435B06 /* ContentViewModel_old.swift in Sources */,
 				AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */,
 				9A8C2FD32587192300435B06 /* Display.swift in Sources */,
 				9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */,
 				AA36B7C12F8B36E9009A7A84 /* GlassyToolbarButton.swift in Sources */,
+				AA4DC3632F943028006E4581 /* FilterView.swift in Sources */,
 				AADB0A132F79BF1D00531741 /* RestroomViewModel.swift in Sources */,
 				9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */,
 				9A1DD6902C364E7400F78D20 /* NetworkError_old.swift in Sources */,
 				9A94BB83255C6D6A00BD4F08 /* Transition.swift in Sources */,
 				9A8C30012588260E00435B06 /* SearchViewModel_old.swift in Sources */,
 				9AC534402C3AE81900C4A795 /* RestroomView.swift in Sources */,
+				AA4DC36C2F9660C8006E4581 /* SettingsView.swift in Sources */,
 				9A7A391C2C37B41400B19BA7 /* SheetView.swift in Sources */,
 				9A1DD6922C36521600F78D20 /* ContentViewModel.swift in Sources */,
 				AAD535982F746C9C00B9D2C7 /* RestroomEntity.swift in Sources */,
@@ -545,6 +564,7 @@
 				AADB0A112F79BD2A00531741 /* SearchResultsView.swift in Sources */,
 				AAD80BCE2F6F77A4006AF588 /* SearchRestroom.swift in Sources */,
 				AAD80BCF2F6F77A4006AF588 /* Response.swift in Sources */,
+				AA4DC3652F95B565006E4581 /* View+NavigationTransition.swift in Sources */,
 				9A8C2FD6258719C000435B06 /* Function.swift in Sources */,
 				9A8C2FCE2587187B00435B06 /* ConcreteStructs.swift in Sources */,
 			);

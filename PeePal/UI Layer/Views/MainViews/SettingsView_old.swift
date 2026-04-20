@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
+struct SettingsView_old: View {
     @ObservedObject var sm: SharedModel
     @ObservedObject var settings: AppSettings
     @ObservedObject var vm = SettingsViewModel()
@@ -135,7 +135,7 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(sharedModel: SharedModel(), settings: AppSettings())
+        SettingsView_old(sharedModel: SharedModel(), settings: AppSettings())
 //            .colorScheme(.dark)
     }
 }
