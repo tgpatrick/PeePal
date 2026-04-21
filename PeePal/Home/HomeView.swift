@@ -11,6 +11,9 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    @AppStorage("accessFilter") private var accessFilter: Bool = false
+    @AppStorage("unisexFilter") private var unisexFilter: Bool = false
+    @AppStorage("tableFilter") private var tableFilter: Bool = false
     @Namespace private var homeNamespace
     
     @State private var mapViewModel: MapViewModel?
@@ -18,6 +21,10 @@ struct HomeView: View {
     @State private var sheetCluster: RestroomCluster?
     @State private var showSearch: Bool = false
     @State private var showFilter: Bool = false
+    
+    private var filterCount: Int {
+        (accessFilter ? 1 : 0) + (unisexFilter ? 1 : 0) + (tableFilter ? 1 : 0)
+    }
     
     let sheetDismissTime = 0.25
     var showBottomControls: Bool {
@@ -36,7 +43,7 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    var content: some View {
+    private var content: some View {
         if let mapViewModel {
             MapView(viewModel: mapViewModel)
                 .ignoresSafeArea(.keyboard)
@@ -52,17 +59,36 @@ struct HomeView: View {
         }
     }
     
+    private func filterButtonLabel<Content: View>(_ content: Content) -> some View {
+        ZStack {
+            content
+            if !showFilter && filterCount > 0 {
+                Text("\(filterCount)")
+                    .font(.caption)
+                    .fontWeight(.heavy)
+                    .background {
+                        Circle()
+                            .fill(.accent)
+                            .frame(width: 20, height: 20)
+                    }
+                    .offset(x: 15, y: -10)
+                    .transition(.scale)
+            }
+        }
+    }
+    
     @available(iOS 26.0, *)
-    @ViewBuilder
-    func container<Content: View>(width: CGFloat, _ content: Content) -> some View {
+    private func container<Content: View>(width: CGFloat, _ content: Content) -> some View {
         ZStack(alignment: .top) {
             content
         }
         .toolbar {
             ToolbarSpacer(.flexible, placement: .bottomBar)
             ToolbarItem(placement: .bottomBar) {
-                Button("Show Filter", systemImage: "line.3.horizontal.decrease") {
+                Button {
                     showFilter = true
+                } label: {
+                    filterButtonLabel(Image(systemName: "line.3.horizontal.decrease"))
                 }
                 .disabled(!showBottomControls)
                 .matchedTransitionSource(id: "filter", in: homeNamespace)
@@ -84,8 +110,8 @@ struct HomeView: View {
                 .disabled(!showBottomControls)
                 .matchedTransitionSource(id: "search", in: homeNamespace)
             }
-            
             ToolbarSpacer(.fixed, placement: .bottomBar)
+            
             ToolbarItem(placement: .bottomBar) {
                 Button("settings", systemImage: "gearshape") {
                     
@@ -96,8 +122,7 @@ struct HomeView: View {
         }
     }
     
-    @ViewBuilder
-    func compatibilityContainter<Content: View>(_ content: Content) -> some View {
+    private func compatibilityContainter<Content: View>(_ content: Content) -> some View {
         ZStack(alignment: .top) {
             content
             if showBottomControls {
@@ -107,17 +132,19 @@ struct HomeView: View {
                         Button {
                             showFilter = true
                         } label: {
-                            Image(systemName: "line.3.horizontal.decrease")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .fontWeight(.heavy)
-                                .foregroundStyle(.buttonYellow)
-                                .padding(12)
-                                .background(
-                                    Circle()
-                                        .fill(.regularMaterial)
-                                        .strokeBorder(.buttonYellow, lineWidth: 3)
-                                )
+                            filterButtonLabel(
+                                Image(systemName: "line.3.horizontal.decrease")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .fontWeight(.heavy)
+                                    .foregroundStyle(.buttonYellow)
+                                    .padding(12)
+                                    .background(
+                                        Circle()
+                                            .fill(.regularMaterial)
+                                            .strokeBorder(.buttonYellow, lineWidth: 3)
+                                    )
+                            )
                         }
                         .compositingGroup()
                         .transitionSourceIfAvailable(id: "filter", in: homeNamespace)
@@ -221,7 +248,7 @@ struct HomeView: View {
             }
     }
     
-    func runAfterSheetDismiss(_ completion: @escaping () -> Void) {
+    private func runAfterSheetDismiss(_ completion: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + sheetDismissTime) {
             completion()
         }
