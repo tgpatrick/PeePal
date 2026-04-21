@@ -56,6 +56,8 @@
 		AA4DC3632F943028006E4581 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC3622F943028006E4581 /* FilterView.swift */; };
 		AA4DC3652F95B565006E4581 /* View+NavigationTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC3642F95B565006E4581 /* View+NavigationTransition.swift */; };
 		AA4DC36C2F9660C8006E4581 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36B2F9660C8006E4581 /* SettingsView.swift */; };
+		AA4DC36E2F9722B3006E4581 /* AvailabilityBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36D2F9722B3006E4581 /* AvailabilityBadgeView.swift */; };
+		AA4DC3702F97252A006E4581 /* ToolBarDismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
@@ -126,6 +128,8 @@
 		AA4DC3622F943028006E4581 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		AA4DC3642F95B565006E4581 /* View+NavigationTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NavigationTransition.swift"; sourceTree = "<group>"; };
 		AA4DC36B2F9660C8006E4581 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AA4DC36D2F9722B3006E4581 /* AvailabilityBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityBadgeView.swift; sourceTree = "<group>"; };
+		AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarDismissButton.swift; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
@@ -354,6 +358,7 @@
 				9ADE90FC2C3A6BF5006A2E29 /* RatingView.swift */,
 				9AC534412C3B079700C4A795 /* TitledBoxView.swift */,
 				AADB0A122F79BF1D00531741 /* RestroomViewModel.swift */,
+				AA4DC36D2F9722B3006E4581 /* AvailabilityBadgeView.swift */,
 			);
 			path = Restroom;
 			sourceTree = "<group>";
@@ -370,6 +375,7 @@
 		AA36B7BF2F8B3567009A7A84 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
+				AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */,
 				AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */,
 			);
 			path = Buttons;
@@ -544,7 +550,9 @@
 				AA314DE12F756A3500C01DE9 /* MapViewModel.swift in Sources */,
 				9A8C2FD32587192300435B06 /* Display.swift in Sources */,
 				9A8C2FEE2587201500435B06 /* AppSettings.swift in Sources */,
+				AA4DC36E2F9722B3006E4581 /* AvailabilityBadgeView.swift in Sources */,
 				AA36B7C12F8B36E9009A7A84 /* GlassyToolbarButton.swift in Sources */,
+				AA4DC3702F97252A006E4581 /* ToolBarDismissButton.swift in Sources */,
 				AA4DC3632F943028006E4581 /* FilterView.swift in Sources */,
 				AADB0A132F79BF1D00531741 /* RestroomViewModel.swift in Sources */,
 				9AC22471255DA9E3008394A0 /* SharedModel.swift in Sources */,

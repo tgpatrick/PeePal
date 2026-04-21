@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ClusterSheetView: View {
-    @Environment(\.dismiss) var dismiss
-    
     let cluster: RestroomCluster
     let onSelectItem: ((RestroomCluster) -> Void)?
     let onDismiss: (() -> Void)?
@@ -26,20 +24,7 @@ struct ClusterSheetView: View {
                 }
             }
             .toolbar {
-                Button {
-                    dismiss()
-                    if let onDismiss {
-                        onDismiss()
-                    }
-                } label: {
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(8)
-                        .frame(height: 30)
-                        .fontWeight(.heavy)
-                }
-                .buttonStyle(GlassyToolbarButton())
+                ToolBarDismissButton(onDismiss: onDismiss)
             }
             .toolbarTitleDisplayMode(.inlineLarge)
         }
@@ -65,6 +50,7 @@ struct ClusterSheetView: View {
 
 extension PresentationDetent {
     static let low: PresentationDetent = .height(75)
+    static let lowHalf: PresentationDetent = .height(250)
     static let middle: PresentationDetent = .fraction(0.45)
     static let high: PresentationDetent = .fraction(0.99)
 }

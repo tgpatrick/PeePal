@@ -59,6 +59,7 @@ struct HomeView: View {
             content
         }
         .toolbar {
+            ToolbarSpacer(.flexible, placement: .bottomBar)
             ToolbarItem(placement: .bottomBar) {
                 Button("Show Filter", systemImage: "line.3.horizontal.decrease") {
                     showFilter = true
@@ -67,7 +68,7 @@ struct HomeView: View {
                 .matchedTransitionSource(id: "filter", in: homeNamespace)
             }
             
-            ToolbarSpacer(.flexible, placement: .bottomBar)
+            ToolbarSpacer(.fixed, placement: .bottomBar)
             ToolbarItem(id: "search", placement: .bottomBar) {
                 Button {
                     showSearch = true
@@ -79,18 +80,19 @@ struct HomeView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-//                .frame(minWidth: width * 0.575)
+                .frame(minWidth: width * 0.5)
                 .disabled(!showBottomControls)
                 .matchedTransitionSource(id: "search", in: homeNamespace)
             }
             
-            ToolbarSpacer(.flexible, placement: .bottomBar)
+            ToolbarSpacer(.fixed, placement: .bottomBar)
             ToolbarItem(placement: .bottomBar) {
                 Button("settings", systemImage: "gearshape") {
                     
                 }
                 .disabled(!showBottomControls)
             }
+            ToolbarSpacer(.flexible, placement: .bottomBar)
         }
     }
     
@@ -194,7 +196,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showFilter) {
                 FilterView()
-                    .presentationDetents([.middle])
+                    .presentationDetents([.lowHalf])
                     .zoomTransitionIfAvailable(sourceID: "filter", in: homeNamespace)
             }
             .onChange(of: mapViewModel?.selectedCluster) { _, newValue in

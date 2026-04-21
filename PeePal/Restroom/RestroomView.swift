@@ -9,7 +9,6 @@ import SwiftUI
 import CoreLocation
 
 struct RestroomView: View {
-    @Environment(\.colorScheme) private var colorScheme
     let restroom: Restroom
     @State var locationManager = LocationManager()
     @State private var viewModel = RestroomViewModel()
@@ -61,9 +60,9 @@ struct RestroomView: View {
                     HStack {
                         Spacer()
                         HStack(spacing: 0) {
-                            availabilityBadge(for: .unisex, isAvailable: restroom.unisex)
-                            availabilityBadge(for: .accessible, isAvailable: restroom.accessible)
-                            availabilityBadge(for: .changingTable, isAvailable: restroom.changingTable)
+                            AvailabilityBadgeView(for: .unisex, isAvailable: restroom.unisex)
+                            AvailabilityBadgeView(for: .accessible, isAvailable: restroom.accessible)
+                            AvailabilityBadgeView(for: .changingTable, isAvailable: restroom.changingTable)
                         }
                         .background(badgesBackground)
                         Spacer()
@@ -132,28 +131,6 @@ struct RestroomView: View {
                 }
             )
             .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-
-    private func availabilityBadge(for imageResource: ImageResource, isAvailable: Bool) -> some View {
-        imageInvertedIfDark(image: Image(imageResource))
-            .padding(10)
-            .frame(width: 50, height: 50)
-            .opacity(isAvailable ? 1 : 0.1)
-    }
-
-    private func imageInvertedIfDark(image: Image) -> some View {
-        Group {
-            if colorScheme == .dark {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .colorInvert()
-            } else {
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            }
-        }
     }
 }
 
