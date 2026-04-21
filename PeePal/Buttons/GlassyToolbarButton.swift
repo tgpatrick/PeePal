@@ -22,3 +22,17 @@ struct GlassyToolbarButton: ButtonStyle {
         }
     }
 }
+
+struct GlassyButtonIfAvailable: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .buttonStyle(.glassProminent)
+        } else {
+            content
+                .compositingGroup()
+                .shadow(radius: 5)
+                .buttonStyle(.borderedProminent)
+        }
+    }
+}

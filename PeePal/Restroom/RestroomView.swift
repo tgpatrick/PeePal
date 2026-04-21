@@ -45,15 +45,9 @@ struct RestroomView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(Color(.black).opacity(0.9))
-                            .padding(10)
-                            .frame(width: 50, height: 50)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .foregroundStyle(Color.accentColor.opacity(0.8))
-                            )
-                            .cornerRadius(10)
-                            .shadow(radius: 5)
                     }
+                    .frame(height: 50)
+                    .modifier(GlassyButtonIfAvailable())
                 }
 
                 VStack {

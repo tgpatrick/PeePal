@@ -27,9 +27,9 @@ struct HomeView: View {
     }
     
     let sheetDismissTime = 0.25
-    var showBottomControls: Bool {
-        !showSearch &&
-        sheetCluster == nil
+    var disableBottomControls: Bool {
+        showSearch ||
+        sheetCluster != nil
     }
     
     var body: some View {
@@ -66,6 +66,7 @@ struct HomeView: View {
                 Text("\(filterCount)")
                     .font(.caption)
                     .fontWeight(.heavy)
+                    .foregroundStyle(.black)
                     .background {
                         Circle()
                             .fill(.accent)
@@ -90,7 +91,7 @@ struct HomeView: View {
                 } label: {
                     filterButtonLabel(Image(systemName: "line.3.horizontal.decrease"))
                 }
-                .disabled(!showBottomControls)
+                .disabled(disableBottomControls)
                 .matchedTransitionSource(id: "filter", in: homeNamespace)
             }
             
@@ -107,7 +108,7 @@ struct HomeView: View {
                     }
                 }
                 .frame(minWidth: width * 0.5)
-                .disabled(!showBottomControls)
+                .disabled(disableBottomControls)
                 .matchedTransitionSource(id: "search", in: homeNamespace)
             }
             ToolbarSpacer(.fixed, placement: .bottomBar)
@@ -116,7 +117,7 @@ struct HomeView: View {
                 Button("settings", systemImage: "gearshape") {
                     
                 }
-                .disabled(!showBottomControls)
+                .disabled(disableBottomControls)
             }
             ToolbarSpacer(.flexible, placement: .bottomBar)
         }
@@ -125,72 +126,71 @@ struct HomeView: View {
     private func compatibilityContainter<Content: View>(_ content: Content) -> some View {
         ZStack(alignment: .top) {
             content
-            if showBottomControls {
-                VStack {
-                    Spacer()
-                    HStack {
-                        Button {
-                            showFilter = true
-                        } label: {
-                            filterButtonLabel(
-                                Image(systemName: "line.3.horizontal.decrease")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .fontWeight(.heavy)
-                                    .foregroundStyle(.buttonYellow)
-                                    .padding(12)
-                                    .background(
-                                        Circle()
-                                            .fill(.regularMaterial)
-                                            .strokeBorder(.buttonYellow, lineWidth: 3)
-                                    )
-                            )
-                        }
-                        .compositingGroup()
-                        .transitionSourceIfAvailable(id: "filter", in: homeNamespace)
-                        
-                        Spacer()
-                        Button {
-                            showSearch = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundStyle(.secondary)
-                                Text("Search")
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                            }
-                            .padding(10)
-                            .background(
-                                Capsule().foregroundStyle(.ultraThinMaterial)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .transitionSourceIfAvailable(id: "search", in: homeNamespace)
-                        
-                        Spacer()
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "gearshape.fill")
+            VStack {
+                Spacer()
+                HStack {
+                    Button {
+                        showFilter = true
+                    } label: {
+                        filterButtonLabel(
+                            Image(systemName: "line.3.horizontal.decrease")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .fontWeight(.heavy)
                                 .foregroundStyle(.buttonYellow)
-                                .padding(5)
+                                .padding(12)
                                 .background(
                                     Circle()
                                         .fill(.regularMaterial)
                                         .strokeBorder(.buttonYellow, lineWidth: 3)
                                 )
-                        }
-                        .compositingGroup()
+                        )
                     }
-                    .frame(height: 40)
-                    .shadow(radius: 5)
-                    .padding(.horizontal)
+                    .compositingGroup()
+                    .transitionSourceIfAvailable(id: "filter", in: homeNamespace)
+                    
+                    Spacer()
+                    Button {
+                        showSearch = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundStyle(.secondary)
+                            Text("Search")
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                        }
+                        .padding(10)
+                        .background(
+                            Capsule().foregroundStyle(.ultraThinMaterial)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .transitionSourceIfAvailable(id: "search", in: homeNamespace)
+                    
+                    Spacer()
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .fontWeight(.heavy)
+                            .foregroundStyle(.buttonYellow)
+                            .padding(5)
+                            .background(
+                                Circle()
+                                    .fill(.regularMaterial)
+                                    .strokeBorder(.buttonYellow, lineWidth: 3)
+                            )
+                    }
+                    .compositingGroup()
                 }
+                .frame(height: 40)
+                .shadow(radius: 5)
+                .padding(.horizontal)
             }
+            .disabled(disableBottomControls)
         }
     }
     
