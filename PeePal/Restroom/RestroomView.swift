@@ -44,10 +44,10 @@ struct RestroomView: View {
                         Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .foregroundStyle(Color(.black).opacity(0.9))
+                            .foregroundStyle(.black.opacity(0.9))
                     }
                     .frame(height: 50)
-                    .modifier(GlassyButtonIfAvailable())
+                    .modifier(GlassyOrProminentButton())
                 }
 
                 VStack {

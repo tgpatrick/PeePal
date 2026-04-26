@@ -23,7 +23,7 @@ struct GlassyToolbarButton: ButtonStyle {
     }
 }
 
-struct GlassyButtonIfAvailable: ViewModifier {
+struct GlassyOrProminentButton: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
             content
