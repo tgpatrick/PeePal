@@ -11,9 +11,9 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
-    @AppStorage("accessFilter") private var accessFilter: Bool = false
-    @AppStorage("unisexFilter") private var unisexFilter: Bool = false
-    @AppStorage("tableFilter") private var tableFilter: Bool = false
+    @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
+    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
+    @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
     @Namespace private var homeNamespace
     
     @State private var mapViewModel: MapViewModel?

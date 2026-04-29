@@ -55,15 +55,29 @@ struct RestroomLocalService {
         return try JSONDecoder().decode([Restroom].self, from: data)
     }
 
-    func fetchRestrooms(in region: MKCoordinateRegion) async throws -> [Restroom] {
+    func fetchRestrooms(in region: MKCoordinateRegion, filters: FilterService = .init()) async throws -> [Restroom] {
         let minLat = region.center.latitude - region.span.latitudeDelta / 2
         let maxLat = region.center.latitude + region.span.latitudeDelta / 2
         let minLon = region.center.longitude - region.span.longitudeDelta / 2
         let maxLon = region.center.longitude + region.span.longitudeDelta / 2
-
-        let predicate = #Predicate<RestroomEntity> {
-            $0.latitude >= minLat && $0.latitude <= maxLat &&
-            $0.longitude >= minLon && $0.longitude <= maxLon
+        
+        let bboxPredicate = #Predicate<RestroomEntity> { restroom in
+            restroom.latitude >= minLat && restroom.latitude <= maxLat &&
+            restroom.longitude >= minLon && restroom.longitude <= maxLon
+        }
+        
+        let unisexFilter = filters.unisex
+        let accessibleFilter = filters.accessible
+        let changingTableFilter = filters.changingTable
+        
+        let filterPredicate = #Predicate<RestroomEntity> { restroom in
+            (!accessibleFilter || restroom.accessible) &&
+            (!unisexFilter || restroom.unisex) &&
+            (!changingTableFilter || restroom.changingTable)
+        }
+        
+        let predicate = #Predicate<RestroomEntity> { restroom in
+            bboxPredicate.evaluate(restroom) && filterPredicate.evaluate(restroom)
         }
 
         let descriptor = FetchDescriptor<RestroomEntity>(predicate: predicate)

@@ -10,7 +10,15 @@ import SwiftData
 import SwiftUI
 
 struct MapView: View {
+    @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
+    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
+    @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
+    
     @State var viewModel: MapViewModel
+    
+    private var filterState: FilterState {
+        .init(accessible: accessFilter, unisex: unisexFilter, changingTable: tableFilter)
+    }
     
     var body: some View {
         MapReader { mapProxy in
@@ -26,6 +34,9 @@ struct MapView: View {
                             if viewModel.regionHasChanged(context.region) {
                                 viewModel.fetchRestrooms(region: context.region)
                             }
+                        }
+                        .onChange(of: filterState) { _, _ in
+                            viewModel.fetchRestrooms()
                         }
                         .onChange(of: viewModel.restrooms) { _, _ in
                             if let distance = mapProxy.degreesFromPixels(viewModel.clusterPixels) {

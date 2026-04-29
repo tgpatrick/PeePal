@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct FilterView: View {
-    @AppStorage("accessFilter") private var accessFilter: Bool = false
-    @AppStorage("unisexFilter") private var unisexFilter: Bool = false
-    @AppStorage("tableFilter") private var tableFilter: Bool = false
+    @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
+    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
+    @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
     
     var body: some View {
         NavigationStack {
