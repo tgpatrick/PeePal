@@ -32,7 +32,11 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
         return try decode(data)
     }
 
-    func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int = 1) async throws -> [Restroom] {
+    func fetchRestrooms(
+        near location: CLLocationCoordinate2D,
+        page: Int = 1,
+        filters: FilterState = .allDisabled
+    ) async throws -> [Restroom] {
         try Task.checkCancellation()
 
         logger.info("Fetching restrooms near (\(location.latitude), \(location.longitude)) page=\(page)")
@@ -41,7 +45,9 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
             URLQueryItem(name: "page", value: "\(page)"),
             URLQueryItem(name: "per_page", value: "10"),
             URLQueryItem(name: "lat", value: "\(location.latitude)"),
-            URLQueryItem(name: "lng", value: "\(location.longitude)")
+            URLQueryItem(name: "lng", value: "\(location.longitude)"),
+            URLQueryItem(name: "ada", value: "\(filters.accessible)"),
+            URLQueryItem(name: "unisex", value: "\(filters.unisex)")
         ])
 
         let data = try await performDataTask(from: url)

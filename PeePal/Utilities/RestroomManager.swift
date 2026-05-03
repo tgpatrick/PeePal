@@ -49,7 +49,11 @@ struct RestroomManager {
     }
     
     func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int = 1) async throws -> [Restroom] {
-        try await networkService.fetchRestrooms(near: location, page: page)
+        try await networkService.fetchRestrooms(
+            near: location,
+            page: page,
+            filters: FilterService().getState()
+        )
     }
     
     func searchRemoteRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {

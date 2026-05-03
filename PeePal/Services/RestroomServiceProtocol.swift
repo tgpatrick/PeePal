@@ -10,7 +10,11 @@ import Foundation
 import MapKit
 
 protocol RestroomNetworkServiceProtocol {
-    func fetchRestrooms(near location: CLLocationCoordinate2D, page: Int) async throws -> [Restroom]
+    func fetchRestrooms(
+        near location: CLLocationCoordinate2D,
+        page: Int,
+        filters: FilterState
+    ) async throws -> [Restroom]
     func fetchAllRestrooms() async throws -> [Restroom]
 }
 

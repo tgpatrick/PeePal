@@ -21,4 +21,10 @@ struct FilterState: Sendable, Equatable {
     var accessible: Bool
     var unisex: Bool
     var changingTable: Bool
+    
+    static let allDisabled: FilterState = FilterState(
+        accessible: false,
+        unisex: false,
+        changingTable: false
+    )
 }
