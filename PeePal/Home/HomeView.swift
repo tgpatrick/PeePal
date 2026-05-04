@@ -21,6 +21,7 @@ struct HomeView: View {
     @State private var sheetCluster: RestroomCluster?
     @State private var showSearch: Bool = false
     @State private var showFilter: Bool = false
+    @State private var showSettings: Bool = false
     
     private var filterCount: Int {
         (accessFilter ? 1 : 0) + (unisexFilter ? 1 : 0) + (tableFilter ? 1 : 0)
@@ -115,9 +116,10 @@ struct HomeView: View {
             
             ToolbarItem(placement: .bottomBar) {
                 Button("settings", systemImage: "gearshape") {
-                    
+                    showSettings = true
                 }
                 .disabled(disableBottomControls)
+                .matchedTransitionSource(id: "settings", in: homeNamespace)
             }
             ToolbarSpacer(.flexible, placement: .bottomBar)
         }
@@ -170,7 +172,7 @@ struct HomeView: View {
                     
                     Spacer()
                     Button {
-                        
+                        showSettings = true
                     } label: {
                         Image(systemName: "gearshape.fill")
                             .resizable()
@@ -211,6 +213,11 @@ struct HomeView: View {
                     .interactiveDismissDisabled()
                     .zoomTransitionIfAvailable(sourceID: "search", in: homeNamespace)
                 }
+            }
+            .sheet(isPresented: $showSettings) {
+                SettingsView()
+                    .interactiveDismissDisabled()
+                    .zoomTransitionIfAvailable(sourceID: "settings", in: homeNamespace)
             }
             .sheet(item: $sheetCluster) { cluster in
                 ClusterSheetView(
