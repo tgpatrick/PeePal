@@ -12,3 +12,7 @@ enum Filter: String {
     case unisex = "unisexFilter"
     case changingTable = "tableFilter"
 }
+
+enum Setting: String {
+    case colorScheme = "colorScheme"
+}
