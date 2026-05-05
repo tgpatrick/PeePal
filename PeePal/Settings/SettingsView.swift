@@ -40,6 +40,23 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                 }
                 
+                Section(header: Text("Data")) {
+                    VStack(alignment: .leading) {
+                        Link(destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!) {
+                            HStack {
+                                Text("Add a restroom")
+                                Spacer()
+                                Image(systemName: "arrow.up.forward.app")
+                            }
+                        }
+                        .foregroundStyle(.unisex)
+                        
+                        Text("Opens Refuge Restrooms in your browser")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                
                 if #available(iOS 26.0, *) {
                     Section(header: Text("Accessibility")) {
                         VStack(alignment: .leading) {
