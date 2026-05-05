@@ -16,4 +16,5 @@ enum Filter: String {
 enum Setting: String {
     case colorScheme = "colorScheme"
     case liquidGlassDisabled = "liquidGlassDisabled"
+    case googleMapsEnabled = "googleMapsEnabled"
 }

@@ -9,6 +9,8 @@ import SwiftUI
 import CoreLocation
 
 struct RestroomView: View {
+    @AppStorage(Setting.googleMapsEnabled.rawValue) private var isGoogleMapsEnabled: Bool = false
+    
     let restroom: Restroom
     @State var locationManager = LocationManager()
     @State private var viewModel = RestroomViewModel()
@@ -40,7 +42,12 @@ struct RestroomView: View {
                             .fontDesign(.rounded)
                             .foregroundStyle(.secondary)
                     }
-                    Link(destination: viewModel.directionsURL(restroom: restroom)) {
+                    Link(
+                        destination: viewModel.directionsURL(
+                            restroom: restroom,
+                            useGoogle: isGoogleMapsEnabled
+                        )
+                    ) {
                         Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)

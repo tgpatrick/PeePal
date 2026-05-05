@@ -46,13 +46,12 @@ class RestroomViewModel {
         return URL(string: url) ?? URL(string: "https://www.google.com/maps/dir/?api=1")!
     }
     
-    func directionsURL(restroom: Restroom) -> URL {
-        // TODO: Mapping service setting
-//        if !settings.useGoogle {
+    func directionsURL(restroom: Restroom, useGoogle: Bool) -> URL {
+        if !useGoogle {
             return makeAppleMapsURL(restroom: restroom)
-//        } else {
-//            return makeGoogleMapsURL(restroom: restroom)
-//        }
+        } else {
+            return makeGoogleMapsURL(restroom: restroom)
+        }
     }
     
     func makeEditURL(restroom: Restroom) -> URL {

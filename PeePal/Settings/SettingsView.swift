@@ -27,6 +27,7 @@ struct SettingsView: View {
     
     @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
     @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
+    @AppStorage(Setting.googleMapsEnabled.rawValue) private var isGoogleMapsEnabled: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -40,7 +41,9 @@ struct SettingsView: View {
                     .pickerStyle(.segmented)
                 }
                 
-                Section(header: Text("Data")) {
+                Section(header: Text("Map")) {
+                    Toggle("Use Google Maps directions", isOn: $isGoogleMapsEnabled)
+                    
                     VStack(alignment: .leading) {
                         Link(destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!) {
                             HStack {
