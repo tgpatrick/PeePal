@@ -11,9 +11,13 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
+    
     @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
     @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
     @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
+    
+    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = true
+    
     @Namespace private var homeNamespace
     
     @State private var mapViewModel: MapViewModel?
@@ -130,7 +134,7 @@ struct HomeView: View {
             content
             VStack {
                 Spacer()
-                HStack {
+                HStack(spacing: 8) {
                     Button {
                         showFilter = true
                     } label: {
@@ -191,6 +195,7 @@ struct HomeView: View {
                 .frame(height: 40)
                 .shadow(radius: 5)
                 .padding(.horizontal)
+                .padding(.horizontal)
             }
             .disabled(disableBottomControls)
         }
@@ -210,14 +215,16 @@ struct HomeView: View {
                         },
                         onDismiss: {}
                     )
+                    .materialPresentationBackground(isLiquidGlassDisabled)
                     .interactiveDismissDisabled()
-                    .zoomTransitionIfAvailable(sourceID: "search", in: homeNamespace)
+                    .zoomTransitionIfAvailable(sourceID: "search", in: homeNamespace, enabled: !isLiquidGlassDisabled)
                 }
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
+                    .materialPresentationBackground(isLiquidGlassDisabled)
                     .interactiveDismissDisabled()
-                    .zoomTransitionIfAvailable(sourceID: "settings", in: homeNamespace)
+                    .zoomTransitionIfAvailable(sourceID: "settings", in: homeNamespace, enabled: !isLiquidGlassDisabled)
             }
             .sheet(item: $sheetCluster) { cluster in
                 ClusterSheetView(
@@ -225,13 +232,15 @@ struct HomeView: View {
                     onSelectItem: mapViewModel?.selectAnnotation,
                     onDismiss: mapViewModel?.clearSelectedAnnotation
                 )
+                .materialPresentationBackground(isLiquidGlassDisabled)
                 .id(cluster.hashValue)
                 .interactiveDismissDisabled()
             }
             .sheet(isPresented: $showFilter) {
                 FilterView()
+                    .materialPresentationBackground(isLiquidGlassDisabled)
                     .presentationDetents([.lowHalf])
-                    .zoomTransitionIfAvailable(sourceID: "filter", in: homeNamespace)
+                    .zoomTransitionIfAvailable(sourceID: "filter", in: homeNamespace, enabled: !isLiquidGlassDisabled)
             }
             .onChange(of: mapViewModel?.selectedCluster) { _, newValue in
                 // Copy of selected cluster ensures a new sheet for each cluster change

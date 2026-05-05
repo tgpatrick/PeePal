@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct PeePalApp: App {
-    @AppStorage("app_appearance") private var appearance: Appearance = .system
+    @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
     
     var body: some Scene {
         WindowGroup {

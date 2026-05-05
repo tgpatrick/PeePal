@@ -18,8 +18,8 @@ extension View {
     }
     
     @ViewBuilder
-    func zoomTransitionIfAvailable(sourceID: AnyHashable, in namespace: Namespace.ID) -> some View {
-        if #available(iOS 18.0, *) {
+    func zoomTransitionIfAvailable(sourceID: AnyHashable, in namespace: Namespace.ID, enabled: Bool) -> some View {
+        if #available(iOS 18.0, *), enabled {
             self.navigationTransition(.zoom(sourceID: sourceID, in: namespace))
         } else {
             self

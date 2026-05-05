@@ -26,6 +26,7 @@ struct SettingsView: View {
     @State private var systemColorScheme: ColorScheme?
     
     @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
+    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -38,6 +39,17 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                 }
+                
+                if #available(iOS 26.0, *) {
+                    Section(header: Text("Accessibility")) {
+                        VStack(alignment: .leading) {
+                            Toggle("Reduce Liquid Glass", isOn: $isLiquidGlassDisabled)
+                            Text("Adds solid backgrounds and reduces animations")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
             }
             .navigationTitle("Settings")
             .toolbar {
@@ -49,6 +61,7 @@ struct SettingsView: View {
                 systemColorScheme = colorScheme
             }
         }
+        .transition(.identity) // Other
     }
 }
 
