@@ -16,7 +16,7 @@ struct HomeView: View {
     @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
     @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
     
-    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = true
+    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
     @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
     
     @Namespace private var homeNamespace
