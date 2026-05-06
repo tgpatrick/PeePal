@@ -14,13 +14,14 @@ struct FilterView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack(spacing: 10) {
-                    AvailabilityBadgeView(
-                        for: .unisex,
-                        isAvailable: true,
-                        shouldInvert: false
-                    )
+            ScrollView {
+                VStack {
+                    HStack(spacing: 10) {
+                        AvailabilityBadgeView(
+                            for: .unisex,
+                            isAvailable: true,
+                            shouldInvert: false
+                        )
                         .background {
                             Circle()
                                 .fill(Color.unisex)
@@ -29,16 +30,16 @@ struct FilterView: View {
                                 .shadow(color: .unisex, radius: 5)
                                 .shadow(color: .unisex, radius: 5)
                         }
-                    Toggle("Unisex Available", isOn: $unisexFilter)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                }
-                HStack {
-                    AvailabilityBadgeView(
-                        for: .accessible,
-                        isAvailable: true,
-                        shouldInvert: false
-                    )
+                        Toggle("Unisex", isOn: $unisexFilter)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
+                    HStack {
+                        AvailabilityBadgeView(
+                            for: .accessible,
+                            isAvailable: true,
+                            shouldInvert: false
+                        )
                         .background {
                             Circle()
                                 .fill(Color.accessible)
@@ -47,16 +48,16 @@ struct FilterView: View {
                                 .shadow(color: .accessible, radius: 5)
                                 .shadow(color: .accessible, radius: 5)
                         }
-                    Toggle("ADA Accessible", isOn: $accessFilter)
-                        .font(.title3)
-                        .fontWeight(.bold)
-                }
-                HStack {
-                    AvailabilityBadgeView(
-                        for: .changingTable,
-                        isAvailable: true,
-                        shouldInvert: false
-                    )
+                        Toggle("Accessible", isOn: $accessFilter)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
+                    HStack {
+                        AvailabilityBadgeView(
+                            for: .changingTable,
+                            isAvailable: true,
+                            shouldInvert: false
+                        )
                         .background {
                             Circle()
                                 .fill(Color.changingTable)
@@ -65,12 +66,13 @@ struct FilterView: View {
                                 .shadow(color: .changingTable, radius: 5)
                                 .shadow(color: .changingTable, radius: 5)
                         }
-                    Toggle("Changing Table Available", isOn: $tableFilter)
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        Toggle("Changing Table", isOn: $tableFilter)
+                            .font(.title3)
+                            .fontWeight(.bold)
+                    }
                 }
+                .padding(.horizontal, 15)
             }
-            .padding(.horizontal, 15)
             .toolbar {
                 ToolBarDismissButton()
             }

@@ -228,7 +228,6 @@ struct HomeView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsView()
                     .materialPresentationBackground(isLiquidGlassDisabled)
-                    .interactiveDismissDisabled()
                     .zoomTransitionIfAvailable(sourceID: "settings", in: homeNamespace, enabled: !isLiquidGlassDisabled)
             }
             .sheet(item: $sheetCluster) { cluster in
