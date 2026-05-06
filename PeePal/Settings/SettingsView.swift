@@ -26,8 +26,9 @@ struct SettingsView: View {
     @State private var systemColorScheme: ColorScheme?
     
     @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
-    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
     @AppStorage(Setting.googleMapsEnabled.rawValue) private var isGoogleMapsEnabled: Bool = false
+    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
+    @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -42,6 +43,13 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Map")) {
+                    VStack(alignment: .leading) {
+                        Toggle("Offline mode", isOn: $isOfflineModeEnabled)
+                        Text("Disables automatic fetch")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    
                     Toggle("Use Google Maps directions", isOn: $isGoogleMapsEnabled)
                     
                     VStack(alignment: .leading) {

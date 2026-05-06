@@ -23,6 +23,7 @@ class MapViewModel {
     var selectedCluster: RestroomCluster?
     var parentCluster: RestroomCluster?
     var isLoading = false
+    var showRefresh = false
     var error: NetworkError?
     var cameraPosition: MapCameraPosition = .rect(
         MKMapRect(
@@ -74,6 +75,7 @@ class MapViewModel {
         
         if hasChanged {
             self.lastCameraRegion = region
+            withAnimation { showRefresh = region.span.latitudeDelta < 1 && hasChanged }
         }
         return hasChanged
     }
@@ -130,13 +132,13 @@ class MapViewModel {
         isLoading = false
     }
 
-    func fetchRestrooms(region: MKCoordinateRegion? = nil) {
+    func fetchRestrooms(region: MKCoordinateRegion? = nil, fetchFromNetwork: Bool) {
         // Cancel any ongoing fetch task to restart debounce timer
         fetchTask?.cancel()
         fetchTask = nil
         self.setLoading(false)
         
-        guard let region = region ?? cameraPosition.region else {
+        guard let region = region ?? cameraPosition.region ?? lastCameraRegion else {
             // No region, no fetch
             return
         }
@@ -152,15 +154,18 @@ class MapViewModel {
             }
         }
         
+        guard fetchFromNetwork else { return }
         // Don't fetch when zoomed out, that's not really useful
         guard region.span.latitudeDelta < 1 else { return }
-        
         // Start debounced network fetch task
         fetchTask = Task.detached { [weak self] in
             try? await Task.sleep(for: .seconds(1))
             
             guard let self, !Task.isCancelled else { return }
-            await MainActor.run { self.setLoading(true) }
+            await MainActor.run { withAnimation {
+                self.setLoading(true)
+                self.showRefresh = false
+            }}
             
             do {
                 var page = 1

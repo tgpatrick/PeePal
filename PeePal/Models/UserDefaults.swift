@@ -9,12 +9,13 @@ import Foundation
 
 enum Filter: String {
     case accessible = "accessFilter"
-    case unisex = "unisexFilter"
     case changingTable = "tableFilter"
+    case unisex = "unisexFilter"
 }
 
 enum Setting: String {
     case colorScheme = "colorScheme"
-    case liquidGlassDisabled = "liquidGlassDisabled"
     case googleMapsEnabled = "googleMapsEnabled"
+    case liquidGlassDisabled = "liquidGlassDisabled"
+    case offlineMode = "offlineMode"
 }

@@ -37,6 +37,7 @@ struct LoadingSpinner: View {
         .background {
             Circle().foregroundStyle(.ultraThickMaterial)
         }
+        .compositingGroup()
         .shadow(radius: 5)
         .zIndex(2)
         .transition(.move(edge: .top).combined(with: .opacity))

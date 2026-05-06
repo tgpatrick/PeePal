@@ -14,6 +14,8 @@ struct MapView: View {
     @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
     @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
     
+    @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
+    
     @State var viewModel: MapViewModel
     
     private var filterState: FilterState {
@@ -32,11 +34,11 @@ struct MapView: View {
                         }
                         .onMapCameraChange(frequency: .onEnd) { context in
                             if viewModel.regionHasChanged(context.region) {
-                                viewModel.fetchRestrooms(region: context.region)
+                                viewModel.fetchRestrooms(region: context.region, fetchFromNetwork: !isOfflineModeEnabled)
                             }
                         }
                         .onChange(of: filterState) { _, _ in
-                            viewModel.fetchRestrooms()
+                            viewModel.fetchRestrooms(fetchFromNetwork: !isOfflineModeEnabled)
                         }
                         .onChange(of: viewModel.restrooms) { _, _ in
                             if let distance = mapProxy.degreesFromPixels(viewModel.clusterPixels) {

@@ -13,10 +13,11 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     
     @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
-    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
     @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
+    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
     
     @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = true
+    @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
     
     @Namespace private var homeNamespace
     
@@ -54,6 +55,10 @@ struct HomeView: View {
                 .ignoresSafeArea(.keyboard)
             if mapViewModel.isLoading {
                 LoadingSpinner()
+            } else if isOfflineModeEnabled && mapViewModel.showRefresh {
+                RefreshButton {
+                    mapViewModel.fetchRestrooms(fetchFromNetwork: true)
+                }
             }
         } else {
             ProgressView()
