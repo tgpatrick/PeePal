@@ -112,7 +112,7 @@ class MapViewModel {
 
     func loadInitialRestrooms() async {
         do {
-            isLoading = true
+            setLoading(true)
             try? await restroomManager.initializeFromBundleIfNeeded()
             // If a known region exists, fetch restrooms in that region to limit data
             if let region = cameraPosition.region {
@@ -129,7 +129,7 @@ class MapViewModel {
             logger.error("Failed to load initial restrooms: \(error)")
             self.error = .unknownError
         }
-        isLoading = false
+        setLoading(false)
     }
 
     func fetchRestrooms(region: MKCoordinateRegion? = nil, fetchFromNetwork: Bool) {
@@ -142,30 +142,36 @@ class MapViewModel {
             // No region, no fetch
             return
         }
+        self.setLoading(true)
         
         // Immediately fetch and display local restrooms for the given region
-        Task { @MainActor in
+        Task {
             do {
                 let localRestrooms = try await restroomManager.fetchRestrooms(in: region)
-                self.restrooms = Set(localRestrooms)
+                Task { @MainActor in
+                    self.restrooms = Set(localRestrooms)
+                }
             } catch {
                 logger.error("Failed to fetch local restrooms immediately: \(error)")
                 self.error = .unknownError
             }
         }
         
-        guard fetchFromNetwork else { return }
         // Don't fetch when zoomed out, that's not really useful
-        guard region.span.latitudeDelta < 1 else { return }
+        guard fetchFromNetwork && region.span.latitudeDelta < 1 else {
+            setLoading(false)
+            return
+        }
+        
         // Start debounced network fetch task
         fetchTask = Task.detached { [weak self] in
             try? await Task.sleep(for: .seconds(1))
             
             guard let self, !Task.isCancelled else { return }
-            await MainActor.run { withAnimation {
+            await MainActor.run {
                 self.setLoading(true)
                 self.showRefresh = false
-            }}
+            }
             
             do {
                 var page = 1
