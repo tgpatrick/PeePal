@@ -84,20 +84,29 @@ struct RestroomLocalService {
         let entities = try modelContext.fetch(descriptor)
         return entities.map { $0.asRestroom }
     }
-
-    func searchRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {
+    
+    func searchRestrooms(matching query: String, limit: Int = 25, filters: FilterState = .allDisabled) async throws -> [Restroom] {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return [] }
-//        let lowercased = trimmed.lowercased()
-
-        // Build a SwiftData predicate to search across common textual fields.
-        let predicate = #Predicate<RestroomEntity> { entity in
-            (entity.name?.localizedStandardContains(trimmed) ?? false) ||
-//            (entity.street?.localizedLowercase.contains(lowercased) ?? false) ||
-            (entity.city?.localizedStandardContains(trimmed) ?? false)
-//            (entity.state?.localizedLowercase.contains(lowercased) ?? false)
+        let lowercased = trimmed.lowercased()
+        
+        let textPredicate = #Predicate<RestroomEntity> { entity in
+            entity.allText.localizedStandardContains(lowercased)
         }
-
+        
+        let unisexFilter = filters.unisex
+        let accessibleFilter = filters.accessible
+        let changingTableFilter = filters.changingTable
+        let filterPredicate = #Predicate<RestroomEntity> { restroom in
+            (!accessibleFilter || restroom.accessible) &&
+            (!unisexFilter || restroom.unisex) &&
+            (!changingTableFilter || restroom.changingTable)
+        }
+        
+        let predicate = #Predicate<RestroomEntity> { restroom in
+            textPredicate.evaluate(restroom) && filterPredicate.evaluate(restroom)
+        }
+        
         var descriptor = FetchDescriptor<RestroomEntity>(predicate: predicate)
         descriptor.fetchLimit = limit
         let entities = try modelContext.fetch(descriptor)

@@ -165,6 +165,7 @@ struct HomeView: View {
                         showSearch = true
                     } label: {
                         HStack {
+                            Spacer()
                             Image(systemName: "magnifyingglass")
                                 .foregroundStyle(.secondary)
                             Text("Search")

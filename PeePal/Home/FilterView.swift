@@ -22,14 +22,7 @@ struct FilterView: View {
                             isAvailable: true,
                             shouldInvert: false
                         )
-                        .background {
-                            Circle()
-                                .fill(Color.unisex)
-                                .padding(10)
-                                .shadow(color: .unisex, radius: 5)
-                                .shadow(color: .unisex, radius: 5)
-                                .shadow(color: .unisex, radius: 5)
-                        }
+                        .colorCircleShadow(.unisex)
                         Toggle("Unisex", isOn: $unisexFilter)
                             .font(.title3)
                             .fontWeight(.bold)
@@ -40,14 +33,7 @@ struct FilterView: View {
                             isAvailable: true,
                             shouldInvert: false
                         )
-                        .background {
-                            Circle()
-                                .fill(Color.accessible)
-                                .padding(10)
-                                .shadow(color: .accessible, radius: 5)
-                                .shadow(color: .accessible, radius: 5)
-                                .shadow(color: .accessible, radius: 5)
-                        }
+                        .colorCircleShadow(.accessible)
                         Toggle("Accessible", isOn: $accessFilter)
                             .font(.title3)
                             .fontWeight(.bold)
@@ -58,14 +44,7 @@ struct FilterView: View {
                             isAvailable: true,
                             shouldInvert: false
                         )
-                        .background {
-                            Circle()
-                                .fill(Color.changingTable)
-                                .padding(10)
-                                .shadow(color: .changingTable, radius: 5)
-                                .shadow(color: .changingTable, radius: 5)
-                                .shadow(color: .changingTable, radius: 5)
-                        }
+                        .colorCircleShadow(.changingTable)
                         Toggle("Changing Table", isOn: $tableFilter)
                             .font(.title3)
                             .fontWeight(.bold)

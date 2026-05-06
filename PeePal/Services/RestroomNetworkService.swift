@@ -78,11 +78,13 @@ struct RestroomNetworkService: RestroomNetworkServiceProtocol, NetworkService {
         return restrooms
     }
     
-    func searchRestrooms(matching query: String, page: Int = 1, limit: Int = 25) async throws -> [Restroom] {
+    func searchRestrooms(matching query: String, page: Int = 1, limit: Int = 25, filters: FilterState = .allDisabled) async throws -> [Restroom] {
         let url = try makeURL(path: "/search", queryItems: [
             URLQueryItem(name: "query", value: "\(query)"),
             URLQueryItem(name: "page", value: "\(page)"),
             URLQueryItem(name: "per_page", value: "\(limit)"),
+            URLQueryItem(name: "ada", value: "\(filters.accessible)"),
+            URLQueryItem(name: "unisex", value: "\(filters.unisex)")
         ])
         
         let data = try await performDataTask(from: url)

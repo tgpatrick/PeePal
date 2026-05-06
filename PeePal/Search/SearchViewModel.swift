@@ -43,16 +43,16 @@ final class SearchViewModel: ObservableObject {
         self.restroomManager = RestroomManager(modelContext: modelContext)
     }
     
-    func search() {
+    func search(useFilters: Bool = true, filters: FilterState = .allDisabled) {
         logger.debug("Searching for: \(self.searchText)")
         searchTask?.cancel()
         searchTask = nil
         searchTask = Task {
             async let _ = searchMapLocations()
-            async let _ = searchLocalRestrooms()
+            async let _ = searchLocalRestrooms(filters: useFilters ? filters : nil)
             try? await Task.sleep(for: .seconds(1))
             try? Task.checkCancellation()
-            await searchRemoteRestrooms()
+            await searchRemoteRestrooms(filters: useFilters ? filters : nil)
         }
     }
     
@@ -96,9 +96,10 @@ final class SearchViewModel: ObservableObject {
         }
     }
     
-    private func searchLocalRestrooms() async {
+    private func searchLocalRestrooms(filters: FilterState? = nil) async {
+        let filters = filters ?? .allDisabled
         do {
-            let response = try await restroomManager.searchLocalRestrooms(matching: searchText)
+            let response = try await restroomManager.searchLocalRestrooms(matching: searchText, filters: filters)
             try? Task.checkCancellation()
             await MainActor.run { [weak self] in
                 self?.restroomResults = response.map({ ListableItem(item: $0) })
@@ -108,7 +109,8 @@ final class SearchViewModel: ObservableObject {
         }
     }
     
-    func searchRemoteRestrooms() async {
+    func searchRemoteRestrooms(filters: FilterState? = nil) async {
+        let filters = filters ?? .allDisabled
         guard searchText.count > 3 else { return }
         defer {
             withAnimation {
@@ -122,7 +124,7 @@ final class SearchViewModel: ObservableObject {
                     self?.loadingNetworkResults = true
                 }
             }
-            let response = try await restroomManager.searchRemoteRestrooms(matching: searchText)
+            let response = try await restroomManager.searchRemoteRestrooms(matching: searchText, filters: filters)
             let currentRestrooms = Set<ListableItem>(restroomResults)
             let newResults = currentRestrooms.union(Set<ListableItem>(response.map({ ListableItem(item: $0) })))
             try? Task.checkCancellation()

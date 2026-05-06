@@ -25,6 +25,8 @@ final class RestroomEntity {
     var upvote: Int
     var latitude: Double
     var longitude: Double
+    
+    var allText: String
 
     init(
         id: Int,
@@ -58,6 +60,11 @@ final class RestroomEntity {
         self.upvote = upvote
         self.latitude = latitude
         self.longitude = longitude
+        self.allText = [name, street, city, state, comment, directions]
+            .compactMap(\.self)
+            .joined()
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
     }
 
     convenience init(restroom: Restroom) {

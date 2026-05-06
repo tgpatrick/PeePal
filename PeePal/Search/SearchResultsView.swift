@@ -9,58 +9,113 @@ import SwiftData
 import SwiftUI
 
 struct SearchResultsView: View {
+    @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
+    @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
+    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
+    private var anyFilterEnabled: Bool { accessFilter || tableFilter || unisexFilter }
+    private var filterCount: Int {
+        (accessFilter ? 1 : 0) + (unisexFilter ? 1 : 0) + (tableFilter ? 1 : 0)
+    }
+    
     @State var viewModel: SearchViewModel
     @State private var currentDetent: PresentationDetent = .middle
+    @State private var usingFilters: Bool = true
     
     let onItemTap: (any Listable) -> Void
     var onDismiss: (() -> Void)? = nil
     
     var body: some View {
         NavigationStack {
-            if viewModel.anyResults, currentDetent != .low {
-                List {
-                    Section(content: {
-                        ForEach(viewModel.mapResults.prefix(1)) { result in
-                            itemButton(result.item)
-                        }
-                    }, header: {
-                        HStack {
-                            Text("Map Results")
-                                .font(.title2)
-                            Spacer()
-                            NavigationLink("See All") {
-                                allResults(for: viewModel.mapResults, title: "Map")
+            VStack {
+                if viewModel.anyResults, currentDetent != .low {
+                    List {
+                        Section(content: {
+                            ForEach(viewModel.mapResults.prefix(1)) { result in
+                                itemButton(result.item)
                             }
-                            .font(.subheadline)
-                        }
-                        .foregroundStyle(.primary)
-                    })
-                    
-                    Section(content: {
-                        ForEach(viewModel.restroomResults.prefix(3)) { result in
-                            itemButton(result.item)
-                        }
-                    }, header: {
-                        HStack {
-                            Text("Restroom Results")
-                                .font(.title2)
-                            if viewModel.loadingNetworkResults {
-                                ProgressView()
+                        }, header: {
+                            HStack {
+                                Text("Map Results")
+                                    .font(.title2)
+                                Spacer()
+                                NavigationLink("See All") {
+                                    allResults(for: viewModel.mapResults, title: "Map")
+                                }
+                                .font(.subheadline)
                             }
-                            Spacer()
-                            NavigationLink("See All") {
-                                allResults(for: viewModel.restroomResults, title: "Restroom")
+                            .foregroundStyle(.primary)
+                        })
+                        
+                        Section(content: {
+                            if anyFilterEnabled {
+                                Toggle(isOn: $usingFilters) {
+                                    HStack {
+                                        Text("Using your filter" + (filterCount > 1 ? "s:" : ":"))
+                                        HStack(spacing: -15) {
+                                            if unisexFilter {
+                                                AvailabilityBadgeView(
+                                                    for: .unisex,
+                                                    isAvailable: usingFilters,
+                                                    shouldInvert: false
+                                                )
+                                                .colorCircleShadow(.unisex.opacity(usingFilters ? 1 : 0.1))
+                                                .scaleEffect(0.5)
+                                            }
+                                            if accessFilter {
+                                                AvailabilityBadgeView(
+                                                    for: .accessible,
+                                                    isAvailable: usingFilters,
+                                                    shouldInvert: false
+                                                )
+                                                .colorCircleShadow(.accessible.opacity(usingFilters ? 1 : 0.1))
+                                                .scaleEffect(0.5)
+                                            }
+                                            if tableFilter {
+                                                AvailabilityBadgeView(
+                                                    for: .changingTable,
+                                                    isAvailable: usingFilters,
+                                                    shouldInvert: false
+                                                )
+                                                .colorCircleShadow(.changingTable.opacity(usingFilters ? 1 : 0.1))
+                                                .scaleEffect(0.5)
+                                            }
+                                        }
+                                        .padding(-15)
+                                        Spacer()
+                                    }
+                                    .foregroundStyle(usingFilters ? Color.primary : Color.gray)
+                                }
                             }
-                            .font(.subheadline)
-                        }
-                        .foregroundStyle(.primary)
-                    })
+                            ForEach(viewModel.restroomResults.prefix(10)) { result in
+                                itemButton(result.item)
+                            }
+                        }, header: {
+                            VStack {
+                                HStack {
+                                    Text("Restroom Results")
+                                        .font(.title2)
+                                    if viewModel.loadingNetworkResults {
+                                        ProgressView()
+                                    }
+                                    Spacer()
+                                    if !viewModel.restroomResults.isEmpty {
+                                        NavigationLink("See All") {
+                                            allResults(for: viewModel.restroomResults, title: "Restroom")
+                                        }
+                                        .font(.subheadline)
+                                    }
+                                }
+                                
+                                
+                            }
+                            .foregroundStyle(.primary)
+                        })
+                    }
+                    .listStyle(.plain)
+                    .listSectionSpacing(0)
+                } else if currentDetent != .low {
+                    searchSuggestions
                 }
-                .listStyle(.plain)
-            } else if currentDetent != .low {
-                searchSuggestions
-            } else {
-                List {} // Otherwise the search bar disappears and everything crashes
             }
         }
         .searchable(
@@ -70,7 +125,26 @@ struct SearchResultsView: View {
         )
         .presentationDetents([.low, .middle, .high], selection: $currentDetent)
         .presentationBackgroundInteraction(.enabled(upThrough: .middle))
-        .onChange(of: viewModel.searchText, viewModel.search)
+        .onChange(of: viewModel.searchText) {
+            viewModel.search(
+                useFilters: usingFilters,
+                filters: .init(
+                    accessible: accessFilter,
+                    unisex: unisexFilter,
+                    changingTable: tableFilter
+                )
+            )
+        }
+        .onChange(of: usingFilters) {
+            viewModel.search(
+                useFilters: usingFilters,
+                filters: .init(
+                    accessible: accessFilter,
+                    unisex: unisexFilter,
+                    changingTable: tableFilter
+                )
+            )
+        }
         .onDisappear {
             if let onDismiss {
                 onDismiss()

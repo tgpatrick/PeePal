@@ -56,8 +56,10 @@ struct RestroomManager {
         )
     }
     
-    func searchRemoteRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {
-        try await networkService.searchRestrooms(matching: query, limit: limit)
+    func searchRemoteRestrooms(matching query: String, limit: Int = 25, filters: FilterState = .allDisabled) async throws -> [Restroom] {
+        let results = try await networkService.searchRestrooms(matching: query, limit: limit, filters: filters)
+        guard filters.changingTable else { return results } // API does not have this filter
+        return results.filter { !$0.changingTable }
     }
     
     func initializeFromBundleIfNeeded() async throws {
@@ -73,8 +75,8 @@ struct RestroomManager {
         try await localService.fetchRestrooms(in: region)
     }
     
-    func searchLocalRestrooms(matching query: String, limit: Int = 25) async throws -> [Restroom] {
-        try await localService.searchRestrooms(matching: query, limit: limit)
+    func searchLocalRestrooms(matching query: String, limit: Int = 25, filters: FilterState = .allDisabled) async throws -> [Restroom] {
+        try await localService.searchRestrooms(matching: query, limit: limit, filters: filters)
     }
     
     // Save restrooms to local storage (delegates to local service)
