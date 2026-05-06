@@ -38,7 +38,7 @@ struct HomeView: View {
     }
     
     var body: some View {
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, *), !isLiquidGlassDisabled {
             GeometryReader { geo in
                 container(width: geo.size.width, withModifiers(content))
             }
