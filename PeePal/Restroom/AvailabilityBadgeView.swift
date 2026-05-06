@@ -43,8 +43,10 @@ struct AvailabilityBadgeView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     AvailabilityBadgeView(for: .unisex, isAvailable: true)
     AvailabilityBadgeView(for: .accessible, isAvailable: true)
     AvailabilityBadgeView(for: .changingTable, isAvailable: true)
 }
+#endif

@@ -24,6 +24,7 @@ struct RefreshButton: View {
     }
 }
 
+#if DEBUG
 #Preview {
     @Previewable @State var showButton: Bool = false
     
@@ -42,3 +43,4 @@ struct RefreshButton: View {
         .frame(height: 250)
     }
 }
+#endif

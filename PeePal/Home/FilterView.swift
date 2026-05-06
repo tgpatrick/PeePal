@@ -82,6 +82,7 @@ struct FilterView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     Color.yellow
         .edgesIgnoringSafeArea(.all)
@@ -90,3 +91,4 @@ struct FilterView: View {
                 .presentationDetents([.lowHalf])
         }
 }
+#endif
