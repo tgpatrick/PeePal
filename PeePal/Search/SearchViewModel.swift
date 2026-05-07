@@ -48,6 +48,8 @@ final class SearchViewModel: ObservableObject {
         searchTask?.cancel()
         searchTask = nil
         searchTask = Task {
+            try? await Task.sleep(for: .seconds(0.5))
+            try? Task.checkCancellation()
             async let _ = searchMapLocations()
             async let _ = searchLocalRestrooms(filters: useFilters ? filters : nil)
             try? await Task.sleep(for: .seconds(1))
