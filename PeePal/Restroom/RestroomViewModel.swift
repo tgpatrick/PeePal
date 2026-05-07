@@ -46,10 +46,11 @@ class RestroomViewModel {
         return URL(string: url) ?? URL(string: "https://www.google.com/maps/dir/?api=1")!
     }
     
-    func directionsURL(restroom: Restroom, useGoogle: Bool) -> URL {
-        if !useGoogle {
+    func directionsURL(restroom: Restroom, using provider: DirectionsProvider) -> URL {
+        switch provider {
+        case .apple:
             return makeAppleMapsURL(restroom: restroom)
-        } else {
+        case .google:
             return makeGoogleMapsURL(restroom: restroom)
         }
     }

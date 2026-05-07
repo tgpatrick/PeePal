@@ -22,6 +22,11 @@ enum Appearance: String, CaseIterable {
     }
 }
 
+enum DirectionsProvider: String, CaseIterable {
+    case apple = "Apple Maps"
+    case google = "Google Maps"
+}
+
 enum MapMode: String, CaseIterable {
     case standard = "Standard"
     case satellite = "Satellite"
@@ -41,7 +46,7 @@ struct SettingsView: View {
     @State private var systemColorScheme: ColorScheme?
     
     @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
-    @AppStorage(Setting.googleMapsEnabled.rawValue) private var isGoogleMapsEnabled: Bool = false
+    @AppStorage(Setting.directionsProvider.rawValue) private var directionsProvider: DirectionsProvider = .apple
     @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
     @AppStorage(Setting.mapMode.rawValue) private var mapMode: MapMode = .standard
     @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
@@ -66,14 +71,20 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                     
+                    Picker("Directions provider", selection: $directionsProvider) {
+                        ForEach(DirectionsProvider.allCases, id: \.self) { provider in
+                            Text(provider.rawValue).tag(provider)
+                        }
+                    }
+                }
+                
+                Section(header: Text("Data")) {
                     VStack(alignment: .leading) {
                         Toggle("Offline mode", isOn: $isOfflineModeEnabled)
                         Text("Disables automatic fetch")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
-                    
-                    Toggle("Use Google Maps directions", isOn: $isGoogleMapsEnabled)
                     
                     VStack(alignment: .leading) {
                         Link(destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!) {
@@ -112,7 +123,7 @@ struct SettingsView: View {
                 systemColorScheme = colorScheme
             }
         }
-        .transition(.identity) // Other
+        .transition(.identity) // No going crazy when we toggle Liquid Glass
     }
 }
 
