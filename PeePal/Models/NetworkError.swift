@@ -2,7 +2,7 @@
 //  NetworkError.swift
 //  PeePal
 //
-//  Created by Thomas Patrick on 3/21/26.
+//  Created by Thomas Patrick on 7/3/24.
 //
 
 enum NetworkError: Error, CustomStringConvertible {
