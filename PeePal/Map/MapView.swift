@@ -15,6 +15,7 @@ struct MapView: View {
     @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
     
     @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = true
+    @AppStorage(Setting.mapMode.rawValue) private var mapMode: MapMode = .standard
     @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
     
     @State var viewModel: MapViewModel
@@ -113,6 +114,7 @@ struct MapView: View {
                     .tag(mapItemCluster)
             }
         }
+            .mapStyle(mapMode.mapStyle)
             .safeAreaPadding(.bottom, isLiquidGlassDisabled ? 40 : 0)
     }
 }

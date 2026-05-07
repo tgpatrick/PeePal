@@ -5,6 +5,7 @@
 //  Created by Thomas Patrick on 11/12/20.
 //
 
+import MapKit
 import SwiftUI
 
 enum Appearance: String, CaseIterable {
@@ -21,6 +22,20 @@ enum Appearance: String, CaseIterable {
     }
 }
 
+enum MapMode: String, CaseIterable {
+    case standard = "Standard"
+    case satellite = "Satellite"
+    case hybrid = "Hybrid"
+    
+    var mapStyle: MapStyle {
+        switch self {
+        case .standard: return .standard
+        case .satellite: return .imagery
+        case .hybrid: return .hybrid
+        }
+    }
+}
+
 struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var systemColorScheme: ColorScheme?
@@ -28,6 +43,7 @@ struct SettingsView: View {
     @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
     @AppStorage(Setting.googleMapsEnabled.rawValue) private var isGoogleMapsEnabled: Bool = false
     @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
+    @AppStorage(Setting.mapMode.rawValue) private var mapMode: MapMode = .standard
     @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
     
     var body: some View {
@@ -43,6 +59,13 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Map")) {
+                    Picker("Map style", selection: $mapMode) {
+                        ForEach(MapMode.allCases, id: \.self) { mode in
+                            Text(mode.rawValue).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    
                     VStack(alignment: .leading) {
                         Toggle("Offline mode", isOn: $isOfflineModeEnabled)
                         Text("Disables automatic fetch")

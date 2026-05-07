@@ -17,5 +17,6 @@ enum Setting: String {
     case colorScheme = "colorScheme"
     case googleMapsEnabled = "googleMapsEnabled"
     case liquidGlassDisabled = "liquidGlassDisabled"
+    case mapMode = "mapMode"
     case offlineMode = "offlineMode"
 }
