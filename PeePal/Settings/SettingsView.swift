@@ -5,51 +5,17 @@
 //  Created by Thomas Patrick on 11/12/20.
 //
 
-import MapKit
 import SwiftUI
-
-enum Appearance: String, CaseIterable {
-    case system = "System"
-    case light = "Light"
-    case dark = "Dark"
-    
-    var colorScheme: ColorScheme? {
-        switch self {
-        case .system: return nil
-        case .light: return .light
-        case .dark: return .dark
-        }
-    }
-}
-
-enum DirectionsProvider: String, CaseIterable {
-    case apple = "Apple Maps"
-    case google = "Google Maps"
-}
-
-enum MapMode: String, CaseIterable {
-    case standard = "Standard"
-    case satellite = "Satellite"
-    case hybrid = "Hybrid"
-    
-    var mapStyle: MapStyle {
-        switch self {
-        case .standard: return .standard
-        case .satellite: return .imagery
-        case .hybrid: return .hybrid
-        }
-    }
-}
 
 struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var systemColorScheme: ColorScheme?
     
-    @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
-    @AppStorage(Setting.directionsProvider.rawValue) private var directionsProvider: DirectionsProvider = .apple
-    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
-    @AppStorage(Setting.mapMode.rawValue) private var mapMode: MapMode = .standard
-    @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
+    @AppSetting(.colorScheme) private var appearance: Appearance
+    @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
+    @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
+    @AppSetting(.mapMode) private var mapMode: MapMode
+    @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
     
     var body: some View {
         NavigationStack {
@@ -118,7 +84,7 @@ struct SettingsView: View {
                 ToolBarDismissButton()
             }
             .toolbarTitleDisplayMode(.inlineLarge)
-            .preferredColorScheme(appearance == .system ? systemColorScheme : appearance.colorScheme)
+            .preferredColorScheme(appearance == .system ? systemColorScheme : appearance.scheme)
             .onAppear {
                 systemColorScheme = colorScheme
             }

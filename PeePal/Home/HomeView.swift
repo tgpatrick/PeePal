@@ -12,12 +12,12 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     
-    @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
-    @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
-    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
+    @AppFilter(.accessible) private var accessFilter
+    @AppFilter(.changingTable) private var tableFilter
+    @AppFilter(.unisex) private var unisexFilter
     
-    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = false
-    @AppStorage(Setting.offlineMode.rawValue) private var isOfflineModeEnabled: Bool = false
+    @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
+    @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
     
     @Namespace private var homeNamespace
     

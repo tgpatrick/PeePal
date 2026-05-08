@@ -24,7 +24,7 @@ struct GlassyToolbarButton: ButtonStyle {
 }
 
 struct GlassyOrProminentButton: ViewModifier {
-    @AppStorage(Setting.liquidGlassDisabled.rawValue) private var isLiquidGlassDisabled: Bool = true
+    @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
     
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *), !isLiquidGlassDisabled {

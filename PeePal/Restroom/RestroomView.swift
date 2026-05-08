@@ -9,7 +9,7 @@ import SwiftUI
 import CoreLocation
 
 struct RestroomView: View {
-    @AppStorage(Setting.directionsProvider.rawValue) private var directionsProvider: DirectionsProvider = .apple
+    @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
     
     let restroom: Restroom
     @State var locationManager = LocationManager()

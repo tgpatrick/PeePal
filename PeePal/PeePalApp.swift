@@ -10,12 +10,12 @@ import SwiftData
 
 @main
 struct PeePalApp: App {
-    @AppStorage(Setting.colorScheme.rawValue) private var appearance: Appearance = .system
+    @AppSetting(.colorScheme) private var appearance: Appearance
     
     var body: some Scene {
         WindowGroup {
             HomeView()
-                .preferredColorScheme(appearance.colorScheme)
+                .preferredColorScheme(appearance.scheme)
                 .modelContainer(for: [RestroomEntity.self])
         }
     }

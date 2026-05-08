@@ -9,9 +9,9 @@ import SwiftData
 import SwiftUI
 
 struct SearchResultsView: View {
-    @AppStorage(Filter.accessible.rawValue) private var accessFilter: Bool = false
-    @AppStorage(Filter.changingTable.rawValue) private var tableFilter: Bool = false
-    @AppStorage(Filter.unisex.rawValue) private var unisexFilter: Bool = false
+    @AppFilter(.accessible) private var accessFilter
+    @AppFilter(.changingTable) private var tableFilter
+    @AppFilter(.unisex) private var unisexFilter
     private var anyFilterEnabled: Bool { accessFilter || tableFilter || unisexFilter }
     private var filterCount: Int {
         (accessFilter ? 1 : 0) + (unisexFilter ? 1 : 0) + (tableFilter ? 1 : 0)
