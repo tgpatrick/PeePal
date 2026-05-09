@@ -27,22 +27,27 @@ enum Setting: String {
 // MARK: UserDefaults property wrappers
 
 @propertyWrapper
-struct AppSetting<T: Saveable>: DynamicProperty where T.RawValue == String {
+struct AppSetting<Value>: DynamicProperty {
     let setting: Setting
-    @AppStorage private var storage: T
+    @AppStorage private var storage: Value
     
-    init(_ setting: Setting) {
-        let defaultValue = T.defaultValue
+    init(_ setting: Setting) where Value: Saveable, Value: RawRepresentable, Value.RawValue == String {
+        let defaultValue = Value.defaultValue
         self.setting = setting
         self._storage = .init(wrappedValue: defaultValue, setting.rawValue)
     }
     
-    var wrappedValue: T {
+    init(_ setting: Setting) where Value == Bool {
+        self.setting = setting
+        self._storage = .init(wrappedValue: false, setting.rawValue)
+    }
+    
+    var wrappedValue: Value {
         get { storage }
         nonmutating set { storage = newValue }
     }
     
-    var projectedValue: Binding<T> {
+    var projectedValue: Binding<Value> {
         $storage
     }
 }
@@ -69,36 +74,11 @@ struct AppFilter: DynamicProperty {
 
 // MARK: UserDefaults values
 
-protocol Saveable: RawRepresentable, CaseIterable {
+protocol Saveable {
     static var defaultValue: Self { get }
 }
 
-extension Bool: @retroactive RawRepresentable {
-    public init?(rawValue: String) {
-        if rawValue.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "true" {
-            self = true
-        } else if rawValue.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "false" {
-            self = false
-        }
-        return nil
-    }
-    
-    public var rawValue: String {
-        "\(self)"
-    }
-}
-extension Bool: @retroactive CaseIterable {
-    public static var allCases: [Bool] {
-        [true, false]
-    }
-}
-extension Bool: Saveable {
-    static var defaultValue: Bool {
-        false
-    }
-}
-
-enum Appearance: String, Saveable {
+enum Appearance: String, CaseIterable, Saveable {
     case system = "System"
     case light = "Light"
     case dark = "Dark"
@@ -116,7 +96,7 @@ enum Appearance: String, Saveable {
     }
 }
 
-enum DirectionsProvider: String, Saveable {
+enum DirectionsProvider: String, CaseIterable, Saveable {
     case apple = "Apple Maps"
     case google = "Google Maps"
     
@@ -125,7 +105,7 @@ enum DirectionsProvider: String, Saveable {
     }
 }
 
-enum MapMode: String, Saveable {
+enum MapMode: String, CaseIterable, Saveable {
     case standard = "Standard"
     case satellite = "Satellite"
     case hybrid = "Hybrid"

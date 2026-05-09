@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var systemColorScheme: ColorScheme?
+    @State private var showDeletionAlert: Bool = false
     
     @AppSetting(.colorScheme) private var appearance: Appearance
     @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
@@ -60,11 +61,23 @@ struct SettingsView: View {
                                 Image(systemName: "arrow.up.forward.app")
                             }
                         }
-                        .foregroundStyle(.unisex)
+                        .foregroundStyle(.blue)
                         
                         Text("Opens Refuge Restrooms in your browser")
                             .font(.caption2)
                             .foregroundStyle(.secondary)
+                    }
+                    
+                    Button("Delete all local storage", role: .destructive) {
+                        showDeletionAlert = true
+                    }
+                    .alert(
+                        "This will delete all locally-stored restrooms. The experience will be slower until the ones you care about re-download. Are you sure?",
+                        isPresented: $showDeletionAlert
+                    ) {
+                        Button("Yes, delete", role: .destructive) {
+                            
+                        }
                     }
                 }
                 
