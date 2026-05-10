@@ -107,8 +107,8 @@ enum DirectionsProvider: String, CaseIterable, Saveable {
 
 enum MapMode: String, CaseIterable, Saveable {
     case standard = "Standard"
+    case standardTraffic = "Traffic"
     case satellite = "Satellite"
-    case hybrid = "Hybrid"
     
     static var defaultValue: MapMode {
         .standard
@@ -117,8 +117,8 @@ enum MapMode: String, CaseIterable, Saveable {
     var style: MapStyle {
         switch self {
         case .standard: return .standard
-        case .satellite: return .imagery
-        case .hybrid: return .hybrid
+        case .standardTraffic: return .standard(showsTraffic: true)
+        case .satellite: return .hybrid
         }
     }
 }

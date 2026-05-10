@@ -9,11 +9,9 @@ import SwiftData
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) private var modelContext
     
     @State private var settingsViewModel: SettingsViewModel?
-    @State private var systemColorScheme: ColorScheme?
     @State private var showDeletionAlert: Bool = false
     
     @AppSetting(.colorScheme) private var appearance: Appearance
@@ -50,12 +48,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("Data")) {
-                    VStack(alignment: .leading) {
-                        Toggle("Offline mode", isOn: $isOfflineModeEnabled)
-                        Text("Disables automatic fetch")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
+                    Toggle("Disable automatic fetch", isOn: $isOfflineModeEnabled)
                     
                     VStack(alignment: .leading) {
                         Link(destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!) {
@@ -103,7 +96,7 @@ struct SettingsView: View {
                 ToolBarDismissButton()
             }
             .toolbarTitleDisplayMode(.inlineLarge)
-            .preferredColorScheme(appearance == .system ? systemColorScheme : appearance.scheme)
+            .preferredColorScheme(appearance == .system ? nil : appearance.scheme)
             .alert(
                 settingsViewModel?.error ?? "There was an error completing your task. Please try again.",
                 isPresented: .init(get: {
@@ -114,7 +107,6 @@ struct SettingsView: View {
                 actions: {}
             )
             .onAppear {
-                systemColorScheme = colorScheme
                 settingsViewModel = SettingsViewModel(modelContext: modelContext)
             }
         }
