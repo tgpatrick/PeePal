@@ -25,5 +25,6 @@ final class SettingsViewModel {
             showErrorAlert = true
             return
         }
+        try? await restroomManager.initializeFromBundleIfNeeded()
     }
 }
