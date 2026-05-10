@@ -20,6 +20,8 @@ struct SettingsView: View {
     @AppSetting(.mapMode) private var mapMode: MapMode
     @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
     
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -45,25 +47,14 @@ struct SettingsView: View {
                             Text(provider.rawValue).tag(provider)
                         }
                     }
+                    
+                    externalLink("Open location settings", destination: URL(string: UIApplication.openSettingsURLString)!)
                 }
                 
                 Section(header: Text("Data")) {
                     Toggle("Disable automatic fetch", isOn: $isOfflineModeEnabled)
                     
-                    VStack(alignment: .leading) {
-                        Link(destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!) {
-                            HStack {
-                                Text("Add a restroom")
-                                Spacer()
-                                Image(systemName: "arrow.up.forward.app")
-                            }
-                        }
-                        .foregroundStyle(.blue)
-                        
-                        Text("Opens Refuge Restrooms in your browser")
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
+                    externalLink("Add a restroom", destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!)
                     
                     Button("Delete all local storage", role: .destructive) {
                         showDeletionAlert = true
@@ -90,13 +81,36 @@ struct SettingsView: View {
                         }
                     }
                 }
+                
+                Section {
+                    HStack {
+                        Spacer()
+                        VStack {
+                            Text("PeePal")
+                                .font(.title2)
+                            Text("v\(appVersion)")
+                                .font(.caption)
+                            Text("Created by Thomas Patrick")
+                                .font(.footnote)
+                        }
+                        Spacer()
+                    }
+                    
+                    Text("PeePal depends on the Refuge Restrooms API and the data contributed to it by the public. Please consider visiting and/or contributing to the source.")
+                        .font(.footnote)
+                    
+                    externalLink("Support/Privacy Policy", destination: URL(string: "https://tgpatrick.github.io")!)
+                    externalLink("Visit Refuge Restrooms", destination: URL(string: "https://www.refugerestrooms.org")!)
+                    externalLink("See the code", destination: URL(string: "https://github.com/tgpatrick/PeePal")!)
+                    externalLink("Visit my Ko-Fi", destination: URL(string: "https://ko-fi.com/thomasp57041")!)
+                }
             }
             .navigationTitle("Settings")
             .toolbar {
                 ToolBarDismissButton()
             }
             .toolbarTitleDisplayMode(.inlineLarge)
-            .preferredColorScheme(appearance == .system ? nil : appearance.scheme)
+            .preferredColorScheme(appearance.scheme)
             .alert(
                 settingsViewModel?.error ?? "There was an error completing your task. Please try again.",
                 isPresented: .init(get: {
@@ -111,6 +125,17 @@ struct SettingsView: View {
             }
         }
         .transition(.identity) // No going crazy when we toggle Liquid Glass
+    }
+    
+    private func externalLink(_ titleKey: LocalizedStringKey, destination: URL) -> some View {
+        Link(destination: destination) {
+            HStack {
+                Text(titleKey)
+                Spacer()
+                Image(systemName: "arrow.up.forward.app")
+            }
+        }
+        .foregroundStyle(.blue)
     }
 }
 
