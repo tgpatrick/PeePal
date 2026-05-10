@@ -5,10 +5,14 @@
 //  Created by Thomas Patrick on 11/12/20.
 //
 
+import SwiftData
 import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var settingsViewModel: SettingsViewModel?
     @State private var systemColorScheme: ColorScheme?
     @State private var showDeletionAlert: Bool = false
     
@@ -76,7 +80,9 @@ struct SettingsView: View {
                         isPresented: $showDeletionAlert
                     ) {
                         Button("Yes, delete", role: .destructive) {
-                            
+                            Task {
+                                await settingsViewModel?.deleteAllLocalRestrooms()
+                            }
                         }
                     }
                 }
@@ -98,8 +104,18 @@ struct SettingsView: View {
             }
             .toolbarTitleDisplayMode(.inlineLarge)
             .preferredColorScheme(appearance == .system ? systemColorScheme : appearance.scheme)
+            .alert(
+                settingsViewModel?.error ?? "There was an error completing your task. Please try again.",
+                isPresented: .init(get: {
+                    settingsViewModel?.showErrorAlert ?? false
+                }, set: { newValue in
+                    settingsViewModel?.showErrorAlert = newValue
+                }),
+                actions: {}
+            )
             .onAppear {
                 systemColorScheme = colorScheme
+                settingsViewModel = SettingsViewModel(modelContext: modelContext)
             }
         }
         .transition(.identity) // No going crazy when we toggle Liquid Glass
@@ -109,5 +125,6 @@ struct SettingsView: View {
 #if DEBUG
 #Preview {
     SettingsView()
+        .modelContainer(DataController.previewContainer)
 }
 #endif

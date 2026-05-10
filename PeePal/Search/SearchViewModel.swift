@@ -13,7 +13,7 @@ import SwiftUI
 
 @Observable
 @MainActor
-final class SearchViewModel: ObservableObject {
+final class SearchViewModel {
     var searchText: String = ""
     var searching: Bool = false
     var anyResults: Bool { !mapResults.isEmpty || !restroomResults.isEmpty }
@@ -30,7 +30,7 @@ final class SearchViewModel: ObservableObject {
         "Discotheques", "Art Galleries", "Botanical Gardens", "Zombie Apocalypse Shelters"
     ]
 
-    let restroomManager: RestroomManager
+    private let restroomManager: RestroomManager
     
     var mapResults = [ListableItem]()
     var restroomResults = [ListableItem]()

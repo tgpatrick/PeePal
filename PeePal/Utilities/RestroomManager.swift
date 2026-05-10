@@ -83,5 +83,15 @@ struct RestroomManager {
     func save(_ restrooms: [Restroom]) async throws {
         try await localService.save(restrooms)
     }
+    
+    func deleteAllLocalRestrooms() async -> Bool {
+        do {
+            try await localService.clearRestrooms()
+            return true
+        } catch {
+            logger.error("Error deleting local restrooms: \(error.localizedDescription)")
+            return false
+        }
+    }
 }
 
