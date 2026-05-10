@@ -171,10 +171,19 @@ class MapViewModel {
                 self.showRefresh = false
             }
 
-            // Run five page fetches concurrently
+            let d = region.span.latitudeDelta
+            let numPages: Int
+            switch d {
+            case ..<0.05: numPages = 1
+            case ..<0.1: numPages = 2
+            case ..<0.25: numPages = 3
+            case ..<0.5: numPages = 4
+            case ..<1: numPages = 5
+            default: numPages = 6
+            }
             do {
                 try await withThrowingTaskGroup(of: Void.self) { group in
-                    for page in 0...4 {
+                    for page in 1...numPages {
                         group.addTask { [weak self] in
                             guard let self else { return }
                             do {
