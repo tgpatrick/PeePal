@@ -165,48 +165,55 @@ class MapViewModel {
         
         // Start debounced network fetch task
         fetchTask = Task.detached { [weak self] in
-            try? await Task.sleep(for: .seconds(1))
-            
-            guard let self, !Task.isCancelled else { return }
+            guard let self else { return }
             await MainActor.run {
                 self.setLoading(true)
                 self.showRefresh = false
             }
-            
+
+            // Run five page fetches concurrently
             do {
-                var page = 1
-                while page < 5 && !Task.isCancelled {
-                    let networkRestrooms = try await self.restroomManager.fetchRestrooms(near: region.center, page: page)
-                    if networkRestrooms.isEmpty { break }
-                    
-                    // Save fetched restrooms to local storage before next page
-                    await saveNewRestrooms(networkRestrooms)
-                    let updatedLocalRestrooms = try await self.restroomManager.fetchRestrooms(in: region)
-                    await MainActor.run {
-                        if self.restrooms.count == updatedLocalRestrooms.count {
-                            self.fetchTask?.cancel()
-                            return
-                        } else {
-                            self.restrooms = Set(updatedLocalRestrooms)
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    for page in 0...4 {
+                        group.addTask { [weak self] in
+                            guard let self else { return }
+                            do {
+                                let networkRestrooms = try await self.restroomManager.fetchRestrooms(near: region.center, page: page)
+                                guard !networkRestrooms.isEmpty else { return }
+
+                                try Task.checkCancellation()
+                                // Save fetched restrooms to local storage before next page
+                                await self.saveNewRestrooms(networkRestrooms)
+
+                                let updatedLocalRestrooms = try await self.restroomManager.fetchRestrooms(in: region)
+                                await MainActor.run {
+                                    if !updatedLocalRestrooms.isEmpty {
+                                        self.restrooms = Set(updatedLocalRestrooms)
+                                    }
+                                }
+                            } catch let error as NetworkError {
+                                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                                    self.logger.info("Network cancellation successful")
+                                    // Rethrow to cancel the whole group
+                                    throw error
+                                }
+                            } catch {
+                                throw error
+                            }
                         }
                     }
-                    page += 1
-                }
-                await MainActor.run { self.setLoading(false) }
-            } catch let error as NetworkError {
-                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
-                    self.logger.info("Network cancellation successful")
-                } else {
-                    await MainActor.run {
-                        self.error = error
-                        self.setLoading(false)
-                    }
+                    // Drain the group to surface any thrown error
+                    try await group.waitForAll()
                 }
             } catch {
                 await MainActor.run {
                     self.error = .unknownError
-                    self.setLoading(false)
                 }
+            }
+
+            // All tasks finished (or error handled); stop loading
+            await MainActor.run {
+                self.setLoading(false)
             }
         }
     }
