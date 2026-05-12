@@ -353,7 +353,7 @@ class MapViewModel {
             guard var newCamera = lastCameraContext?.camera else {
                 cameraPosition = .region(
                     MKCoordinateRegion(
-                        center: newCenter,
+                        center: lastCameraContext?.region.span != nil ? newCenter : cluster.center,
                         span: lastCameraContext?.region.span ??
                         MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
                     )

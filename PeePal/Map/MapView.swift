@@ -62,6 +62,7 @@ struct MapView: View {
         .mapControls {
             MapUserLocationButton()
             MapCompass()
+            MapPitchToggle()
             MapScaleView()
         }
         .onChange(of: viewModel.locationManager.location) { oldLocation, newLocation in
@@ -75,7 +76,7 @@ struct MapView: View {
     var mainMap: some View {
         Map(position: $viewModel.cameraPosition,
             bounds: .init(maximumDistance: 5_000_000),
-            interactionModes: [.pan, .rotate, .zoom],
+            interactionModes: [.pan, .rotate, .pitch, .zoom],
             selection: $viewModel.selectedCluster) {
             UserAnnotation()
             ForEach(viewModel.clusters) { cluster in
