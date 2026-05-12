@@ -12,7 +12,7 @@ struct LoadingSpinner: View {
     
     var body: some View {
         ZStack {
-            Image(systemName: "aqi.medium")
+            Image(systemName: .dotsIcon)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 25, height: 25)
@@ -22,7 +22,7 @@ struct LoadingSpinner: View {
                     .variableColor.iterative,
                     options: .repeating.speed(0.5),
                     value: animateLoader)
-            Image(systemName: "arrow.triangle.2.circlepath")
+            Image(systemName: .refreshIcon)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 45, height: 45)

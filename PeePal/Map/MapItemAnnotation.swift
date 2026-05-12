@@ -73,7 +73,6 @@ public struct MapItemAnnotation: View {
         }
     }
 
-    // Icon mapping similar to ListItemView.mapItemIconname(for:)
     private func mapItemIconName(for item: MKMapItem) -> String {
         if item.pointOfInterestCategory == .airport {
             return "airplane"

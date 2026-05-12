@@ -37,6 +37,7 @@
 		AA4DC36E2F9722B3006E4581 /* AvailabilityBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36D2F9722B3006E4581 /* AvailabilityBadgeView.swift */; };
 		AA4DC3702F97252A006E4581 /* ToolBarDismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */; };
 		AA4DC3742F9E8EF9006E4581 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC3732F9E8EF9006E4581 /* UserDefaults.swift */; };
+		AA72D0E02FB3E65A000E40AE /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA72D0DF2FB3E65A000E40AE /* String+Extensions.swift */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
@@ -89,6 +90,7 @@
 		AA4DC36D2F9722B3006E4581 /* AvailabilityBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailabilityBadgeView.swift; sourceTree = "<group>"; };
 		AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarDismissButton.swift; sourceTree = "<group>"; };
 		AA4DC3732F9E8EF9006E4581 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		AA72D0DF2FB3E65A000E40AE /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			children = (
 				AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */,
 				AA36B7C02F8B36E9009A7A84 /* GlassyToolbarButton.swift */,
+				AA72D0DF2FB3E65A000E40AE /* String+Extensions.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				AA314DE62F78680700C01DE9 /* ClusterSheetView.swift in Sources */,
 				AAD80BCC2F6F77A4006AF588 /* Restroom.swift in Sources */,
 				AAD80BCD2F6F77A4006AF588 /* RestroomCluster.swift in Sources */,
+				AA72D0E02FB3E65A000E40AE /* String+Extensions.swift in Sources */,
 				AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */,
 				AADB0A112F79BD2A00531741 /* SearchResultsView.swift in Sources */,
 				AAD80BCE2F6F77A4006AF588 /* SearchRestroom.swift in Sources */,

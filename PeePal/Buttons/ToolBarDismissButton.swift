@@ -18,7 +18,7 @@ struct ToolBarDismissButton: View {
                 onDismiss()
             }
         } label: {
-            Image(systemName: "xmark")
+            Image(systemName: .closeIcon)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .padding(8)

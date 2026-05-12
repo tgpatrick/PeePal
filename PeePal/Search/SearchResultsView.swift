@@ -5,10 +5,13 @@
 //  Created by Thomas Patrick on 11/15/20.
 //
 
+import MapKit
 import SwiftData
 import SwiftUI
 
 struct SearchResultsView: View {
+    @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
+    
     @AppFilter(.accessible) private var accessFilter
     @AppFilter(.changingTable) private var tableFilter
     @AppFilter(.unisex) private var unisexFilter

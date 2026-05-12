@@ -43,12 +43,11 @@ struct RestroomView: View {
                             .foregroundStyle(.secondary)
                     }
                     Link(
-                        destination: viewModel.directionsURL(
-                            restroom: restroom,
+                        destination: restroom.getDirectionsURL(
                             using: directionsProvider
                         )
                     ) {
-                        Image(systemName: "arrow.triangle.turn.up.right.diamond.fill")
+                        Image(systemName: .directionsIcon)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(.black.opacity(0.9))
@@ -81,10 +80,10 @@ struct RestroomView: View {
                 VStack(spacing: 0) {
                     Text("Please note that PeePal cannot verify any of the information presented here. If you want to rate this restroom or propose an edit, please visit its page at")
                         .multilineTextAlignment(.center)
-                    Link(destination: viewModel.makeEditURL(restroom: restroom)) {
+                    Link(destination: restroom.getRefugeRestroomsURL()) {
                         HStack(alignment: .bottom, spacing: 2) {
                             Text("Refuge Restrooms")
-                            Image(systemName: "arrow.up.forward.square")
+                            Image(systemName: .externalLinkIcon)
                                 .aspectRatio(contentMode: .fit)
                         }
                         .underline()

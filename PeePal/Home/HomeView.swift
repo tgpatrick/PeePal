@@ -99,7 +99,7 @@ struct HomeView: View {
                 Button {
                     showFilter = true
                 } label: {
-                    filterButtonLabel(Image(systemName: "line.3.horizontal.decrease"))
+                    filterButtonLabel(Image(systemName: .filterIcon))
                 }
                 .disabled(disableBottomControls)
                 .matchedTransitionSource(id: "filter", in: homeNamespace)
@@ -111,7 +111,7 @@ struct HomeView: View {
                     showSearch = true
                 } label: {
                     HStack {
-                        Image(systemName: "magnifyingglass")
+                        Image(systemName: .searchIcon)
                             .foregroundStyle(.secondary)
                         Text("Search")
                             .foregroundStyle(.secondary)
@@ -124,7 +124,7 @@ struct HomeView: View {
             ToolbarSpacer(.fixed, placement: .bottomBar)
             
             ToolbarItem(placement: .bottomBar) {
-                Button("settings", systemImage: "gearshape") {
+                Button("settings", systemImage: .settingsIcon) {
                     showSettings = true
                     showFilter = false // Fixes a weird edge case
                 }
@@ -145,7 +145,7 @@ struct HomeView: View {
                         showFilter = true
                     } label: {
                         filterButtonLabel(
-                            Image(systemName: "line.3.horizontal.decrease")
+                            Image(systemName: .filterIcon)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .fontWeight(.heavy)
@@ -167,7 +167,7 @@ struct HomeView: View {
                     } label: {
                         HStack {
                             Spacer()
-                            Image(systemName: "magnifyingglass")
+                            Image(systemName: .searchIcon)
                                 .foregroundStyle(.secondary)
                             Text("Search")
                                 .foregroundStyle(.secondary)
@@ -185,7 +185,7 @@ struct HomeView: View {
                     Button {
                         showSettings = true
                     } label: {
-                        Image(systemName: "gearshape.fill")
+                        Image(systemName: .settingsIcon)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .fontWeight(.heavy)

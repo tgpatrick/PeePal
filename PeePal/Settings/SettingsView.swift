@@ -132,7 +132,7 @@ struct SettingsView: View {
             HStack {
                 Text(titleKey)
                 Spacer()
-                Image(systemName: "arrow.up.forward.app")
+                Image(systemName: .externalLinkIcon)
             }
         }
         .foregroundStyle(.blue)
