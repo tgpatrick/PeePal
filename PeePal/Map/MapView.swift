@@ -35,6 +35,7 @@ struct MapView: View {
                             await viewModel.loadInitialRestrooms()
                         }
                         .onMapCameraChange(frequency: .onEnd) { context in
+                            viewModel.lastCameraContext = context
                             if viewModel.regionHasChanged(context.region) {
                                 viewModel.fetchRestrooms(region: context.region, fetchFromNetwork: !isOfflineModeEnabled)
                             }
@@ -74,7 +75,7 @@ struct MapView: View {
     var mainMap: some View {
         Map(position: $viewModel.cameraPosition,
             bounds: .init(maximumDistance: 5_000_000),
-            interactionModes: [.pan, .zoom],
+            interactionModes: [.pan, .rotate, .zoom],
             selection: $viewModel.selectedCluster) {
             UserAnnotation()
             ForEach(viewModel.clusters) { cluster in

@@ -25,20 +25,7 @@ class MapViewModel {
     var isLoading = false
     var showRefresh = false
     var error: NetworkError?
-    var cameraPosition: MapCameraPosition = .rect(
-        MKMapRect(
-            origin: MKMapPoint(
-                CLLocationCoordinate2D(
-                    latitude: 40.7128,
-                    longitude: -74.0060
-                )
-            ),
-            size: MKMapSize(
-                width: 100_000,
-                height: 100_000
-            )
-        )
-    )
+    var cameraPosition: MapCameraPosition = .automatic
 
     private var fetchTask: Task<Void, Never>? = nil
     private var clusteringTask: Task<Void, Never>? = nil
@@ -50,23 +37,24 @@ class MapViewModel {
     private var cachedPointLookup: [SIMD3<Double>: Restroom]? = nil
     private var lastRestroomCount: Int = 0
     private var lastZoomDeltaSum: Double?
-    private var lastCameraRegion: MKCoordinateRegion?
+    private var lastFetchRegion: MKCoordinateRegion?
+    var lastCameraContext: MapCameraUpdateContext?
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
     }
 
     func regionHasChanged(_ region: MKCoordinateRegion) -> Bool {
-        guard let lastCameraRegion else {
-            lastCameraRegion = region
+        guard let lastFetchRegion else {
+            lastFetchRegion = region
             return true
         }
         let minimumDistance = 0.05
         let minimumSpanChange = 0.001
         
-        let longitudeDifference = abs(lastCameraRegion.center.longitude - region.center.longitude)
-        let latitudeDifference = abs(lastCameraRegion.center.latitude - region.center.latitude)
-        let latitudeSpanDifference = abs(lastCameraRegion.span.latitudeDelta - region.span.latitudeDelta)
+        let longitudeDifference = abs(lastFetchRegion.center.longitude - region.center.longitude)
+        let latitudeDifference = abs(lastFetchRegion.center.latitude - region.center.latitude)
+        let latitudeSpanDifference = abs(lastFetchRegion.span.latitudeDelta - region.span.latitudeDelta)
         
         
         let hasChanged = longitudeDifference > minimumDistance
@@ -74,7 +62,7 @@ class MapViewModel {
         || latitudeSpanDifference > minimumSpanChange
         
         if hasChanged {
-            self.lastCameraRegion = region
+            self.lastFetchRegion = region
             withAnimation { showRefresh = region.span.latitudeDelta < 1 && hasChanged }
         }
         return hasChanged
@@ -82,10 +70,12 @@ class MapViewModel {
 
     func centerOn(_ location: CLLocation) {
         withAnimation {
-            cameraPosition = .region(MKCoordinateRegion(
-                center: location.coordinate,
-                span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
-            ))
+            cameraPosition = .camera(
+                MapCamera(
+                    centerCoordinate: location.coordinate,
+                    distance: 1000
+                )
+            )
         }
     }
     
@@ -138,7 +128,7 @@ class MapViewModel {
         fetchTask = nil
         self.setLoading(false)
         
-        guard let region = region ?? cameraPosition.region ?? lastCameraRegion else {
+        guard let region = region ?? lastCameraContext?.region ?? lastFetchRegion else {
             // No region, no fetch
             return
         }
@@ -327,39 +317,51 @@ class MapViewModel {
     }
 
     func adjustMapPosition(for cluster: RestroomCluster, with mapProxy: MapProxy, in size: CGSize) {
-        guard let clusterPoint = mapProxy.convert(cluster.center, to: .global),
-              let topLeft = mapProxy.convert(CGPoint(x: 0, y: 0), from: .local),
-              let bottomRight = mapProxy.convert(CGPoint(x: size.width, y: size.height), from: .local)
+        guard let clusterPoint = mapProxy.convert(cluster.center, to: .local)
         else { return }
+        
+        var center = CGPoint(x: size.width / 2, y: size.height / 2)
+        var shouldUpdate = false
 
-        var mapRect = MKMapRect(topLeft: topLeft, bottomRight: bottomRight)
-        var originPoint = CGPoint(x: 0, y: 0)
+        let topEdge = size.height * 0.1
+        let bottomEdge = size.height * 0.55
+        let leadingEdge = size.width * 0.125
+        let trailingEdge = size.width * 0.875
 
-        let topPadding = size.height * 0.1
-        let bottomPadding = size.height * 0.4
-        let sidePadding = size.width * 0.1
-
-        if clusterPoint.y > size.height - bottomPadding {
-            let pixelsToMove = clusterPoint.y - (size.height - bottomPadding)
-            originPoint.y += pixelsToMove
-        } else if clusterPoint.y < topPadding {
-            originPoint.y = -topPadding
+        if clusterPoint.y > bottomEdge {
+            let pixelsToMove = clusterPoint.y - bottomEdge
+            center.y += pixelsToMove
+            shouldUpdate = true
+        } else if clusterPoint.y < topEdge {
+            let pixelsToMove = clusterPoint.y - topEdge
+            center.y += pixelsToMove
+            shouldUpdate = true
         }
 
-        if clusterPoint.x > size.width - sidePadding {
-            let pixelsToMove = clusterPoint.x - (size.width - sidePadding)
-            originPoint.x += pixelsToMove
-        } else if clusterPoint.x < sidePadding {
-            originPoint.x = -sidePadding
+        if clusterPoint.x < leadingEdge {
+            let pixelsToMove = clusterPoint.x - leadingEdge
+            center.x += pixelsToMove
+            shouldUpdate = true
+        } else if clusterPoint.x > trailingEdge {
+            let pixelsToMove = clusterPoint.x - trailingEdge
+            center.x += pixelsToMove
+            shouldUpdate = true
         }
 
-        guard let newOriginCoords = mapProxy.convert(originPoint, from: .local) else { return }
-        let newOrigin = MKMapPoint(newOriginCoords)
-        if mapRect.origin.y != newOrigin.y || mapRect.origin.x != newOrigin.x {
-            mapRect.origin = newOrigin
-            withAnimation {
-                cameraPosition = .rect(mapRect)
+        guard shouldUpdate, let newCenter = mapProxy.convert(center, from: .local) else { return }
+        withAnimation {
+            guard var newCamera = lastCameraContext?.camera else {
+                cameraPosition = .region(
+                    MKCoordinateRegion(
+                        center: newCenter,
+                        span: lastCameraContext?.region.span ??
+                        MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
+                    )
+                )
+                return
             }
+            newCamera.centerCoordinate = newCenter
+            cameraPosition = .camera(newCamera)
         }
     }
 
