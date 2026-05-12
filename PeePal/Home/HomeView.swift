@@ -126,6 +126,7 @@ struct HomeView: View {
             ToolbarItem(placement: .bottomBar) {
                 Button("settings", systemImage: "gearshape") {
                     showSettings = true
+                    showFilter = false // Fixes a weird edge case
                 }
                 .disabled(disableBottomControls)
                 .matchedTransitionSource(id: "settings", in: homeNamespace)
