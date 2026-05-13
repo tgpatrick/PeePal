@@ -9,7 +9,7 @@ import Foundation
 
 @Observable
 class RestroomViewModel {
-    func makeAppleMapsURL(restroom: Restroom) -> URL {
+    static func makeAppleMapsURL(restroom: Restroom) -> URL {
         var url = "maps://?"
         url += "near=" + String(restroom.latitude) + "," + String(restroom.longitude)
         if let street = restroom.street {
@@ -27,7 +27,7 @@ class RestroomViewModel {
         return URL(string: url) ?? URL(string: "maps://?")!
     }
     
-    func makeGoogleMapsURL(restroom: Restroom) -> URL {
+    static func makeGoogleMapsURL(restroom: Restroom) -> URL {
         var url = "https://www.google.com/maps/dir/?api=1"
         if let street = restroom.street {
             url += "&destination=" + street
@@ -44,20 +44,5 @@ class RestroomViewModel {
         url = url.replacingOccurrences(of: ",", with: "%2C")
         url = url.replacingOccurrences(of: "|", with: "%7C")
         return URL(string: url) ?? URL(string: "https://www.google.com/maps/dir/?api=1")!
-    }
-    
-    func directionsURL(restroom: Restroom, using provider: DirectionsProvider) -> URL {
-        switch provider {
-        case .apple:
-            return makeAppleMapsURL(restroom: restroom)
-        case .google:
-            return makeGoogleMapsURL(restroom: restroom)
-        }
-    }
-    
-    func makeEditURL(restroom: Restroom) -> URL {
-        var url = "https://www.refugerestrooms.org/restrooms/"
-        url += String(restroom.id)
-        return URL(string: url) ?? URL(string: "https://www.refugerestrooms.org")!
     }
 }

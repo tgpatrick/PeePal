@@ -193,8 +193,11 @@ struct SearchResultsView: View {
             currentDetent = .middle
             onItemTap(item)
         } label: {
-            ListItemView(listItem: item)
-                .contentShape(Rectangle())
+            ListItemView(listItem: item, onOpen: { listItem in
+                currentDetent = .middle
+                onItemTap(item)
+            })
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }

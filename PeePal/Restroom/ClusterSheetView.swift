@@ -39,7 +39,11 @@ struct ClusterSheetView: View {
                 onSelectItem(RestroomCluster(restrooms: [restroom]))
             } label: {
                 ListItemView(
-                    listItem: restroom
+                    listItem: restroom,
+                    onOpen: { listItem in
+                        guard let onSelectItem, let restroom = listItem as? Restroom else { return }
+                        onSelectItem(RestroomCluster(restrooms: [restroom]))
+                    }
                 )
             }
         }

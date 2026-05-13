@@ -132,3 +132,20 @@ extension Restroom: Hashable {
         lhs.longitude == rhs.longitude
     }
 }
+
+extension Restroom {
+    func getDirectionsURL(using provider: DirectionsProvider) -> URL {
+        switch provider {
+        case .apple:
+            return RestroomViewModel.makeAppleMapsURL(restroom: self)
+        case .google:
+            return RestroomViewModel.makeGoogleMapsURL(restroom: self)
+        }
+    }
+    
+    func getRefugeRestroomsURL() -> URL {
+        var url = "https://www.refugerestrooms.org/restrooms/"
+        url += String(id)
+        return URL(string: url) ?? URL(string: "https://www.refugerestrooms.org")!
+    }
+}

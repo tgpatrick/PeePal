@@ -9,7 +9,10 @@ import SwiftUI
 import MapKit
 
 struct ListItemView: View {
+    @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
+    
     let listItem: any Listable
+    var onOpen: ((any Listable) -> Void)? = nil
     @State var locationManager = LocationManager()
     
     private var restroomData: Restroom? {
@@ -50,6 +53,28 @@ struct ListItemView: View {
                 }
                 if let restroomData {
                     RatingView(restroom: restroomData, small: true)
+                }
+            }
+        }
+        .contextMenu {
+            if let onOpen {
+                Button("View") {
+                    onOpen(listItem)
+                }
+            }
+            if let mapItem = listItem as? MKMapItem {
+                Button("Open in Maps", systemImage: .externalLinkIcon) {
+                    mapItem.openInMaps()
+                }
+            }
+            if let restroom = listItem as? Restroom {
+                Link(destination: restroom.getDirectionsURL(using: directionsProvider)) {
+                    Image(systemName: .directionsIcon)
+                    Text("Get directions")
+                }
+                Link(destination: restroom.getRefugeRestroomsURL()) {
+                    Image(systemName: .externalLinkIcon)
+                    Text("Open in Refuge Restrooms")
                 }
             }
         }
@@ -98,23 +123,7 @@ struct ListItemView: View {
         }
     }
 
-    private func mapItemIconname(for mapItem: MKMapItem) -> String {
-        let iconName: String
-
-        if mapItem.pointOfInterestCategory == .airport {
-            iconName = "airplane"
-        } else if mapItem.pointOfInterestCategory == .restaurant {
-            iconName = "fork.knife"
-        } else if mapItem.pointOfInterestCategory == .hotel {
-            iconName = "bed.double"
-        } else if mapItem.pointOfInterestCategory == .store {
-            iconName = "cart"
-        } else {
-            iconName = "mappin"
-        }
-
-        return iconName
-    }
+    
 
     private func mapItemPin(mapItem: MKMapItem) -> some View {
         return Image(systemName: mapItem.iconName)
