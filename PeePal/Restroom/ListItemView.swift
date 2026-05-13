@@ -117,7 +117,7 @@ struct ListItemView: View {
     }
 
     private func mapItemPin(mapItem: MKMapItem) -> some View {
-        return Image(systemName: mapItemIconname(for: mapItem))
+        return Image(systemName: mapItem.iconName)
             .font(.system(size: 22))
             .frame(width: 55, height: 55)
             .foregroundColor(.black)
@@ -132,6 +132,206 @@ extension CLLocationDistance {
         let formatStyle = Measurement<UnitLength>.FormatStyle(width: .wide, usage: .road)
 
         return meters.formatted(formatStyle)
+    }
+}
+
+extension MKMapItem {
+    var iconName: String {
+        var iconName: String
+
+        switch pointOfInterestCategory {
+            // Arts and culture
+        case .museum:
+            iconName = "building.columns.fill"
+        case .theater:
+            iconName = "theatermasks.fill"
+            
+            // Education
+        case .library:
+            iconName = "building.columns.fill"
+        case .school:
+            iconName = "building.2.fill"
+        case .university:
+            iconName = "graduationcap.fill"
+            
+            // Entertainment
+        case .movieTheater:
+            iconName = "popcorn.fill"
+        case .nightlife:
+            iconName = "moon.stars.fill"
+            
+            // Health and safety
+        case .fireStation:
+            iconName = "house.and.flag.fill"
+        case .hospital:
+            iconName = "cross.fill"
+        case .pharmacy:
+            iconName = "pills.fill"
+        case .police:
+            iconName = "shield.fill"
+            
+            // Food and drink
+        case .bakery:
+            iconName = "birthday.cake.fill"
+        case .brewery:
+            iconName = "mug.fill"
+        case .cafe:
+            iconName = "fork.knife"
+        case .foodMarket:
+            iconName = "cart.fill"
+        case .restaurant:
+            iconName = "fork.knife"
+        case .winery:
+            iconName = "wineglass.fill"
+            
+            // Personal services
+        case .atm:
+            iconName = "banknote.fill"
+        case .bank:
+            iconName = "dollarsign.bank.building.fill"
+        case .evCharger:
+            iconName = "ev.charger.fill"
+        case .fitnessCenter:
+            iconName = "dumbbell.fill"
+        case .laundry:
+            iconName = "hanger"
+        case .postOffice:
+            iconName = "envelope.fill"
+        case .restroom:
+            iconName = "toilet.fill"
+        case .store:
+            iconName = "cart"
+            
+            // Parks and recreation
+        case .amusementPark:
+            iconName = "seal"
+        case .aquarium:
+            iconName = "fish.fill"
+        case .beach:
+            iconName = "beach.umbrella.fill"
+        case .campground:
+            iconName = "tent.2.fill"
+        case .marina:
+            iconName = "sailboat.fill"
+        case .nationalPark:
+            iconName = "tree.fill"
+        case .park:
+            iconName = "tree.fill"
+        case .zoo:
+            iconName = "pawprint.fill"
+            
+            // Sports
+        case .stadium:
+            iconName = "circle.dotted.circle"
+            
+            // Travel
+        case .airport:
+            iconName = "airplane"
+        case .carRental:
+            iconName = "car.2.fill"
+        case .gasStation:
+            iconName = "fuelpump.fill"
+        case .hotel:
+            iconName = "bed.double"
+        case .parking:
+            iconName = "parkingsign.circle.fill"
+        case .publicTransport:
+            iconName = "bus.fill"
+        default:
+            iconName = .mapPinIcon
+        }
+        
+        if #available(iOS 18.0, *) {
+            switch pointOfInterestCategory {
+                //Arts and culture
+            case .musicVenue:
+                iconName = "music.microphone"
+                
+                //Education
+            case .planetarium:
+                iconName = "globe.desk.fill"
+                
+                // Historical and cultural landmarks
+            case .castle:
+                iconName = "building.columns.fill"
+            case .fortress:
+                iconName = "building.columns.fill"
+            case .landmark:
+                iconName = "building.columns.fill"
+            case .nationalMonument:
+                iconName = "building.columns.fill"
+                
+                // Food and drink
+            case .distillery:
+                iconName = "mug.fill"
+                
+                // Personal services
+            case .animalService:
+                iconName = "dog.fill"
+            case .automotiveRepair:
+                iconName = "car.side.front.open.fill"
+            case .beauty:
+                iconName = "scissors"
+            case .mailbox:
+                iconName = "envelope.front.fill"
+            case .spa:
+                iconName = "water.waves"
+                
+                //Parks and recreation
+            case .fairground:
+                iconName = "seal"
+            case .rvPark:
+                iconName = "bus.doubledecker.fill"
+
+                //Sports
+            case .baseball:
+                iconName = "baseball.fill"
+            case .basketball:
+                iconName = "basketball.fill"
+            case .bowling:
+                iconName = "figure.bowling"
+            case .goKart:
+                iconName = "road.lanes.curved.right"
+            case .golf:
+                iconName = "figure.golf"
+            case .hiking:
+                iconName = "figure.hiking"
+            case .miniGolf:
+                iconName = "figure.golf"
+            case .rockClimbing:
+                iconName = "figure.climbing"
+            case .skatePark:
+                iconName = "figure.skateboarding"
+            case .skating:
+                iconName = "figure.ice.skating"
+            case .skiing:
+                iconName = "figure.skiing.downhill"
+            case .soccer:
+                iconName = "soccerball"
+            case .tennis:
+                iconName = "figure.tennis"
+            case .volleyball:
+                iconName = "volleyball.fill"
+                
+                // Travel
+            case .conventionCenter:
+                iconName = "seal"
+
+                // Water sports
+            case .fishing:
+                iconName = "figure.fishing"
+            case .kayaking:
+                iconName = "water.waves"
+            case .surfing:
+                iconName = "figure.surfing"
+            case .swimming:
+                iconName = "figure.pool.swim"
+            default:
+                iconName = .mapPinIcon
+            }
+        }
+        
+        return iconName
     }
 }
 

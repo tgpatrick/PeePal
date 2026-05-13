@@ -13,6 +13,7 @@ extension String {
     static let dotsIcon = "aqi.medium"
     static let externalLinkIcon = "arrow.up.forward.app"
     static let filterIcon = "line.3.horizontal.decrease"
+    static let mapPinIcon = "mappin"
     static let refreshIcon = "arrow.triangle.2.circlepath"
     static let searchIcon = "magnifyingglass"
     static let settingsIcon = "gearshape.fill"
