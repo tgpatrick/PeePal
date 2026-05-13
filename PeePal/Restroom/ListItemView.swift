@@ -58,7 +58,7 @@ struct ListItemView: View {
         }
         .contextMenu {
             if let onOpen {
-                Button("View") {
+                Button("View", systemImage: .mapPinIcon) {
                     onOpen(listItem)
                 }
             }
@@ -280,7 +280,7 @@ extension MKMapItem {
             case .automotiveRepair:
                 iconName = "car.side.front.open.fill"
             case .beauty:
-                iconName = "scissors"
+                iconName = "eyebrow"
             case .mailbox:
                 iconName = "envelope.front.fill"
             case .spa:
