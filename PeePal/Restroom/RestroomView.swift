@@ -47,7 +47,7 @@ struct RestroomView: View {
                             using: directionsProvider
                         )
                     ) {
-                        Image(systemName: .directionsIcon)
+                        Image(systemName: .directionsIconFilled)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(.black.opacity(0.9))

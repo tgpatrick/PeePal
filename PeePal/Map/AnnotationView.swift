@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RestroomAnnotation: View {
+    @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
+    
     @Binding var selection: RestroomCluster?
     let restroom: Restroom
 
@@ -104,6 +106,39 @@ struct RestroomAnnotation: View {
         }
         .frame(width: 44, height: 50)
         .fixedSize()
+        .contextMenu(menuItems: {
+            if !isSelected {
+                Button("View", systemImage: .expandIcon) {
+                    selection = RestroomCluster(restrooms: [restroom])
+                }
+                Link(destination: restroom.getDirectionsURL(using: directionsProvider)) {
+                    Image(systemName: .directionsIcon)
+                    Text("Get directions")
+                }
+                Link(destination: restroom.getRefugeRestroomsURL()) {
+                    Image(systemName: .externalLinkIcon)
+                    Text("Open in Refuge Restrooms")
+                }
+            }
+        }, preview: {
+            if !isSelected {
+                VStack {
+                    if let name = restroom.name {
+                        Text(name)
+                            .font(.title2)
+                            .bold()
+                            .lineLimit(1)
+                    }
+                    Text(restroom.fullAddress)
+                        .font(.caption)
+                        .lineLimit(1)
+                    AvailabilityBadgeView(restroom: restroom)
+                    RatingView(restroom: restroom)
+                }
+                .padding()
+                .frame(maxWidth: 350)
+            }
+        })
         .animation(
             .interactiveSpring(extraBounce: 0.5),
             value: selection)
