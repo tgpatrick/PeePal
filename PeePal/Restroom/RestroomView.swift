@@ -59,12 +59,7 @@ struct RestroomView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        HStack(spacing: 0) {
-                            AvailabilityBadgeView(for: .unisex, isAvailable: restroom.unisex)
-                            AvailabilityBadgeView(for: .accessible, isAvailable: restroom.accessible)
-                            AvailabilityBadgeView(for: .changingTable, isAvailable: restroom.changingTable)
-                        }
-                        .background(badgesBackground)
+                        AvailabilityBadgeView(restroom: restroom)
                         Spacer()
                     }
                     RatingView(restroom: restroom)
@@ -103,34 +98,6 @@ struct RestroomView: View {
                 whenContainedInInstancesOf: [UINavigationBar.self]
             ).adjustsFontSizeToFitWidth = true
         }
-    }
-
-    private var badgesBackground: some View {
-        Rectangle()
-            .foregroundStyle(.ultraThinMaterial)
-            .background(
-                HStack(spacing: 0) {
-                    Rectangle()
-                        .foregroundStyle(
-                            Color(.unisex).opacity(restroom.unisex ? 1 : 0.1)
-                        )
-                    Rectangle()
-                        .foregroundStyle(
-                            Color(.accessible).opacity(restroom.accessible ? 1 : 0.1)
-                        )
-                        .zIndex(2)
-                    Rectangle()
-                        .foregroundStyle(
-                            Color(.accessible).opacity(restroom.accessible ? 1 : 0.1)
-                        )
-                        .zIndex(2)
-                    Rectangle()
-                        .foregroundStyle(
-                            Color(.changingTable).opacity(restroom.changingTable ? 1 : 0.1)
-                        )
-                }
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

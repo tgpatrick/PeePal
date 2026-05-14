@@ -17,7 +17,7 @@ struct FilterView: View {
             ScrollView {
                 VStack {
                     HStack(spacing: 10) {
-                        AvailabilityBadgeView(
+                        IndividualAvailabilityBadgeView(
                             for: .unisex,
                             isAvailable: true,
                             shouldInvert: false
@@ -28,7 +28,7 @@ struct FilterView: View {
                             .fontWeight(.bold)
                     }
                     HStack {
-                        AvailabilityBadgeView(
+                        IndividualAvailabilityBadgeView(
                             for: .accessible,
                             isAvailable: true,
                             shouldInvert: false
@@ -39,7 +39,7 @@ struct FilterView: View {
                             .fontWeight(.bold)
                     }
                     HStack {
-                        AvailabilityBadgeView(
+                        IndividualAvailabilityBadgeView(
                             for: .changingTable,
                             isAvailable: true,
                             shouldInvert: false

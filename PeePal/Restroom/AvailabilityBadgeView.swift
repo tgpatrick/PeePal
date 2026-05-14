@@ -8,6 +8,47 @@
 import SwiftUI
 
 struct AvailabilityBadgeView: View {
+    let restroom: Restroom
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            IndividualAvailabilityBadgeView(for: .unisex, isAvailable: restroom.unisex)
+            IndividualAvailabilityBadgeView(for: .accessible, isAvailable: restroom.accessible)
+            IndividualAvailabilityBadgeView(for: .changingTable, isAvailable: restroom.changingTable)
+        }
+        .background(badgesBackground)
+    }
+    
+    private var badgesBackground: some View {
+        Rectangle()
+            .foregroundStyle(.ultraThinMaterial)
+            .background(
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.unisex).opacity(restroom.unisex ? 1 : 0.1)
+                        )
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.accessible).opacity(restroom.accessible ? 1 : 0.1)
+                        )
+                        .zIndex(2)
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.accessible).opacity(restroom.accessible ? 1 : 0.1)
+                        )
+                        .zIndex(2)
+                    Rectangle()
+                        .foregroundStyle(
+                            Color(.changingTable).opacity(restroom.changingTable ? 1 : 0.1)
+                        )
+                }
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+}
+
+struct IndividualAvailabilityBadgeView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     private let imageResource: ImageResource
@@ -45,8 +86,6 @@ struct AvailabilityBadgeView: View {
 
 #if DEBUG
 #Preview {
-    AvailabilityBadgeView(for: .unisex, isAvailable: true)
-    AvailabilityBadgeView(for: .accessible, isAvailable: true)
-    AvailabilityBadgeView(for: .changingTable, isAvailable: true)
+    AvailabilityBadgeView(restroom: exampleRestroom)
 }
 #endif

@@ -56,7 +56,7 @@ struct SearchResultsView: View {
                                         Text("Using your filter" + (filterCount > 1 ? "s:" : ":"))
                                         HStack(spacing: -15) {
                                             if unisexFilter {
-                                                AvailabilityBadgeView(
+                                                IndividualAvailabilityBadgeView(
                                                     for: .unisex,
                                                     isAvailable: usingFilters,
                                                     shouldInvert: false
@@ -65,7 +65,7 @@ struct SearchResultsView: View {
                                                 .scaleEffect(0.5)
                                             }
                                             if accessFilter {
-                                                AvailabilityBadgeView(
+                                                IndividualAvailabilityBadgeView(
                                                     for: .accessible,
                                                     isAvailable: usingFilters,
                                                     shouldInvert: false
@@ -74,7 +74,7 @@ struct SearchResultsView: View {
                                                 .scaleEffect(0.5)
                                             }
                                             if tableFilter {
-                                                AvailabilityBadgeView(
+                                                IndividualAvailabilityBadgeView(
                                                     for: .changingTable,
                                                     isAvailable: usingFilters,
                                                     shouldInvert: false
