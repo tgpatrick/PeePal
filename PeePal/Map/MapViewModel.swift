@@ -63,7 +63,10 @@ class MapViewModel {
         
         if hasChanged {
             self.lastFetchRegion = region
-            withAnimation { showRefresh = region.span.latitudeDelta < 1 && hasChanged }
+            withAnimation {
+                error = nil
+                showRefresh = region.span.latitudeDelta < 1 && hasChanged
+            }
         }
         return hasChanged
     }

@@ -113,6 +113,8 @@ final class SearchViewModel {
     }
     
     func searchRemoteRestrooms(filters: FilterState? = nil) async {
+        self.networkError = nil
+        
         let filters = filters ?? .allDisabled
         guard searchText.count > 3 else { return }
         defer {
