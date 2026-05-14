@@ -228,7 +228,7 @@ struct HomeView: View {
                         onDismiss: {}
                     )
                     .materialPresentationBackground(isLiquidGlassDisabled)
-                    .interactiveDismissDisabled()
+                    .interactiveDismissDisabled(!UIDevice.isIpad)
                     .zoomTransitionIfAvailable(sourceID: "search", in: homeNamespace, enabled: !isLiquidGlassDisabled)
                 }
             }
@@ -245,7 +245,7 @@ struct HomeView: View {
                 )
                 .materialPresentationBackground(isLiquidGlassDisabled)
                 .id(cluster.hashValue)
-                .interactiveDismissDisabled()
+                .interactiveDismissDisabled(!UIDevice.isIpad)
             }
             .sheet(isPresented: $showFilter) {
                 FilterView()

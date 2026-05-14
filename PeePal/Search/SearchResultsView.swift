@@ -132,7 +132,10 @@ struct SearchResultsView: View {
             isPresented: $viewModel.searching,
             placement: .toolbarPrincipal
         )
-        .presentationDetents([.low, .middle, .high], selection: $currentDetent)
+        .presentationDetents(
+            UIDevice.isIpad ? [.large] : [.low, .middle, .high],
+            selection: $currentDetent
+        )
         .presentationBackgroundInteraction(.enabled(upThrough: .middle))
         .onChange(of: viewModel.searchText) {
             viewModel.search(

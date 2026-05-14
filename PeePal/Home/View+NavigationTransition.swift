@@ -26,3 +26,9 @@ extension View {
         }
     }
 }
+
+extension UIDevice {
+    static var isIpad: Bool {
+        current.userInterfaceIdiom == .pad
+    }
+}

@@ -28,7 +28,10 @@ struct ClusterSheetView: View {
             }
             .toolbarTitleDisplayMode(.inlineLarge)
         }
-        .presentationDetents([.low, .middle, .high], selection: $currentDetent)
+        .presentationDetents(
+            UIDevice.isIpad ? [.large] : [.low, .middle, .high],
+            selection: $currentDetent
+        )
         .presentationBackgroundInteraction(.enabled(upThrough: .middle))
     }
     
