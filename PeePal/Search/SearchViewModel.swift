@@ -127,6 +127,7 @@ final class SearchViewModel {
                 }
             }
             let response = try await restroomManager.searchRemoteRestrooms(matching: searchText, filters: filters)
+            try await restroomManager.save(response)
             let currentRestrooms = Set<ListableItem>(restroomResults)
             let newResults = currentRestrooms.union(Set<ListableItem>(response.map({ ListableItem(item: $0) })))
             try? Task.checkCancellation()
