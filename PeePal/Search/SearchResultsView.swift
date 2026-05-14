@@ -41,10 +41,12 @@ struct SearchResultsView: View {
                                 Text("Map Results")
                                     .font(.title2)
                                 Spacer()
-                                NavigationLink("See All") {
-                                    allResults(for: viewModel.mapResults, title: "Map")
+                                if !viewModel.mapResults.isEmpty {
+                                    NavigationLink("See All") {
+                                        allResults(for: viewModel.mapResults, title: "Map")
+                                    }
+                                    .font(.subheadline)
                                 }
-                                .font(.subheadline)
                             }
                             .foregroundStyle(.primary)
                         })
@@ -99,6 +101,10 @@ struct SearchResultsView: View {
                                         .font(.title2)
                                     if viewModel.loadingNetworkResults {
                                         ProgressView()
+                                    } else if viewModel.networkError != nil {
+                                        Button("Try Again", systemImage: .errorIcon, role: .destructive) {
+                                            viewModel.search()
+                                        }
                                     }
                                     Spacer()
                                     if !viewModel.restroomResults.isEmpty {

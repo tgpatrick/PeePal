@@ -55,6 +55,11 @@ struct HomeView: View {
                 .ignoresSafeArea(.keyboard)
             if mapViewModel.isLoading {
                 LoadingSpinner()
+            } else if mapViewModel.error != nil {
+                Button("Try again", systemImage: .errorIcon, role: .destructive) {
+                    mapViewModel.fetchRestrooms(fetchFromNetwork: true)
+                }
+                .modifier(GlassyOrProminentButton())
             } else if isOfflineModeEnabled && mapViewModel.showRefresh {
                 RefreshButton {
                     mapViewModel.fetchRestrooms(fetchFromNetwork: true)

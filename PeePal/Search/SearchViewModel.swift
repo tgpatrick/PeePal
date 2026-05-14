@@ -36,6 +36,7 @@ final class SearchViewModel {
     var restroomResults = [ListableItem]()
     
     var loadingNetworkResults: Bool = false
+    var networkError: Error?
     private var searchTask: Task<Void, Never>?
     private let logger = Logger.for(SearchViewModel.self)
     
@@ -141,6 +142,7 @@ final class SearchViewModel {
             } else {
                 description = error.localizedDescription
             }
+            networkError = error
             logger.error("Remote restroom search error: \(description)")
         }
     }
