@@ -25,7 +25,14 @@ class MapViewModel {
     var isLoading = false
     var showRefresh = false
     var error: NetworkError?
-    var cameraPosition: MapCameraPosition = .automatic
+    var cameraPosition: MapCameraPosition = .userLocation(
+        fallback: .region(
+            MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060),
+                span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
+            )
+        )
+    )
 
     private var fetchTask: Task<Void, Never>? = nil
     private var clusteringTask: Task<Void, Never>? = nil
