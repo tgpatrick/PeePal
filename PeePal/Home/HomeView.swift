@@ -16,6 +16,7 @@ struct HomeView: View {
     @AppFilter(.changingTable) private var tableFilter
     @AppFilter(.unisex) private var unisexFilter
     
+    @AppSetting(.hasSeenTutorial) private var hasSeenTutorial: Bool
     @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
     @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
     
@@ -215,6 +216,16 @@ struct HomeView: View {
     
     private func withModifiers<Content: View>(_ content: Content) -> some View {
         content
+            .sheet(isPresented: .init(get: {
+                !hasSeenTutorial
+            }, set: { newValue in
+                hasSeenTutorial = !newValue
+            }), content: {
+                Text("Tutorial!")
+                    .onDisappear {
+                        mapViewModel?.centerOnUser()
+                    }
+            })
             .sheet(isPresented: $showSearch) {
                 if let searchViewModel, let mapViewModel {
                     SearchResultsView(

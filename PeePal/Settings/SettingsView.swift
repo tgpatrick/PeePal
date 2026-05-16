@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
     @State private var settingsViewModel: SettingsViewModel?
@@ -16,11 +17,12 @@ struct SettingsView: View {
     
     @AppSetting(.colorScheme) private var appearance: Appearance
     @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
+    @AppSetting(.hasSeenTutorial) private var hasSeenTutorial: Bool
     @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
     @AppSetting(.mapMode) private var mapMode: MapMode
     @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
     
-    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
     var body: some View {
         NavigationStack {
@@ -88,8 +90,10 @@ struct SettingsView: View {
                         VStack {
                             Text("PeePal")
                                 .font(.title2)
-                            Text("v\(appVersion)")
-                                .font(.caption)
+                            if let appVersion {
+                                Text("v\(appVersion)")
+                                    .font(.caption)
+                            }
                             Text("Created by Thomas Patrick")
                                 .font(.footnote)
                         }
@@ -103,6 +107,11 @@ struct SettingsView: View {
                     externalLink("Visit Refuge Restrooms", destination: URL(string: "https://www.refugerestrooms.org")!)
                     externalLink("See the code", destination: URL(string: "https://github.com/tgpatrick/PeePal")!)
                     externalLink("Visit my Ko-Fi", destination: URL(string: "https://ko-fi.com/thomasp57041")!)
+                    Button("Show tutorial") {
+                        dismiss()
+                        hasSeenTutorial = false
+                    }
+                    .foregroundStyle(.blue)
                 }
             }
             .navigationTitle("Settings")

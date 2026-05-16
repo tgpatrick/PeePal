@@ -89,6 +89,12 @@ class MapViewModel {
         }
     }
     
+    func centerOnUser() {
+        if let location = locationManager.location {
+            centerOn(location)
+        }
+    }
+    
     func focusOn(_ item: any Listable) {
         if let mapItem = item as? MKMapItem {
             selectedMapItem = mapItem
