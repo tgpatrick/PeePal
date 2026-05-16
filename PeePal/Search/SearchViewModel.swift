@@ -140,6 +140,10 @@ final class SearchViewModel {
         } catch {
             var description = ""
             if let error = error as? NetworkError {
+                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                    self.logger.info("Network search cancellation successful")
+                    return
+                }
                 description = error.description
             } else {
                 description = error.localizedDescription

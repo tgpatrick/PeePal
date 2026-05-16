@@ -101,10 +101,13 @@ struct SearchResultsView: View {
                                         .font(.title2)
                                     if viewModel.loadingNetworkResults {
                                         ProgressView()
+                                            .transition(.move(edge: .leading).combined(with: .opacity))
                                     } else if viewModel.networkError != nil {
-                                        Button("Try Again", systemImage: .errorIcon, role: .destructive) {
+                                        Button("Try Again", systemImage: .errorIcon) {
                                             viewModel.search()
                                         }
+                                        .modifier(GlassyOrProminentButton())
+                                        .transition(.move(edge: .leading).combined(with: .opacity))
                                     }
                                     Spacer()
                                     if !viewModel.restroomResults.isEmpty {
