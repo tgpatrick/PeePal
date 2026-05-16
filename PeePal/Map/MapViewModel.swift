@@ -200,12 +200,6 @@ class MapViewModel {
                                         self.restrooms = Set(updatedLocalRestrooms)
                                     }
                                 }
-                            } catch let error as NetworkError {
-                                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
-                                    self.logger.info("Network cancellation successful")
-                                    // Rethrow to cancel the whole group
-                                    throw error
-                                }
                             } catch {
                                 throw error
                             }
@@ -215,8 +209,20 @@ class MapViewModel {
                     try await group.waitForAll()
                 }
             } catch {
-                await MainActor.run {
-                    self.error = .unknownError
+                if let error = error as? NetworkError {
+                   if case let .networkError(nestedError) = error,
+                      nestedError.localizedDescription == "cancelled" {
+                       self.logger.info("Network cancellation successful")
+                       return
+                   } else {
+                       await MainActor.run {
+                           self.error = error
+                       }
+                   }
+                } else {
+                    await MainActor.run {
+                        self.error = .unknownError
+                    }
                 }
             }
 
