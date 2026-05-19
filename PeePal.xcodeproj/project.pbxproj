@@ -148,6 +148,7 @@
 				AAD80BC72F6F773D006AF588 /* Models */,
 				AAD3B7352F67768E000FC239 /* Services */,
 				AABDEF292F26DDA5005414D5 /* Home */,
+				AA72D0E12FB931EA000E40AE /* Tutorial */,
 				AA314DDD2F75619500C01DE9 /* Map */,
 				AA314DE42F7867D700C01DE9 /* Restroom */,
 				AA314DE72F79A29C00C01DE9 /* Search */,
@@ -229,6 +230,13 @@
 				AA4ABB052FB00955009BCD86 /* SettingsViewModel.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		AA72D0E12FB931EA000E40AE /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Tutorial;
 			sourceTree = "<group>";
 		};
 		AABDEF292F26DDA5005414D5 /* Home */ = {

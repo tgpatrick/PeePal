@@ -223,7 +223,7 @@ struct HomeView: View {
             }), content: {
                 Text("Tutorial!")
                     .onDisappear {
-                        mapViewModel?.centerOnUser()
+                        mapViewModel?.centerOnUserIfAvailable()
                     }
             })
             .sheet(isPresented: $showSearch) {

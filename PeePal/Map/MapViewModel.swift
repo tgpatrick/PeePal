@@ -46,6 +46,8 @@ class MapViewModel {
     private var lastZoomDeltaSum: Double?
     private var lastFetchRegion: MKCoordinateRegion?
     var lastCameraContext: MapCameraUpdateContext?
+    
+    var triggerRefresh: Bool = false
 
     init(modelContext: ModelContext) {
         self.restroomManager = RestroomManager(modelContext: modelContext)
@@ -89,10 +91,13 @@ class MapViewModel {
         }
     }
     
-    func centerOnUser() {
-        if let location = locationManager.location {
-            centerOn(location)
+    func centerOnUserIfAvailable() {
+        guard locationManager.authorizationStatus == .authorizedAlways ||
+                locationManager.authorizationStatus == .authorizedWhenInUse,
+        let location = locationManager.location else {
+            return
         }
+        centerOn(location)
     }
     
     func focusOn(_ item: any Listable) {
@@ -114,6 +119,7 @@ class MapViewModel {
     
     func setInitialCameraPosition() {
         locationManager.requestLocation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: centerOnUserIfAvailable)
     }
 
     func loadInitialRestrooms() async {

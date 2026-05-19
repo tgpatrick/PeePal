@@ -60,7 +60,10 @@ struct MapView: View {
             }
         }
         .mapControls {
-            MapUserLocationButton()
+            if viewModel.locationManager.authorizationStatus == .authorizedAlways ||
+                viewModel.locationManager.authorizationStatus == .authorizedWhenInUse {
+                MapUserLocationButton()
+            }
             MapCompass()
             MapPitchToggle()
             MapScaleView()
@@ -68,6 +71,16 @@ struct MapView: View {
         .onChange(of: viewModel.locationManager.location) { oldLocation, newLocation in
             if oldLocation == nil, let newLocation {
                 viewModel.centerOn(newLocation)
+            }
+        }
+        .onChange(of: viewModel.locationManager.authorizationStatus) { _, new in
+            switch new {
+            case .authorizedAlways, .authorizedWhenInUse:
+                viewModel.centerOnUserIfAvailable()
+            case .notDetermined:
+                viewModel.locationManager.requestLocation()
+            default:
+                return
             }
         }
     }

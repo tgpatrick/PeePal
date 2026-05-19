@@ -11,10 +11,12 @@ import CoreLocation
 @Observable
 class LocationManager: NSObject {
     private let locationManager = CLLocationManager()
+    var authorizationStatus: CLAuthorizationStatus
     var location: CLLocation?
     var locationError: Error?
 
     override init() {
+        self.authorizationStatus = locationManager.authorizationStatus
         super.init()
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -40,5 +42,9 @@ extension LocationManager: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationError = error
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        self.authorizationStatus = manager.authorizationStatus
     }
 }
