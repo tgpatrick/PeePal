@@ -25,7 +25,7 @@ public struct MapItemAnnotation: View {
         VStack {
             Spacer()
             if isShowing {
-                Image(systemName: mapItemIconName(for: mapItem))
+                Image(systemName: mapItem.iconName)
                     .resizable()
                     .scaledToFit()
                     .frame(height: iconSize)
@@ -70,20 +70,6 @@ public struct MapItemAnnotation: View {
             withAnimation(.interactiveSpring(extraBounce: 0.5)) {
                 isShowing = true
             }
-        }
-    }
-
-    private func mapItemIconName(for item: MKMapItem) -> String {
-        if item.pointOfInterestCategory == .airport {
-            return "airplane"
-        } else if item.pointOfInterestCategory == .restaurant {
-            return "fork.knife"
-        } else if item.pointOfInterestCategory == .hotel {
-            return "bed.double"
-        } else if item.pointOfInterestCategory == .store {
-            return "cart"
-        } else {
-            return "mappin"
         }
     }
 }

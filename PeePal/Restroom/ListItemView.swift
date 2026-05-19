@@ -123,8 +123,6 @@ struct ListItemView: View {
         }
     }
 
-    
-
     private func mapItemPin(mapItem: MKMapItem) -> some View {
         return Image(systemName: mapItem.iconName)
             .font(.system(size: 22))
