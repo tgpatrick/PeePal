@@ -32,7 +32,11 @@ struct MapView: View {
                         .zIndex(1)
                         .task {
                             viewModel.setInitialCameraPosition()
+                            // Make sure stored restrooms are loaded
                             await viewModel.loadInitialRestrooms()
+                            // Wait for camera change, then fetch on-screen ones
+                            try? await Task.sleep(for: .seconds(0.5))
+                            viewModel.fetchRestrooms(fetchFromNetwork: !isOfflineModeEnabled)
                         }
                         .onMapCameraChange(frequency: .onEnd) { context in
                             viewModel.lastCameraContext = context

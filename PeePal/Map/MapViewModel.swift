@@ -85,7 +85,7 @@ class MapViewModel {
             cameraPosition = .camera(
                 MapCamera(
                     centerCoordinate: location.coordinate,
-                    distance: 1000
+                    distance: 1500
                 )
             )
         }
@@ -125,18 +125,7 @@ class MapViewModel {
     func loadInitialRestrooms() async {
         do {
             setLoading(true)
-            try? await restroomManager.initializeFromBundleIfNeeded()
-            // If a known region exists, fetch restrooms in that region to limit data
-            if let region = cameraPosition.region {
-                let regionRestrooms = try await restroomManager.fetchRestrooms(in: region)
-                restrooms.formUnion(regionRestrooms)
-                logger.info("Loaded \(regionRestrooms.count) restrooms in initial region")
-            } else {
-                // Fallback to loading all restrooms if no region is set
-                let allRestrooms = try await restroomManager.fetchAllLocalRestrooms()
-                restrooms.formUnion(allRestrooms)
-                logger.info("Loaded all local restrooms (\(allRestrooms.count))")
-            }
+            try await restroomManager.initializeFromBundleIfNeeded()
         } catch {
             logger.error("Failed to load initial restrooms: \(error)")
             self.error = .unknownError
