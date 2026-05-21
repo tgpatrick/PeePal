@@ -11,13 +11,12 @@ struct TutorialScreenModifier: ViewModifier {
     let id: TutorialPage
     
     func body(content: Content) -> some View {
-        ScrollView {
-            HStack {
-                Spacer()
-                content
-                Spacer()
-            }
+        HStack {
+            Spacer()
+            content
+            Spacer()
         }
+        .safeAreaPadding(.bottom, 100)
         .background(.ultraThinMaterial)
         .id(id)
     }

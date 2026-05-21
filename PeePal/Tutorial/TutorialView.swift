@@ -24,7 +24,13 @@ struct TutorialView: View {
     
     @State private var scrollPosition: TutorialPage?
     @State private var locationManager: LocationManager = .init()
-    private let pages = TutorialPage.allCases
+    private var pages: [TutorialPage] {
+        var pages = TutorialPage.allCases
+        if !showLocationPage {
+            pages.removeAll(where: { $0 == .location })
+        }
+        return pages
+    }
     
     private var showLocationPage: Bool {
         locationManager.authorizationStatus == .notDetermined
@@ -35,29 +41,24 @@ struct TutorialView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
                     ForEach(pages) { page in
-                        switch page {
-                        case .welcome:
-                            WelcomeView()
-                                .modifier(TutorialScreenModifier(id: page))
-                        case .location:
-                            if showLocationPage {
+                        ScrollView {
+                            switch page {
+                            case .welcome:
+                                WelcomeView()
+                            case .location:
                                 LocationPermissionView(locationManager: locationManager)
-                                    .modifier(TutorialScreenModifier(id: page))
                                     .onDisappear {
                                         locationManager.requestLocation()
                                     }
+                            case .map:
+                                MapTutorialView()
+                            case .filter:
+                                FilterTutorialView()
+                            case .search:
+                                SearchTutorialView()
                             }
-                        case .map:
-                            MapTutorialView()
-                                .modifier(TutorialScreenModifier(id: .map))
-                        default:
-                            VStack {
-                                Text(page.rawValue)
-                                Spacer()
-                            }
-                            .font(.largeTitle)
-                            .modifier(TutorialScreenModifier(id: page))
                         }
+                        .modifier(TutorialScreenModifier(id: page))
                     }
                     .containerRelativeFrame([.horizontal])
                     .background(.ultraThinMaterial)
