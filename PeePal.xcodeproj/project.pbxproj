@@ -38,8 +38,12 @@
 		AA4DC3702F97252A006E4581 /* ToolBarDismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */; };
 		AA4DC3742F9E8EF9006E4581 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DC3732F9E8EF9006E4581 /* UserDefaults.swift */; };
 		AA72D0E02FB3E65A000E40AE /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA72D0DF2FB3E65A000E40AE /* String+Extensions.swift */; };
+		AA72D0E32FBCBD3F000E40AE /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA72D0E22FBCBD3F000E40AE /* TutorialView.swift */; };
 		AABDEF2B2F26DDC6005414D5 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABDEF2A2F26DDC6005414D5 /* HomeView.swift */; };
 		AABDEF2D2F26FA6F005414D5 /* Restrooms.json in Resources */ = {isa = PBXBuildFile; fileRef = AABDEF2C2F26FA6F005414D5 /* Restrooms.json */; };
+		AAD48F1B2FBE5B7900E068A2 /* TutorialScreenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F1A2FBE5B7900E068A2 /* TutorialScreenModifier.swift */; };
+		AAD48F1D2FBE84C100E068A2 /* LocationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F1C2FBE84C100E068A2 /* LocationPermissionView.swift */; };
+		AAD48F1F2FBE8BAD00E068A2 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F1E2FBE8BAD00E068A2 /* WelcomeView.swift */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
 		AAD535942F746BAF00B9D2C7 /* RestroomServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD535922F746BAF00B9D2C7 /* RestroomServiceProtocol.swift */; };
 		AAD535952F746BAF00B9D2C7 /* RestroomNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD535912F746BAF00B9D2C7 /* RestroomNetworkService.swift */; };
@@ -91,8 +95,12 @@
 		AA4DC36F2F97252A006E4581 /* ToolBarDismissButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarDismissButton.swift; sourceTree = "<group>"; };
 		AA4DC3732F9E8EF9006E4581 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		AA72D0DF2FB3E65A000E40AE /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		AA72D0E22FBCBD3F000E40AE /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		AABDEF2A2F26DDC6005414D5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AABDEF2C2F26FA6F005414D5 /* Restrooms.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Restrooms.json; sourceTree = "<group>"; };
+		AAD48F1A2FBE5B7900E068A2 /* TutorialScreenModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScreenModifier.swift; sourceTree = "<group>"; };
+		AAD48F1C2FBE84C100E068A2 /* LocationPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionView.swift; sourceTree = "<group>"; };
+		AAD48F1E2FBE8BAD00E068A2 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
 		AAD535902F746BAF00B9D2C7 /* RestroomLocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomLocalService.swift; sourceTree = "<group>"; };
 		AAD535912F746BAF00B9D2C7 /* RestroomNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomNetworkService.swift; sourceTree = "<group>"; };
@@ -235,6 +243,10 @@
 		AA72D0E12FB931EA000E40AE /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
+				AA72D0E22FBCBD3F000E40AE /* TutorialView.swift */,
+				AAD48F1A2FBE5B7900E068A2 /* TutorialScreenModifier.swift */,
+				AAD48F1E2FBE8BAD00E068A2 /* WelcomeView.swift */,
+				AAD48F1C2FBE84C100E068A2 /* LocationPermissionView.swift */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -380,6 +392,7 @@
 				AA314DDF2F756A1E00C01DE9 /* MapView.swift in Sources */,
 				9ADE90FD2C3A6BF5006A2E29 /* RatingView.swift in Sources */,
 				AADB0A0F2F79BAE100531741 /* SearchViewModel.swift in Sources */,
+				AAD48F1D2FBE84C100E068A2 /* LocationPermissionView.swift in Sources */,
 				AAD80BD12F6F77E8006AF588 /* NetworkError.swift in Sources */,
 				AA4ABB022FABA8B4009BCD86 /* RefreshButton.swift in Sources */,
 				9A04ADCB255B0DF500D0F02C /* PeePalApp.swift in Sources */,
@@ -407,10 +420,13 @@
 				AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */,
 				AADB0A112F79BD2A00531741 /* SearchResultsView.swift in Sources */,
 				AAD80BCE2F6F77A4006AF588 /* SearchRestroom.swift in Sources */,
+				AAD48F1B2FBE5B7900E068A2 /* TutorialScreenModifier.swift in Sources */,
 				AAD80BCF2F6F77A4006AF588 /* Response.swift in Sources */,
+				AA72D0E32FBCBD3F000E40AE /* TutorialView.swift in Sources */,
 				AA4DC3652F95B565006E4581 /* View+NavigationTransition.swift in Sources */,
 				9A8C2FCE2587187B00435B06 /* ConcreteStructs.swift in Sources */,
 				AA4ABB062FB00955009BCD86 /* SettingsViewModel.swift in Sources */,
+				AAD48F1F2FBE8BAD00E068A2 /* WelcomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

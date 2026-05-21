@@ -8,6 +8,7 @@
 import Foundation
 
 extension String {
+    static let backIcon = "chevron.backward"
     static let closeIcon = "xmark"
     static let directionsIcon = "arrow.triangle.turn.up.right.diamond"
     static let directionsIconFilled = "arrow.triangle.turn.up.right.diamond.fill"
@@ -16,6 +17,7 @@ extension String {
     static let expandIcon = "arrow.up.left.and.arrow.down.right"
     static let externalLinkIcon = "arrow.up.forward.app"
     static let filterIcon = "line.3.horizontal.decrease"
+    static let locationCircleIcon = "location.circle.fill"
     static let mapPinIcon = "mappin"
     static let refreshIcon = "arrow.triangle.2.circlepath"
     static let searchIcon = "magnifyingglass"

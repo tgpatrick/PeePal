@@ -14,6 +14,9 @@ class LocationManager: NSObject {
     var authorizationStatus: CLAuthorizationStatus
     var location: CLLocation?
     var locationError: Error?
+    var authorized: Bool {
+        authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways
+    }
 
     override init() {
         self.authorizationStatus = locationManager.authorizationStatus
@@ -46,5 +49,8 @@ extension LocationManager: CLLocationManagerDelegate {
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         self.authorizationStatus = manager.authorizationStatus
+        if authorized {
+            location = manager.location
+        }
     }
 }

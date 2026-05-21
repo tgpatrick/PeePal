@@ -5,4 +5,27 @@
 //  Created by Thomas Patrick on 5/20/26.
 //
 
-import Foundation
+import SwiftUI
+
+struct TutorialScreenModifier: ViewModifier {
+    let id: TutorialPage
+    
+    func body(content: Content) -> some View {
+        HStack {
+            Spacer()
+            content
+            Spacer()
+        }
+        .background(.ultraThinMaterial)
+        .id(id)
+    }
+}
+
+#if DEBUG
+#Preview {
+    Color.yellow
+        .sheet(isPresented: .constant(true)) {
+            TutorialView()
+        }
+}
+#endif

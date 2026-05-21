@@ -14,6 +14,7 @@ struct MapView: View {
     @AppFilter(.unisex) private var unisexFilter
     @AppFilter(.changingTable) private var tableFilter
     
+    @AppSetting(.hasSeenTutorial) private var hasSeenTutorial: Bool
     @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
     @AppSetting(.mapMode) private var mapMode: MapMode
     @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
@@ -32,6 +33,7 @@ struct MapView: View {
                     mainMap
                         .zIndex(1)
                         .task {
+                            guard hasSeenTutorial else { return }
                             viewModel.setInitialCameraPosition()
                             // Make sure stored restrooms are loaded
                             await viewModel.loadInitialRestrooms()

@@ -221,10 +221,8 @@ struct HomeView: View {
             }, set: { newValue in
                 hasSeenTutorial = !newValue
             }), content: {
-                Text("Tutorial!")
-                    .onDisappear {
-                        mapViewModel?.centerOnUserIfAvailable()
-                    }
+                TutorialView()
+                    .interactiveDismissDisabled()
             })
             .sheet(isPresented: $showSearch) {
                 if let searchViewModel, let mapViewModel {

@@ -23,6 +23,7 @@ enum Setting: String {
     case liquidGlassDisabled = "liquidGlassDisabled"
     case mapMode = "mapMode"
     case offlineMode = "offlineMode"
+    case showsTraffic = "showsTraffic"
 }
 
 // MARK: UserDefaults property wrappers
@@ -108,18 +109,16 @@ enum DirectionsProvider: String, CaseIterable, Saveable {
 
 enum MapMode: String, CaseIterable, Saveable {
     case standard = "Standard"
-    case standardTraffic = "Traffic"
     case satellite = "Satellite"
     
     static var defaultValue: MapMode {
         .standard
     }
     
-    var style: MapStyle {
+    func style(showsTraffic: Bool) -> MapStyle {
         switch self {
-        case .standard: return .standard
-        case .standardTraffic: return .standard(showsTraffic: true)
-        case .satellite: return .hybrid
+        case .standard: return .standard(showsTraffic: showsTraffic)
+        case .satellite: return .hybrid(showsTraffic: showsTraffic)
         }
     }
 }
