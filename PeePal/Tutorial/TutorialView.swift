@@ -10,8 +10,8 @@ import SwiftUI
 enum TutorialPage: String, Identifiable, CaseIterable {
     case welcome
     case location
-    case map
     case filter
+    case map
     case search
     
     var id: String { rawValue }
@@ -41,7 +41,7 @@ struct TutorialView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
                     ForEach(pages) { page in
-                        ScrollView {
+                        Group {
                             switch page {
                             case .welcome:
                                 WelcomeView()
@@ -50,10 +50,10 @@ struct TutorialView: View {
                                     .onDisappear {
                                         locationManager.requestLocation()
                                     }
+                            case .filter:
+                                RestroomTutorialView()
                             case .map:
                                 MapTutorialView()
-                            case .filter:
-                                FilterTutorialView()
                             case .search:
                                 SearchTutorialView()
                             }
@@ -99,13 +99,13 @@ struct TutorialView: View {
             if showLocationPage {
                 scrollPosition = .location
             } else {
-                scrollPosition = .map
+                scrollPosition = .filter
             }
         case .location:
-            scrollPosition = .map
-        case .map:
             scrollPosition = .filter
         case .filter:
+            scrollPosition = .map
+        case .map:
             scrollPosition = .search
         case .search:
             dismiss()

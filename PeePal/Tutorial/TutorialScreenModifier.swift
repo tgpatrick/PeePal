@@ -11,7 +11,7 @@ struct TutorialScreenModifier: ViewModifier {
     let id: TutorialPage
     
     func body(content: Content) -> some View {
-        VStack {
+        ScrollView {
             HStack {
                 Spacer()
                 content

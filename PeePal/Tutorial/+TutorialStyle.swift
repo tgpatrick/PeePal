@@ -32,7 +32,7 @@ extension View {
     
     func tutorialBodyStyle() -> some View {
         self
-            .font(.body)
+            .font(.caption)
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)
             .padding(.horizontal)

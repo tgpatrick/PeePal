@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MapTutorialView: View {
+    @AppSetting(.offlineMode) private var offlineMode
+    
     var body: some View {
         VStack {
             Image(systemName: .mapCircleIcon)
@@ -20,7 +22,7 @@ struct MapTutorialView: View {
                 Text("Works how you'd expect. Swipe, pinch, and rotate to move around. Tap on a restroom pin to see more information.")
                     .tutorialSubtitleStyle()
                 
-                Text("Use the buttons in the top right to focus on your location (if enabled), switch between 2D and 3D, and re-orient to North (if rotated).")
+                Text("Use the buttons in the top right to focus on your location (if you've shared it), switch between 2D and 3D, and re-orient to North (if rotated).")
                     .tutorialBodyStyle()
                 
                 HStack{
@@ -34,9 +36,14 @@ struct MapTutorialView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 4)
                                 .foregroundStyle(.red)
+                                .padding(1)
                         }
                 }
-                .font(.title3)
+                .font(.title)
+                
+                Text("When you see this loading icon at the top, PeePal is attempting to fetch more restrooms from the Refuge Restrooms server. If you prefer doing that manually, you can find the switch in the settings.")
+                    .tutorialBodyStyle()
+                LoadingSpinner()
             }
         }
     }
