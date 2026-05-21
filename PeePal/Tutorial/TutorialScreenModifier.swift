@@ -11,12 +11,15 @@ struct TutorialScreenModifier: ViewModifier {
     let id: TutorialPage
     
     func body(content: Content) -> some View {
-        HStack {
-            Spacer()
-            content
-            Spacer()
+        VStack {
+            HStack {
+                Spacer()
+                content
+                Spacer()
+            }
+            .safeAreaPadding(.top, 50)
+            .safeAreaPadding(.bottom, 100) // For the button
         }
-        .safeAreaPadding(.bottom, 100)
         .background(.ultraThinMaterial)
         .id(id)
     }

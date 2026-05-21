@@ -11,35 +11,21 @@ struct LocationPermissionView: View {
     let locationManager: LocationManager
     
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            
+        VStack {
             Image(systemName: .locationCircleFillIcon)
-                .symbolRenderingMode(.hierarchical)
-                .font(.system(size: 72, weight: .semibold))
-                .foregroundStyle(.tint)
-                .accessibilityHidden(true)
+                .tutorialImageStyle()
             
-            VStack(spacing: 8) {
+            VStack(spacing: .tutorialContentSpacing) {
                 Text("Share your location")
-                    .font(.largeTitle).bold()
-                    .multilineTextAlignment(.center)
+                    .tutorialTitleStyle()
                 
                 Text("PeePal uses your current location to show where you are on the map and help you find nearby restrooms.")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .tutorialSubtitleStyle()
                 
                 Text("We don’t collect or store your location — it’s only used on your device to place you on the map.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .tutorialBodyStyle()
                     .accessibilityLabel("We do not collect or store your location. It is only used on your device to place you on the map.")
             }
-            
-            Spacer()
         }
     }
 }

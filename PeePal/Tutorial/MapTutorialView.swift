@@ -9,30 +9,20 @@ import SwiftUI
 
 struct MapTutorialView: View {
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            
+        VStack {
             Image(systemName: .mapCircleIcon)
-                .symbolRenderingMode(.hierarchical)
-                .font(.system(size: 72, weight: .semibold))
-                .foregroundStyle(.tint)
-                .accessibilityHidden(true)
+                .tutorialImageStyle()
             
-            VStack(spacing: 8) {
+            VStack(spacing: .tutorialContentSpacing) {
                 Text("The map")
-                    .font(.largeTitle).bold()
+                    .tutorialTitleStyle()
                 
                 Text("Works how you'd expect. Swipe, pinch, and rotate to move around. Tap on a restroom pin to see more information.")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .tutorialSubtitleStyle()
                 
                 Text("Use the buttons in the top right to focus on your location (if enabled), switch between 2D and 3D, and re-orient to North (if rotated).")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .tutorialBodyStyle()
+                
                 HStack{
                     Image(systemName: .locationIcon)
                     Image(systemName: .threeDimentionIcon)

@@ -9,9 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     var body: some View {
-        VStack(spacing: 24) {
-            Spacer()
-            
+        VStack {
             Image(.icon)
                 .symbolRenderingMode(.hierarchical)
                 .resizable()
@@ -26,25 +24,16 @@ struct WelcomeView: View {
                 )
                 .accessibilityHidden(true)
             
-            VStack(spacing: 8) {
+            VStack(spacing: .tutorialContentSpacing) {
                 Text("Welcome to PeePal!")
-                    .font(.largeTitle).bold()
-                    .multilineTextAlignment(.center)
+                    .tutorialTitleStyle()
                 
                 Text("We help you know where you can go")
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .tutorialSubtitleStyle()
                 
                 Text("And don't worry if you're in a hurry. You can review this tutorial any time from the settings.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
+                    .tutorialBodyStyle()
             }
-            
-            Spacer()
         }
     }
 }
