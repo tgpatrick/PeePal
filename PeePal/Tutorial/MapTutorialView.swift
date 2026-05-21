@@ -41,7 +41,7 @@ struct MapTutorialView: View {
                 }
                 .font(.title)
                 
-                Text("When you see this loading icon at the top, PeePal is attempting to fetch more restrooms from the Refuge Restrooms server. If you prefer doing that manually, you can find the switch in the settings.")
+                Text("Any restroom you've seen before will load quickly. When you see this loading icon at the top, PeePal is attempting to fetch even more from the Refuge Restrooms server. If you prefer doing that manually, you can find the switch in the settings.")
                     .tutorialBodyStyle()
                 LoadingSpinner()
             }
@@ -51,7 +51,7 @@ struct MapTutorialView: View {
 
 #if DEBUG
 #Preview {
-    Color.yellow
+    Color.accent.ignoresSafeArea()
         .sheet(isPresented: .constant(true)) {
             MapTutorialView()
                 .modifier(TutorialScreenModifier(id: .map))
