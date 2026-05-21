@@ -26,6 +26,7 @@ extension String {
     static let mapPinIcon = "mappin"
     static let mapPinCircleIcon = "mappin.circle.fill"
     static let refreshIcon = "arrow.triangle.2.circlepath"
+    static let searchCircleIcon = "magnifyingglass.circle.fill"
     static let searchIcon = "magnifyingglass"
     static let settingsIcon = "gearshape.fill"
     static let triangleIcon = "triangle.fill"
