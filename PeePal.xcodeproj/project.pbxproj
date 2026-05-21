@@ -44,6 +44,9 @@
 		AAD48F1B2FBE5B7900E068A2 /* TutorialScreenModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F1A2FBE5B7900E068A2 /* TutorialScreenModifier.swift */; };
 		AAD48F1D2FBE84C100E068A2 /* LocationPermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F1C2FBE84C100E068A2 /* LocationPermissionView.swift */; };
 		AAD48F1F2FBE8BAD00E068A2 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F1E2FBE8BAD00E068A2 /* WelcomeView.swift */; };
+		AAD48F212FBF6A6F00E068A2 /* MapTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F202FBF6A6F00E068A2 /* MapTutorialView.swift */; };
+		AAD48F232FBF6A8400E068A2 /* SearchTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F222FBF6A8400E068A2 /* SearchTutorialView.swift */; };
+		AAD48F252FBF6A8E00E068A2 /* FilterTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD48F242FBF6A8E00E068A2 /* FilterTutorialView.swift */; };
 		AAD535932F746BAF00B9D2C7 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */; };
 		AAD535942F746BAF00B9D2C7 /* RestroomServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD535922F746BAF00B9D2C7 /* RestroomServiceProtocol.swift */; };
 		AAD535952F746BAF00B9D2C7 /* RestroomNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD535912F746BAF00B9D2C7 /* RestroomNetworkService.swift */; };
@@ -101,6 +104,9 @@
 		AAD48F1A2FBE5B7900E068A2 /* TutorialScreenModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialScreenModifier.swift; sourceTree = "<group>"; };
 		AAD48F1C2FBE84C100E068A2 /* LocationPermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionView.swift; sourceTree = "<group>"; };
 		AAD48F1E2FBE8BAD00E068A2 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		AAD48F202FBF6A6F00E068A2 /* MapTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTutorialView.swift; sourceTree = "<group>"; };
+		AAD48F222FBF6A8400E068A2 /* SearchTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTutorialView.swift; sourceTree = "<group>"; };
+		AAD48F242FBF6A8E00E068A2 /* FilterTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTutorialView.swift; sourceTree = "<group>"; };
 		AAD5358F2F746BAF00B9D2C7 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
 		AAD535902F746BAF00B9D2C7 /* RestroomLocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomLocalService.swift; sourceTree = "<group>"; };
 		AAD535912F746BAF00B9D2C7 /* RestroomNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestroomNetworkService.swift; sourceTree = "<group>"; };
@@ -247,6 +253,9 @@
 				AAD48F1A2FBE5B7900E068A2 /* TutorialScreenModifier.swift */,
 				AAD48F1E2FBE8BAD00E068A2 /* WelcomeView.swift */,
 				AAD48F1C2FBE84C100E068A2 /* LocationPermissionView.swift */,
+				AAD48F202FBF6A6F00E068A2 /* MapTutorialView.swift */,
+				AAD48F242FBF6A8E00E068A2 /* FilterTutorialView.swift */,
+				AAD48F222FBF6A8400E068A2 /* SearchTutorialView.swift */,
 			);
 			path = Tutorial;
 			sourceTree = "<group>";
@@ -410,11 +419,13 @@
 				AA4DC3702F97252A006E4581 /* ToolBarDismissButton.swift in Sources */,
 				AA4DC3632F943028006E4581 /* FilterView.swift in Sources */,
 				AADB0A132F79BF1D00531741 /* RestroomViewModel.swift in Sources */,
+				AAD48F232FBF6A8400E068A2 /* SearchTutorialView.swift in Sources */,
 				9AC534402C3AE81900C4A795 /* RestroomView.swift in Sources */,
 				AA4DC36C2F9660C8006E4581 /* SettingsView.swift in Sources */,
 				AAD535982F746C9C00B9D2C7 /* RestroomEntity.swift in Sources */,
 				AA314DE62F78680700C01DE9 /* ClusterSheetView.swift in Sources */,
 				AAD80BCC2F6F77A4006AF588 /* Restroom.swift in Sources */,
+				AAD48F252FBF6A8E00E068A2 /* FilterTutorialView.swift in Sources */,
 				AAD80BCD2F6F77A4006AF588 /* RestroomCluster.swift in Sources */,
 				AA72D0E02FB3E65A000E40AE /* String+Extensions.swift in Sources */,
 				AA1984602F745E3900D16F36 /* NetworkService.swift in Sources */,
@@ -425,6 +436,7 @@
 				AA72D0E32FBCBD3F000E40AE /* TutorialView.swift in Sources */,
 				AA4DC3652F95B565006E4581 /* View+NavigationTransition.swift in Sources */,
 				9A8C2FCE2587187B00435B06 /* ConcreteStructs.swift in Sources */,
+				AAD48F212FBF6A6F00E068A2 /* MapTutorialView.swift in Sources */,
 				AA4ABB062FB00955009BCD86 /* SettingsViewModel.swift in Sources */,
 				AAD48F1F2FBE8BAD00E068A2 /* WelcomeView.swift in Sources */,
 			);

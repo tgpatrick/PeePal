@@ -47,6 +47,9 @@ struct TutorialView: View {
                                         locationManager.requestLocation()
                                     }
                             }
+                        case .map:
+                            MapTutorialView()
+                                .modifier(TutorialScreenModifier(id: .map))
                         default:
                             VStack {
                                 Text(page.rawValue)

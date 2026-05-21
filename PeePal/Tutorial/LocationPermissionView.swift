@@ -14,7 +14,7 @@ struct LocationPermissionView: View {
         VStack(spacing: 24) {
             Spacer()
             
-            Image(systemName: .locationCircleIcon)
+            Image(systemName: .locationCircleFillIcon)
                 .symbolRenderingMode(.hierarchical)
                 .font(.system(size: 72, weight: .semibold))
                 .foregroundStyle(.tint)
