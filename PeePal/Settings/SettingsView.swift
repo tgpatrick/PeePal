@@ -21,6 +21,7 @@ struct SettingsView: View {
     @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
     @AppSetting(.mapMode) private var mapMode: MapMode
     @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
+    @AppSetting(.showsTraffic) private var showsTraffic: Bool
     
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     
@@ -43,6 +44,8 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    
+                    Toggle("Traffic", isOn: $showsTraffic)
                     
                     Picker("Directions provider", selection: $directionsProvider) {
                         ForEach(DirectionsProvider.allCases, id: \.self) { provider in

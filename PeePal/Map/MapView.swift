@@ -10,13 +10,14 @@ import SwiftData
 import SwiftUI
 
 struct MapView: View {
-    @AppFilter(Filter.accessible) private var accessFilter
-    @AppFilter(Filter.unisex) private var unisexFilter
-    @AppFilter(Filter.changingTable) private var tableFilter
+    @AppFilter(.accessible) private var accessFilter
+    @AppFilter(.unisex) private var unisexFilter
+    @AppFilter(.changingTable) private var tableFilter
     
-    @AppSetting(Setting.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
-    @AppSetting(Setting.mapMode) private var mapMode: MapMode
-    @AppSetting(Setting.offlineMode) private var isOfflineModeEnabled: Bool
+    @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
+    @AppSetting(.mapMode) private var mapMode: MapMode
+    @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
+    @AppSetting(.showsTraffic) private var showsTraffic: Bool
     
     @State var viewModel: MapViewModel
     
@@ -133,7 +134,7 @@ struct MapView: View {
                     .tag(mapItemCluster)
             }
         }
-            .mapStyle(mapMode.style)
+            .mapStyle(mapMode.style(showsTraffic: showsTraffic))
             .safeAreaPadding(.bottom, isLiquidGlassDisabled ? 40 : 0)
     }
 }
