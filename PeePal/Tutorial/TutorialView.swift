@@ -13,10 +13,11 @@ enum TutorialPage: String, Identifiable, CaseIterable {
     case filter
     case map
     case search
+    case end
     
     var id: String { rawValue }
     static let first: Self = .welcome
-    static let last: Self = .search
+    static let last: Self = .end
 }
 
 struct TutorialView: View {
@@ -56,6 +57,8 @@ struct TutorialView: View {
                                 MapTutorialView()
                             case .search:
                                 SearchTutorialView()
+                            case .end:
+                                EndTutorialView()
                             }
                         }
                         .modifier(TutorialScreenModifier(id: page))
@@ -108,6 +111,8 @@ struct TutorialView: View {
         case .map:
             scrollPosition = .search
         case .search:
+            scrollPosition = .end
+        case .end:
             dismiss()
         case .none:
             scrollPosition = TutorialPage.first
