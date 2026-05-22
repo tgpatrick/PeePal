@@ -72,6 +72,7 @@ class MapViewModel {
         
         if hasChanged {
             self.lastFetchRegion = region
+            self.parentCluster = nil // Feels weird to re-select a cluster if you've moved the map
             withAnimation {
                 error = nil
                 showRefresh = region.span.latitudeDelta < 1 && hasChanged
