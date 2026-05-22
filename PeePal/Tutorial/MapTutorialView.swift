@@ -13,7 +13,7 @@ struct MapTutorialView: View {
     var body: some View {
         VStack {
             Image(systemName: .mapCircleIcon)
-                .tutorialImageStyle()
+                .modifier(TutorialImageModifer())
             
             VStack(spacing: .tutorialContentSpacing) {
                 Text("The map")

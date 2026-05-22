@@ -13,7 +13,7 @@ struct LocationPermissionView: View {
     var body: some View {
         VStack {
             Image(systemName: .locationCircleFillIcon)
-                .tutorialImageStyle()
+                .modifier(TutorialImageModifer())
             
             VStack(spacing: .tutorialContentSpacing) {
                 Text("Share your location")

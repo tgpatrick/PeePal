@@ -8,14 +8,6 @@
 import SwiftUI
 
 extension View {
-    func tutorialImageStyle() -> some View {
-        self
-            .symbolRenderingMode(.hierarchical)
-            .font(.system(size: 72, weight: .semibold))
-            .foregroundStyle(.tint)
-            .accessibilityHidden(true)
-    }
-    
     func tutorialTitleStyle() -> some View {
         self
             .font(.largeTitle)
@@ -41,4 +33,18 @@ extension View {
 
 extension CGFloat {
     static let tutorialContentSpacing: CGFloat = 10
+}
+
+struct TutorialImageModifer: ViewModifier {
+    @State var animateIcon: Bool = false
+    
+    func body(content: Content) -> some View {
+        content
+            .symbolRenderingMode(.hierarchical)
+            .symbolEffect(.bounce, value: animateIcon)
+            .font(.system(size: 72, weight: .semibold))
+            .foregroundStyle(.tint)
+            .accessibilityHidden(true)
+            .onAppear { animateIcon.toggle() }
+    }
 }

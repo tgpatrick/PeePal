@@ -11,7 +11,7 @@ struct RestroomTutorialView: View {
     var body: some View {
         VStack {
             Image(systemName: .mapPinCircleIcon)
-                .tutorialImageStyle()
+                .modifier(TutorialImageModifer())
             
             VStack(spacing: .tutorialContentSpacing) {
                 Text("Restrooms")
