@@ -14,6 +14,17 @@ struct RestroomView: View {
     let restroom: Restroom
     @State var locationManager = LocationManager()
     @State private var viewModel = RestroomViewModel()
+    
+    private var cityAndState: String? {
+        var cityAndState: [String] = []
+        if let city = restroom.city {
+            cityAndState.append(city)
+        }
+        if let state = restroom.state {
+            cityAndState.append(state)
+        }
+        return cityAndState.isEmpty ? nil : cityAndState.joined(separator: ", ")
+    }
 
     var body: some View {
         ScrollView {
@@ -23,14 +34,8 @@ struct RestroomView: View {
                         if let street = restroom.street {
                             Text(street).fontWeight(.bold)
                         }
-                        HStack(spacing: 0) {
-                            if let city = restroom.city {
-                                Text(city)
-                            }
-                            if let state = restroom.state {
-                                Text(", " + state)
-                            }
-                            Spacer()
+                        if let cityAndState {
+                            Text(cityAndState)
                         }
                     }
                     .font(.callout)
