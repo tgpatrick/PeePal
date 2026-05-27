@@ -141,6 +141,10 @@ struct SearchResultsView: View {
         )
         .presentationBackgroundInteraction(.enabled(upThrough: .middle))
         .onChange(of: viewModel.searchText) {
+            guard !viewModel.searchText.isEmpty else {
+                viewModel.clear()
+                return
+            }
             viewModel.search(
                 useFilters: usingFilters,
                 filters: .init(
@@ -159,6 +163,9 @@ struct SearchResultsView: View {
                     changingTable: tableFilter
                 )
             )
+        }
+        .onAppear {
+            viewModel.clear()
         }
         .onDisappear {
             if let onDismiss {
