@@ -91,6 +91,7 @@ struct TutorialView: View {
                 .foregroundStyle(.black)
                 .modifier(GlassyOrProminentButton())
                 .padding(.horizontal)
+                .padding(.bottom, UIDevice.isIpad ? 16 : 0)
             }
             .onAppear(perform: goToNextPage)
         }
