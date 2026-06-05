@@ -75,5 +75,8 @@ iOSInjectionProject/
 # macOS
 #
 # macOS, by default, adds a .DS_Store to folders which is irrelevant to a repo.
-
 .DS_Store
+
+# Screenshots
+# I want to store my screenshots in this folder, but not in git.
+Screenshots/

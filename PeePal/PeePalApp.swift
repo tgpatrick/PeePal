@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PeePalApp: App {
+    @AppSetting(.colorScheme) private var appearance: Appearance
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .preferredColorScheme(appearance.scheme)
+                .modelContainer(for: [RestroomEntity.self])
         }
     }
 }

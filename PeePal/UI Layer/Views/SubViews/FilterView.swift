@@ -15,7 +15,7 @@ struct FilterView: View {
         id: 2,
         accessible: true,
         unisex: false,
-        changing_table: true,
+        changingTable: true,
         distance: 1.0,
         downvote: 0,
         upvote: 1,
@@ -26,7 +26,7 @@ struct FilterView: View {
         id: 3,
         accessible: false,
         unisex: true,
-        changing_table: true,
+        changingTable: true,
         distance: 1.0,
         downvote: 0,
         upvote: 1,
@@ -53,7 +53,7 @@ struct FilterView: View {
                                 .font(.caption)
                         }.padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                         HStack {
-                            AnnotationView(restroom: accessibleRestroom, viewModel: vm, contentViewModel: ContentViewModel())
+                            AnnotationView_Old(restroom: accessibleRestroom, viewModel: vm, contentViewModel: ContentViewModel_Old())
                                 .scaleEffect(CGSize(width: 0.5, height: 0.5))
                                 .frame(width: 20, height: 20)
                             Toggle(isOn: $filters.accessFilter, label: {
@@ -64,7 +64,7 @@ struct FilterView: View {
                             })
                         }
                         HStack {
-                            AnnotationView(restroom: unisexRestroom, viewModel: vm, contentViewModel: ContentViewModel())
+                            AnnotationView_Old(restroom: unisexRestroom, viewModel: vm, contentViewModel: ContentViewModel_Old())
                                 .scaleEffect(CGSize(width: 0.5, height: 0.5))
                                 .frame(width: 20, height: 20)
                             Toggle(isOn: $filters.unisexFilter, label: {
@@ -123,11 +123,11 @@ struct FilterView: View {
 struct FilterView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
-            ContentView(sharedModel: searchModel)
-                .onAppear(perform: {
-                    searchModel.showTutorial = false
-                })
-            AnnotationView(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel())
+//            ContentView(sharedModel: searchModel)
+//                .onAppear(perform: {
+//                    searchModel.showTutorial = false
+//                })
+            AnnotationView_Old(restroom: exampleRestroom, viewModel: SharedModel(), contentViewModel: ContentViewModel_Old())
             FilterView(sharedModel: SharedModel(), filters: Filters())
         }
 //        .colorScheme(.dark)

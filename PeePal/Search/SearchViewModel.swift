@@ -1,0 +1,156 @@
+//
+//  SearchViewModel.swift
+//  PeePal
+//
+//  Created by Thomas Patrick on 12/14/20.
+//
+
+import Foundation
+import MapKit
+import OSLog
+import SwiftData
+import SwiftUI
+
+@Observable
+@MainActor
+final class SearchViewModel {
+    var searchText: String = ""
+    var searching: Bool = false
+    var anyResults: Bool { !mapResults.isEmpty || !restroomResults.isEmpty }
+    
+    var currentSuggestion: String?
+    private var suggestionTimer: Timer?
+    private let searchSuggestions: [String] = [
+        "Cafés", "Gas Stations", "Hospitals", "Cities", "Grocery Stores", "Bagel Shops",
+        "Pharmacies", "Dog Parks", "ATM Machines", "Charging Stations", "Pizza Parlors",
+        "Museums", "Hotels", "Restaurants", "Libraries", "Post Offices", "Movie Theaters",
+        "Bookstores", "Parks", "Aquariums", "Bike Repair Shops", "Bowling Alleys",
+        "Ice Cream Shops", "Haunted Houses", "Secret Lairs", "Unicorn Sanctuaries",
+        "Countries", "Mountains", "Universities", "Government Buildings", "Beaches",
+        "Discotheques", "Art Galleries", "Botanical Gardens", "Zombie Apocalypse Shelters"
+    ]
+
+    private let restroomManager: RestroomManager
+    
+    var mapResults = [ListableItem]()
+    var restroomResults = [ListableItem]()
+    
+    var loadingNetworkResults: Bool = false
+    var networkError: Error?
+    private var searchTask: Task<Void, Never>?
+    private let logger = Logger.for(SearchViewModel.self)
+    
+    @MainActor init(modelContext: ModelContext) {
+        self.restroomManager = RestroomManager(modelContext: modelContext)
+    }
+    
+    func search(useFilters: Bool = true, filters: FilterState = .allDisabled) {
+        logger.debug("Searching for: \(self.searchText)")
+        searchTask?.cancel()
+        searchTask = nil
+        searchTask = Task {
+            try? await Task.sleep(for: .seconds(0.5))
+            try? Task.checkCancellation()
+            async let _ = searchMapLocations()
+            async let _ = searchLocalRestrooms(filters: useFilters ? filters : nil)
+            try? await Task.sleep(for: .seconds(1))
+            try? Task.checkCancellation()
+            await searchRemoteRestrooms(filters: useFilters ? filters : nil)
+        }
+    }
+    
+    func clear() {
+        searchText.removeAll()
+        mapResults.removeAll()
+        restroomResults.removeAll()
+    }
+    
+    func startSuggestionAnimation() {
+        suggestionTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] timer in
+            let newSuggestion = self?.searchSuggestions.randomElement()
+            Task { @MainActor in
+                withAnimation {
+                    self?.currentSuggestion = newSuggestion
+                }
+            }
+        }
+    }
+    
+    func stopSuggestionAnimation() {
+        suggestionTimer?.invalidate()
+    }
+
+    private func searchMapLocations() async {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchText
+        request.resultTypes = [.pointOfInterest, .address]
+
+        let search = MKLocalSearch(request: request)
+        do {
+            let response = try await search.start()
+            try? Task.checkCancellation()
+            await MainActor.run { [weak self] in
+                withAnimation {
+                    self?.mapResults = Array(response.mapItems).map({ ListableItem(item: $0) })
+                }
+            }
+        } catch {
+            logger.error("Map search error: \(error.localizedDescription)")
+        }
+    }
+    
+    private func searchLocalRestrooms(filters: FilterState? = nil) async {
+        let filters = filters ?? .allDisabled
+        do {
+            let response = try await restroomManager.searchLocalRestrooms(matching: searchText, filters: filters)
+            try? Task.checkCancellation()
+            await MainActor.run { [weak self] in
+                self?.restroomResults = response.map({ ListableItem(item: $0) })
+            }
+        } catch {
+            logger.error("Local restroom search error: \(error.localizedDescription)")
+        }
+    }
+    
+    func searchRemoteRestrooms(filters: FilterState? = nil) async {
+        self.networkError = nil
+        
+        let filters = filters ?? .allDisabled
+        guard searchText.count > 3 else { return }
+        defer {
+            withAnimation {
+                self.loadingNetworkResults = false
+            }
+        }
+        
+        do {
+            await MainActor.run { [weak self] in
+                withAnimation {
+                    self?.loadingNetworkResults = true
+                }
+            }
+            let response = try await restroomManager.searchRemoteRestrooms(matching: searchText, filters: filters)
+            try await restroomManager.save(response)
+            let currentRestrooms = Set<ListableItem>(restroomResults)
+            let newResults = currentRestrooms.union(Set<ListableItem>(response.map({ ListableItem(item: $0) })))
+            try? Task.checkCancellation()
+            await MainActor.run { [weak self] in
+                self?.restroomResults = Array(newResults)
+            }
+        } catch {
+            var description = ""
+            if let error = error as? NetworkError {
+                if case let .networkError(nestedError) = error, nestedError.localizedDescription == "cancelled" {
+                    self.logger.info("Network search cancellation successful")
+                    return
+                }
+                description = error.description
+            } else {
+                description = error.localizedDescription
+            }
+            networkError = error
+            logger.error("Remote restroom search error: \(description)")
+        }
+    }
+}
+

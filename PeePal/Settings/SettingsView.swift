@@ -1,0 +1,159 @@
+//
+//  SettingsView.swift
+//  PeePal
+//
+//  Created by Thomas Patrick on 11/12/20.
+//
+
+import SwiftData
+import SwiftUI
+
+struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+    @State private var settingsViewModel: SettingsViewModel?
+    @State private var showDeletionAlert: Bool = false
+    
+    @AppSetting(.colorScheme) private var appearance: Appearance
+    @AppSetting(.directionsProvider) private var directionsProvider: DirectionsProvider
+    @AppSetting(.hasSeenTutorial) private var hasSeenTutorial: Bool
+    @AppSetting(.liquidGlassDisabled) private var isLiquidGlassDisabled: Bool
+    @AppSetting(.mapMode) private var mapMode: MapMode
+    @AppSetting(.offlineMode) private var isOfflineModeEnabled: Bool
+    @AppSetting(.showsTraffic) private var showsTraffic: Bool
+    
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Appearance")) {
+                    Picker("Theme", selection: $appearance) {
+                        ForEach(Appearance.allCases, id: \.self) { theme in
+                            Text(theme.rawValue).tag(theme)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+                
+                Section(header: Text("Map")) {
+                    Picker("Map style", selection: $mapMode) {
+                        ForEach(MapMode.allCases, id: \.self) { mode in
+                            Text(mode.rawValue).tag(mode)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    
+                    Toggle("Traffic", isOn: $showsTraffic)
+                    
+                    Picker("Directions provider", selection: $directionsProvider) {
+                        ForEach(DirectionsProvider.allCases, id: \.self) { provider in
+                            Text(provider.rawValue).tag(provider)
+                        }
+                    }
+                    
+                    externalLink("Open location settings", destination: URL(string: UIApplication.openSettingsURLString)!)
+                }
+                
+                Section(header: Text("Data")) {
+                    Toggle("Disable automatic fetch", isOn: $isOfflineModeEnabled)
+                    
+                    externalLink("Add a restroom", destination: URL(string: "https://www.refugerestrooms.org/restrooms/new")!)
+                    
+                    Button("Delete all local storage", role: .destructive) {
+                        showDeletionAlert = true
+                    }
+                    .alert(
+                        "This will delete all locally-stored restrooms. The experience will be slower until the ones you care about re-download. Are you sure?",
+                        isPresented: $showDeletionAlert
+                    ) {
+                        Button("Yes, delete", role: .destructive) {
+                            Task {
+                                await settingsViewModel?.deleteAllLocalRestrooms()
+                            }
+                        }
+                    }
+                }
+                
+                if #available(iOS 26.0, *) {
+                    Section(header: Text("Accessibility")) {
+                        VStack(alignment: .leading) {
+                            Toggle("Reduce Liquid Glass", isOn: $isLiquidGlassDisabled)
+                            Text("Adds solid backgrounds and reduces animations")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                
+                Section {
+                    HStack {
+                        Spacer()
+                        VStack {
+                            Text("PeePal")
+                                .font(.title2)
+                            if let appVersion {
+                                Text("v\(appVersion)")
+                                    .font(.caption)
+                            }
+                            Text("Created by Thomas Patrick")
+                                .font(.footnote)
+                        }
+                        Spacer()
+                    }
+                    
+                    Text("PeePal depends on the Refuge Restrooms API and the data contributed to it by the public. Please consider visiting and/or contributing to the source.")
+                        .font(.footnote)
+                    
+                    externalLink("Support/Privacy Policy", destination: URL(string: "https://tgpatrick.github.io")!)
+                    externalLink("Visit Refuge Restrooms", destination: URL(string: "https://www.refugerestrooms.org")!)
+                    externalLink("See the code", destination: URL(string: "https://github.com/tgpatrick/PeePal")!)
+                    externalLink("Visit my Ko-Fi", destination: URL(string: "https://ko-fi.com/thomasp57041")!)
+                    Button("Show tutorial") {
+                        dismiss()
+                        hasSeenTutorial = false
+                    }
+                    .foregroundStyle(.blue)
+                }
+            }
+            .navigationTitle("Settings")
+            .toolbar {
+                ToolBarDismissButton()
+            }
+            .toolbarTitleDisplayMode(.inlineLarge)
+            .preferredColorScheme(appearance.scheme)
+            .alert(
+                settingsViewModel?.error ?? "There was an error completing your task. Please try again.",
+                isPresented: .init(get: {
+                    settingsViewModel?.showErrorAlert ?? false
+                }, set: { newValue in
+                    settingsViewModel?.showErrorAlert = newValue
+                }),
+                actions: {}
+            )
+            .onAppear {
+                settingsViewModel = SettingsViewModel(modelContext: modelContext)
+            }
+        }
+        .transition(.identity) // No going crazy when we toggle Liquid Glass
+    }
+    
+    private func externalLink(_ titleKey: LocalizedStringKey, destination: URL) -> some View {
+        Link(destination: destination) {
+            HStack {
+                Text(titleKey)
+                Spacer()
+                Image(systemName: .externalLinkIcon)
+            }
+        }
+        .foregroundStyle(.blue)
+    }
+}
+
+#if DEBUG
+#Preview {
+    SettingsView()
+        .modelContainer(DataController.previewContainer)
+}
+#endif
